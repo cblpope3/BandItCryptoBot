@@ -1,4 +1,4 @@
-package ru.leonov.testbot.service;
+package ru.bandit.cryptobot.service;
 
 import org.springframework.stereotype.Service;
 
