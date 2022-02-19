@@ -221,11 +221,8 @@ public class BotService {
 
     public short createAverage(long chatId, List<String> params) {
 
-        if (params.size() < 3) {
+        if (params.size() < 2) {
             logger.warn("not enough parameters");
-            return NOT_VALID_PARAMETER;
-        } else if (!params.get(2).matches("[0-9]+")) {
-            logger.warn("average period is not integer");
             return NOT_VALID_PARAMETER;
         }
 
@@ -254,13 +251,10 @@ public class BotService {
             return NOT_FOUND_TRIGGER_TYPE;
         }
 
-        Integer period = Integer.parseInt(params.remove(0));
-
         UserTriggerEntity userTrigger = new UserTriggerEntity();
         userTrigger.setUser(user);
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
-        userTrigger.setTargetValue(period);
 
         //todo check if this subscription is already in database
 

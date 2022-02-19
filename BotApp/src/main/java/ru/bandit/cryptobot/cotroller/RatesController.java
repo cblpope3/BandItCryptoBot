@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bandit.cryptobot.data_containers.RatesJsonContainer;
+import ru.bandit.cryptobot.repositories.Rates1MinAverageRepository;
 import ru.bandit.cryptobot.repositories.RatesRepository;
 
 import java.util.List;
@@ -28,6 +29,9 @@ public class RatesController {
 
     @Autowired
     RatesRepository ratesRepository;
+
+    @Autowired
+    Rates1MinAverageRepository rates1MinAverageRepository;
 
     @ApiOperation(value = "Отправить последние полученные котировки", nickname = "newRates",
             notes = "Сюда отправляются последние актуальные данные о котировках криптовалют.", tags = {"Rates",})
@@ -64,7 +68,7 @@ public class RatesController {
                         (RatesJsonContainer item) -> Double.parseDouble(item.getPrice())));
         logger.trace("Got new avg rates from api container. For example, BTC/RUB is: {}", newRatesMap.get("BTCRUB"));
 
-        //ratesRepository.saveAll(newRatesMap);
+        rates1MinAverageRepository.saveAll(newRatesMap);
 
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }

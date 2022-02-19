@@ -31,8 +31,6 @@ public class BotRequestProcessor {
     @Autowired
     BotMenuTriggerType menuTriggerType;
     @Autowired
-    BotMenuPeriod menuPeriod;
-    @Autowired
     BotMenuDirection menuDirection;
     @Autowired
     BotMenuValue menuValue;
@@ -59,6 +57,8 @@ public class BotRequestProcessor {
 
         //choosing menu item
         String errorMessage = "Произошла ошибка. Для помощи напишите /help.";
+        String userNotFound = "Сначала наберите /start.";
+        String userNotFoundLog = "User not found.";
         switch (requestedMenuItem) {
 //===============================================
 // Endpoints first
@@ -83,6 +83,10 @@ public class BotRequestProcessor {
                     logger.trace("No subscriptions found.");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас не было подписок.");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while unsubscribing.");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -106,6 +110,10 @@ public class BotRequestProcessor {
                     logger.trace("already have this subscription");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас уже есть такая подписка.");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while creating simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -129,6 +137,10 @@ public class BotRequestProcessor {
                     logger.trace("already have this subscription");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас уже есть такая подписка.");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while creating simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -152,6 +164,10 @@ public class BotRequestProcessor {
                     logger.trace("already have this subscription");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас уже есть такая подписка.");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while creating simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -184,6 +200,10 @@ public class BotRequestProcessor {
                     logger.trace("successfully paused");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Ваши рассылки на паузе.");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while trying to pause");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -196,6 +216,10 @@ public class BotRequestProcessor {
                     logger.trace("successfully resumed");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Ваши рассылки восстановлены!");
+                } else if (commandStatus == BotService.NOT_FOUND_USER) {
+                    logger.trace(userNotFoundLog);
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            userNotFound);
                 } else {
                     logger.error("Error while trying to resume");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -244,9 +268,6 @@ public class BotRequestProcessor {
                 break;
             case TRIGGER_TYPE:
                 menuItem = menuTriggerType;
-                break;
-            case PERIOD:
-                menuItem = menuPeriod;
                 break;
             case DIRECTION:
                 menuItem = menuDirection;

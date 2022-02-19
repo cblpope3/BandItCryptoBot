@@ -23,11 +23,9 @@ import java.util.stream.Collectors;
 @Component
 public class Bot extends TelegramLongPollingBot {
 
-    Logger logger = LoggerFactory.getLogger(Bot.class);
-
     private final String token;
     private final String username;
-
+    Logger logger = LoggerFactory.getLogger(Bot.class);
     @Autowired
     BotRequestProcessor requestProcessor;
 
@@ -141,17 +139,6 @@ public class Bot extends TelegramLongPollingBot {
             }
         }
     }
-
-//    public void sendDataToSubscribers(Long chatName, String data) {
-//        //TODO maybe this method is redundant
-//        SendMessage sendingMessage = new SendMessage(chatName.toString(), data);
-//        try {
-//            execute(sendingMessage);
-//        } catch (TelegramApiException e) {
-//            logger.error(e.getMessage());
-//            e.printStackTrace();
-//        }
-//    }
 
     @Override
     public String getBotUsername() {

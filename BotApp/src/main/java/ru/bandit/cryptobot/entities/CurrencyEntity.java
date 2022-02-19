@@ -14,6 +14,7 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class CurrencyEntity {
 
     @Id

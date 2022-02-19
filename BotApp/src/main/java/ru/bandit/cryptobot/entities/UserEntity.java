@@ -14,6 +14,7 @@ import javax.persistence.Table;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 public class UserEntity {
     @Id
     @Column(name = "telegram_userchat_id", nullable = false)
