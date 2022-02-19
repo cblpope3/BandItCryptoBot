@@ -1,2 +1,6 @@
 server:
   port: 8080
+
+bot-app:
+  hostname: https://ed706411-2e6b-46c3-99f9-ce0493371601.mock.pstmn.io
+#  http://${BOT_APP_HOST:localhost}:8081/

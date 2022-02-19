@@ -1,4 +1,4 @@
-package ru.leonov.testbot;
+package ru.bandit.cryptobot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
