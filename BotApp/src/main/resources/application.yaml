@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    include: passwords
+
+server:
+  port: 8081
+
+api-app:
+  hostname: http://${API_APP_HOST:localhost}:8080/
