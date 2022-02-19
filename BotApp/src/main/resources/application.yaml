@@ -1,0 +1,15 @@
+spring:
+  profiles:
+    include: passwords
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hibernate:
+      ddl-auto: none
+    liquibase:
+      change-log: classpath:db/changelog/db.changelog-master.yaml
+
+server:
+  port: 8081
+
+api-app:
+  hostname: http://${API_APP_HOST:localhost}:8080/

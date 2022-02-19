@@ -44,5 +44,6 @@
 
     <modules>
         <module>ApiExchangeApp</module>
+        <module>BotApp</module>
     </modules>
 </project>
