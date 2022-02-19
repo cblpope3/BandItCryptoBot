@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+<html>
+<head th:fragment="headFragment">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-dark-grey.css">
+
+    <style>
+        body,h1,h2,h3,h4,h5,h6 {font-family: "Lato", sans-serif}
+        .w3-bar,h1,button {font-family: "Montserrat", sans-serif}
+        .separated {background-color: lightgrey; padding-left: 15px; border-radius: 10px; margin-top: 10px;}
+
+    </style>
+</head>
+<body>
+
+<!-- Header -->
+<header th:fragment="headerFragment" class="w3-container w3-theme-dark w3-center" style="padding:30px 16px">
+    <h1 class="w3-margin w3-jumbo">Hackaton 2022 project</h1>
+    <h2>BandIt</h2>
+</header>
+
+<footer th:fragment="footerFragment" class="w3-container w3-theme-dark w3-padding-16">
+    <p>Designed by Nickolay Shmakolay</p>
+    <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a></p>
+    <div style="position:relative;bottom:55px;" class="w3-tooltip w3-right">
+        <span class="w3-text w3-theme-light w3-padding">Go To Top</span>
+        <a class="w3-text-white" href="#myHeader"><span class="w3-xlarge">
+            <i class="fa fa-chevron-circle-up"></i></span></a>
+    </div>
+</footer>
+
+</body>
+
+</html>
