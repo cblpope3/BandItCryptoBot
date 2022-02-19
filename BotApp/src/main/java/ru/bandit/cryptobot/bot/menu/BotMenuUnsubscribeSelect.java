@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.bandit.cryptobot.entities.MailingListEntity;
-import ru.bandit.cryptobot.repositories.ActiveChatsRepository;
-import ru.bandit.cryptobot.repositories.MailingListRepository;
+import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.repositories.UserTriggersRepository;
+import ru.bandit.cryptobot.repositories.UsersRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +15,10 @@ import java.util.List;
 public class BotMenuUnsubscribeSelect implements MenuItem {
 
     @Autowired
-    MailingListRepository mailingListRepository;
+    UserTriggersRepository userTriggersRepository;
 
     @Autowired
-    ActiveChatsRepository activeChatsRepository;
+    UsersRepository usersRepository;
 
     @Override
     public String getText(Long userId, List<String> param) {
@@ -28,15 +28,23 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        List<MailingListEntity> subscriptionsList = mailingListRepository.findByChat(activeChatsRepository.findByChatName(userId));
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersRepository.findByChatId(userId));
 
         List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
 
-        for (MailingListEntity subscription : subscriptionsList) {
+        for (UserTriggerEntity subscription : subscriptionsList) {
 
-            //FIXME button name is not fine
-            InlineKeyboardButton button = new InlineKeyboardButton(subscription.getCurrency());
-            button.setCallbackData(MenuItemsEnum.UNSUBSCRIBE.toString() + '/' + subscription.getCurrency());
+            //FIXME button name is not fine for simple triggers
+            //№ - XXX/YYY/Тип триггера/Период/Искомое значение
+            InlineKeyboardButton button = new InlineKeyboardButton(
+                    String.format("№%d - %s/%s - %s - %d",
+                            subscription.getId(),
+                            subscription.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                            subscription.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                            subscription.getTriggerType().getTriggerName(),
+                            subscription.getTargetValue()));
+
+            button.setCallbackData(MenuItemsEnum.UNSUBSCRIBE.toString() + '/' + subscription.getId().toString());
 
             List<InlineKeyboardButton> row = List.of(button);
 

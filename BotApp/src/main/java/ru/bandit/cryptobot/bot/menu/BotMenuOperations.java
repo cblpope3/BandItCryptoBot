@@ -17,9 +17,9 @@ public class BotMenuOperations implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Новая операция");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("Удалить");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Мои подписки");
+        InlineKeyboardButton button1 = new InlineKeyboardButton("Подписаться");
+        InlineKeyboardButton button2 = new InlineKeyboardButton("Отписаться");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("Список");
 
         button1.setCallbackData(MenuItemsEnum.SELECT_1_CUR.toString());
         button2.setCallbackData(MenuItemsEnum.UNSUBSCRIBE_SELECT.toString());

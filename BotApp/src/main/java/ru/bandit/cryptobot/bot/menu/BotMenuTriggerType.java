@@ -20,7 +20,7 @@ public class BotMenuTriggerType implements MenuItem {
         InlineKeyboardButton button1 = new InlineKeyboardButton("Текущий курс");
         InlineKeyboardButton button2 = new InlineKeyboardButton("Рассылка");
         InlineKeyboardButton button3 = new InlineKeyboardButton("Среднее");
-        InlineKeyboardButton button4 = new InlineKeyboardButton("Уведомление");
+        InlineKeyboardButton button4 = new InlineKeyboardButton("Будильник");
 
         button1.setCallbackData(MenuItemsEnum.ONCE + "/" + String.join("/", param));
         button2.setCallbackData(MenuItemsEnum.SIMPLE + "/" + String.join("/", param));
@@ -30,13 +30,14 @@ public class BotMenuTriggerType implements MenuItem {
         List<InlineKeyboardButton> keyboardRow1 = List.of(button1);
         List<InlineKeyboardButton> keyboardRow2 = List.of(button2);
         List<InlineKeyboardButton> keyboardRow3 = List.of(button3);
+        List<InlineKeyboardButton> keyboardRow4 = List.of(button4);
 
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
         buttonBack.setCallbackData(MenuItemsEnum.OPERATIONS.toString());
 
         List<InlineKeyboardButton> lastRow = List.of(buttonBack);
 
-        List<List<InlineKeyboardButton>> buttonsGrid = List.of(keyboardRow1, keyboardRow2, keyboardRow3, lastRow);
+        List<List<InlineKeyboardButton>> buttonsGrid = List.of(keyboardRow1, keyboardRow2, keyboardRow3, keyboardRow4, lastRow);
 
         return new InlineKeyboardMarkup(buttonsGrid);
     }

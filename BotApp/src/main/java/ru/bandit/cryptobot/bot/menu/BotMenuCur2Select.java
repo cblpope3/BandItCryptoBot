@@ -1,13 +1,27 @@
 package ru.bandit.cryptobot.bot.menu;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.entities.CurrencyEntity;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
+import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
+import ru.bandit.cryptobot.repositories.CurrencyRepository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 public class BotMenuCur2Select implements MenuItem {
+
+    @Autowired
+    CurrencyPairRepository currencyPairRepository;
+
+    @Autowired
+    CurrencyRepository currencyRepository;
 
     @Override
     public String getText(Long userId, List<String> param) {
@@ -17,42 +31,42 @@ public class BotMenuCur2Select implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        //TODO get this from database
-        //TODO except that have chosen in previous menu
+        //BETTER REFACTOR THIS METHOD. TOO COMPLEX
 
         String prevQuery = param.get(0);
 
-        InlineKeyboardButton button1 = new InlineKeyboardButton("RUB");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("USD");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("EUR");
-        InlineKeyboardButton button4 = new InlineKeyboardButton("BTC");
-        InlineKeyboardButton button5 = new InlineKeyboardButton("ETH");
-        InlineKeyboardButton button6 = new InlineKeyboardButton("USDT");
-        InlineKeyboardButton button7 = new InlineKeyboardButton("BNB");
-        InlineKeyboardButton button8 = new InlineKeyboardButton("XRP");
-        InlineKeyboardButton button9 = new InlineKeyboardButton("ADA");
+        //collecting all available currency pairs with previous entered currency
+        CurrencyEntity prevCurrency = currencyRepository.findByCurrencyNameUser(param.get(0));
+        List<CurrencyPairEntity> currencyPairEntityList = new ArrayList<>();
+        currencyPairEntityList.addAll(currencyPairRepository.findByCurrency1(prevCurrency));
+        currencyPairEntityList.addAll(currencyPairRepository.findByCurrency2(prevCurrency));
 
-        button1.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/RUB");
-        button2.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/USD");
-        button3.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/EUR");
-        button4.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/BTC");
-        button5.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/ETH");
-        button6.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/USDT");
-        button7.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/BNB");
-        button8.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/XRP");
-        button9.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/ADA");
+        //filtering all available currencies that can be combined with previous entered currency
+        List<String> currencyLabelsList = currencyPairEntityList.stream()
+                .flatMap(a -> Stream.of(a.getCurrency1(), a.getCurrency2()))
+                .map(CurrencyEntity::getCurrencyNameUser)
+                .filter(currencyNameUser -> !currencyNameUser.equals(prevQuery))
+                .collect(Collectors.toList());
 
+        //generating buttons list
+        List<InlineKeyboardButton> currencyButtonList = new ArrayList<>();
+        for (String buttonLabel : currencyLabelsList) {
+            InlineKeyboardButton button = new InlineKeyboardButton(buttonLabel);
+            button.setCallbackData(MenuItemsEnum.TRIGGER_TYPE + "/" + prevQuery + "/" + buttonLabel);
+            currencyButtonList.add(button);
+        }
 
-        List<InlineKeyboardButton> keyboardRow1 = List.of(button1, button2, button3);
-        List<InlineKeyboardButton> keyboardRow2 = List.of(button4, button5, button6);
-        List<InlineKeyboardButton> keyboardRow3 = List.of(button7, button8, button9);
-
-        InlineKeyboardButton buttonBack = new InlineKeyboardButton("Главное меню");
-        buttonBack.setCallbackData(MenuItemsEnum.MAIN.toString());
-
-        List<InlineKeyboardButton> lastRow = List.of(buttonBack);
-
-        List<List<InlineKeyboardButton>> buttonsGrid = List.of(keyboardRow1, keyboardRow2, keyboardRow3, lastRow);
+        //generating keyboard grid
+        List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
+        while (true) {
+            if (currencyButtonList.size() > 2) buttonsGrid.add(List.of(currencyButtonList.remove(0),
+                    currencyButtonList.remove(0),
+                    currencyButtonList.remove(0)));
+            else {
+                buttonsGrid.add(currencyButtonList);
+                break;
+            }
+        }
 
         return new InlineKeyboardMarkup(buttonsGrid);
     }
