@@ -4,14 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import ru.bandit.cryptobot.bot.menu.*;
 import ru.bandit.cryptobot.services.BotService;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -22,7 +17,7 @@ public class BotRequestProcessor {
     @Autowired
     BotMenuMain menuMain;
     @Autowired
-    BotMenuSubscriptions menuSubscriptions;
+    BotMenuOperations menuSubscriptions;
     @Autowired
     BotMenuCur1Select menuCryptocurrencySelect;
     @Autowired
@@ -43,116 +38,152 @@ public class BotRequestProcessor {
     BotMenuDirection menuDirection;
     @Autowired
     BotMenuValue menuValue;
+    @Autowired
+    BotMenuBack menuBack;
 
     @Autowired
     BotService botService;
 
-    public String processTextRequest(Message message) {
-        long chatId = message.getChatId();
+    public BotResponse generateResponse(List<String> query, Long chatId) {
 
-        List<String> separatedMessage = Arrays.asList(message.getText().split(" "));
+        MenuItemsEnum requestedMenuItem;
+        String command = query.remove(0);
 
-        logger.trace("Received command list: {}", separatedMessage);
-        int commandStatus;
-        switch (separatedMessage.get(0)) {
-            case "/start":
-                logger.debug("Got start command from {}", chatId);
-                commandStatus = botService.appendChatNewcomer(chatId);
-                if (commandStatus == BotService.OK) return "Привет! Я бот от команды BandIt! Для помощи напиши /help";
-                else if (commandStatus == BotService.ALREADY_IN_CHAT) return "Ещё раз привет!";
-                break;
-            case "/stop":
-                logger.debug("Got stop command from {}", chatId);
-                commandStatus = botService.removeChatMember(chatId);
-                if (commandStatus == BotService.OK) return "До встречи! Пиши /start, если соскучишься...";
-                else if (commandStatus == BotService.NOT_FOUND_CHAT) return "Уже прощались.";
-                break;
-            case "/help":
-                logger.debug("Got help command from {}", chatId);
-                return "Чтобы подписаться на рассылку курса валюты напиши \"/subscribe BTCRUB\" \n" +
-                        "Чтобы отписаться, напиши \"/unsubscribe BTCRUB\"\n" +
-                        "Поддерживаемые валюты: BTCRUB, ETHRUB, USDTRUB, BNBRUB, XRPRUB, ADARUB\n" +
-                        "Чтобы прекратить общение, напиши /stop";
-            case "/subscribe":
-                logger.debug("Got subscribe to {} command from {}", separatedMessage.get(0), chatId);
-                if (separatedMessage.size() == 1) return "Повторите с указанием валюты.";
-                commandStatus = botService.subscribe(chatId, separatedMessage.get(1));
-                if (commandStatus == BotService.OK) return "Подписались на " + separatedMessage.get(1);
-                else if (commandStatus == BotService.NOT_FOUND_CHAT) return "Сначала наберите команду /start";
-                else if (commandStatus == BotService.ALREADY_SUBSCRIBED) return "Уже подписаны на эту рассылку";
-                else if (commandStatus == BotService.NOT_FOUND_CURRENCY)
-                    return "Такой валюты я не знаю: " + separatedMessage.get(1);
-                break;
-            case "/unsubscribe":
-                logger.debug("Got unsubscribe from {} command from {}", separatedMessage.get(0), chatId);
-                commandStatus = botService.unsubscribe(chatId, separatedMessage.get(1));
-                if (commandStatus == BotService.OK) return "Отписались от рассылки на " + separatedMessage.get(1);
-                else if (commandStatus == BotService.NOT_FOUND_CHAT) return "Сначала наберите команду /start";
-                else if (commandStatus == BotService.NOT_FOUND_SUBSCRIPTION)
-                    return "Вы ещё не подписались на " + separatedMessage.get(1);
-                break;
-            default:
-                return "Неизвестная команда";
+        try {
+            requestedMenuItem = MenuItemsEnum.valueOf(command);
+        } catch (IllegalArgumentException e) {
+            logger.warn("Command {} is not recognized.", command);
+            return new BotResponse(null, "Неизвестная команда. Напишите /help, чтобы увидеть список команд.");
         }
 
-        logger.error("Error in switch-case. Processing message from {} is: {}. \nSeparated message: {}",
-                message.getChatId(), message.getText(), separatedMessage);
-        return "Что-то пошло не так";
-    }
-
-    public EditMessageText processCallbackRequest(CallbackQuery request) {
-        //Some button had been pressed. Processing request:
-
-        if (request.getData() == null) {
-            logger.error("Request is null: {}", request);
-            return null;
-        }
-
-        System.out.println("got new callback request. call_data: " + request.getData());
-
-        //extracting data from request body
-        List<String> requestQueryList = new ArrayList<>(List.of(request.getData().toUpperCase().split("/")));
-        MenuItemsEnum requestedMenuItem = MenuItemsEnum.valueOf(requestQueryList.get(0));
-        requestQueryList.remove(0);
-
-        Long chatId = request.getMessage().getChatId();
-
-        //FIXME remove '= new BotMenuMain()'
-        MenuItem menuItem = new BotMenuMain();
+        short commandStatus;
+        MenuItem menuItem;
 
         //choosing menu item
+        String errorMessage = "Произошла ошибка. Для помощи напишите /help.";
         switch (requestedMenuItem) {
+//===============================================
+// Endpoints first
+//===============================================
+            case ALL_CUR:
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        botService.getAllCurrenciesList().toString());
+            case ONCE:
+                String rates = String.format("%s/%s: %s", query.get(0), query.get(1), botService.getOnce(query.get(0), query.get(1)));
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        rates);
             case STOP:
-                //TODO here is stop handler
-                botService.unsubscribeAll(chatId);
-                menuItem = menuMain;
-                break;
-            case SUBSCRIBE:
-                //TODO here is Subscribe handler
-                botService.subscribe(chatId, String.join("", requestQueryList));
-                menuItem = menuMain;
-                break;
+                logger.debug("Got stop command from {}", chatId);
+                commandStatus = botService.unsubscribeAll(chatId);
+                if (commandStatus == BotService.OK) return new BotResponse(menuBack.getMarkup(null, null),
+                        "Подписки успешно удалены.");
+                else if (commandStatus == BotService.NO_SUBSCRIPTIONS)
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас не было подписок");
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        errorMessage);
+            case SIMPLE:
+                commandStatus = botService.createSimple(chatId, String.join("", query));
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully created new simple trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Успешно подписались на " + String.join("/", query));
+                } else {
+                    logger.error("Error while creating simple trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
             case AVERAGE:
-                //TODO here is average handler
-                break;
-            case TRIGGER:
-                //TODO here is trigger handler
-                break;
+                commandStatus = botService.createAverage(chatId, query);
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully created new average trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Успешно подписались на среднее: " + String.join("/", query));
+                } else {
+                    logger.error("Error while creating average trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
+            case TARGET:
+                commandStatus = botService.createTrigger(chatId, query);
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully created new target trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Успешно создали будильник: " + String.join("/", query));
+                } else {
+                    logger.error("Error while creating target trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
             case UNSUBSCRIBE:
-                //TODO here is unsubscribe handler
-                botService.unsubscribe(chatId, String.join("", requestQueryList));
-                menuItem = menuMain;
-                break;
+                logger.trace("Got unsubscribe from command from {}", chatId);
+                commandStatus = botService.unsubscribe(chatId, String.join("", query));
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully unsubscribed");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Отписались от рассылки на " + String.join("/", query));
+                } else if (commandStatus == BotService.NOT_FOUND_CHAT) {
+                    logger.warn("not found user");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Сначала наберите команду /start");
+                } else if (commandStatus == BotService.NOT_FOUND_SUBSCRIPTION) {
+                    logger.trace("subscription not found");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас нет такой подписки.");
+                } else {
+                    logger.error("Error while unsubscribing");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
             case PAUSE:
-                //TODO here is pause handler
-                break;
+                logger.trace("Got pause command from {}", chatId);
+                commandStatus = botService.pauseUser(chatId);
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully paused");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Ваши рассылки на паузе.");
+                } else {
+                    logger.error("Error while trying to pause");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
             case RESUME:
-                //TODO here is resume handler
-                break;
+                logger.trace("Got resume command from {}", chatId);
+                commandStatus = botService.resumeUser(chatId);
+                if (commandStatus == BotService.OK) {
+                    logger.trace("successfully resumed");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Ваши рассылки восстановлены!");
+                } else {
+                    logger.error("Error while trying to resume");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
+            case START:
+                //TODO user nickname
+                logger.trace("Got start command from {}", chatId);
+                commandStatus = botService.addNewUser(chatId);
+                if (commandStatus == BotService.OK) {
+                    logger.debug("successfully added new user");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Приветствуем в нашем боте курсов криптовалют, $Ник пользователя. Ознакомьтесь с возможными командами нашего бота");
+                } else if (commandStatus == BotService.ALREADY_IN_CHAT) {
+                    logger.trace("user already exist");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Ещё раз привет, $Ник_пользователя! Для помощи напишите /help.");
+                } else {
+                    logger.error("Error when got /start command.");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            errorMessage);
+                }
+
+//===============================================
+
+//===============================================
             case MAIN:
                 menuItem = menuMain;
                 break;
-            case SUBSCRIPTIONS:
+            case OPERATIONS:
                 menuItem = menuSubscriptions;
                 break;
             case SELECT_1_CUR:
@@ -183,19 +214,15 @@ public class BotRequestProcessor {
                 menuItem = menuStop;
                 break;
             case HELP:
+                logger.trace("Got help command from {}", chatId);
                 menuItem = menuHelp;
                 break;
             default:
-                logger.error("Unknown user request");
-                break;
+                logger.error("Got command that doesn't have handler.");
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        "Произошла ошибка!");
         }
 
-        EditMessageText responseMessage = new EditMessageText();
-
-        responseMessage.setReplyMarkup(menuItem.getMarkup(chatId, requestQueryList));
-        responseMessage.setText(menuItem.getText(chatId, requestQueryList));
-        responseMessage.setChatId(chatId.toString());
-
-        return responseMessage;
+        return new BotResponse(menuItem.getMarkup(chatId, query), menuItem.getText(chatId, query));
     }
 }

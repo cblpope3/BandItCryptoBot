@@ -36,7 +36,7 @@ public class BotMenuCur1Select implements MenuItem {
         List<InlineKeyboardButton> keyboardRow2 = List.of(button4, button5, button6);
 
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
-        buttonBack.setCallbackData(MenuItemsEnum.SUBSCRIPTIONS.toString());
+        buttonBack.setCallbackData(MenuItemsEnum.OPERATIONS.toString());
 
         List<InlineKeyboardButton> lastRow = List.of(buttonBack);
 

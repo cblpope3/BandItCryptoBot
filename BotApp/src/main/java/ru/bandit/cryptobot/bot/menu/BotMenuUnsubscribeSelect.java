@@ -44,7 +44,7 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
         }
 
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
-        buttonBack.setCallbackData(MenuItemsEnum.SUBSCRIPTIONS.toString());
+        buttonBack.setCallbackData(MenuItemsEnum.OPERATIONS.toString());
 
         List<InlineKeyboardButton> lastRow = List.of(buttonBack);
 

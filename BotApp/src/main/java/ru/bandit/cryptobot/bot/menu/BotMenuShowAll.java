@@ -36,7 +36,7 @@ public class BotMenuShowAll implements MenuItem {
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
-        buttonBack.setCallbackData(MenuItemsEnum.SUBSCRIPTIONS.toString());
+        buttonBack.setCallbackData(MenuItemsEnum.OPERATIONS.toString());
 
         List<InlineKeyboardButton> lastRow = List.of(buttonBack);
 

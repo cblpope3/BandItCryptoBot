@@ -7,17 +7,17 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.List;
 
 @Component
-public class BotMenuSubscriptions implements MenuItem {
+public class BotMenuOperations implements MenuItem {
 
     @Override
     public String getText(Long userId, List<String> param) {
-        return "Что хотите сделать с подпиской?";
+        return "Что хотите сделать с валютами?";
     }
 
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        InlineKeyboardButton button1 = new InlineKeyboardButton("Создать");
+        InlineKeyboardButton button1 = new InlineKeyboardButton("Новая операция");
         InlineKeyboardButton button2 = new InlineKeyboardButton("Удалить");
         InlineKeyboardButton button3 = new InlineKeyboardButton("Мои подписки");
 

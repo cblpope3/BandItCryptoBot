@@ -33,7 +33,7 @@ public class BotMenuValue implements MenuItem {
 
         button1.setCallbackData(MenuItemsEnum.VALUE + "/" + currency1 + "/" + currency2 + "/" + triggerType + "/" + nextValue);
         button2.setCallbackData(MenuItemsEnum.VALUE + "/" + currency1 + "/" + currency2 + "/" + triggerType + "/" + prevValue);
-        button3.setCallbackData(MenuItemsEnum.TRIGGER + "/" + String.join("/", param));
+        button3.setCallbackData(MenuItemsEnum.TARGET + "/" + String.join("/", param));
 
         List<InlineKeyboardButton> keyboardRow1 = List.of(button1, button2);
         List<InlineKeyboardButton> keyboardRow2 = List.of(button3);
