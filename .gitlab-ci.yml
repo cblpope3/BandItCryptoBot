@@ -1,0 +1,20 @@
+image: java:8
+
+stages:
+  - build
+  - test
+  - deploy
+
+build:
+  stage: build
+  script: ./mvnw package
+  artifacts:
+    paths:
+      - target/"Название".jar
+
+test:
+  stage: test
+  script: ./
+
+  only:
+  - main
