@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html>
+<title>Test Page</title>
+<th:block th:insert="~{./general_template::headFragment}"></th:block>
+<body>
+
+<!-- Header -->
+<th:block th:insert="~{./general_template::headerFragment}"></th:block>
+
+<div class="w3-row-padding w3-padding-64 w3-container w3-theme">
+    <div class="w3-content">
+        <h1 class="w3-xlarge w3-center">Тестовая страница</h1>
+
+        <h2 th:text="${message}">Hello!</h2>
+
+    </div>
+</div>
+
+<th:block th:insert="~{./general_template::footerFragment}"></th:block>
+</body>
+
+</html>
