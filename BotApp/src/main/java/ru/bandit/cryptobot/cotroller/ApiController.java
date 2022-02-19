@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.bandit.cryptobot.entities.RatesJSONContainer;
+import ru.bandit.cryptobot.data_containers.RatesJSONContainer;
 import ru.bandit.cryptobot.services.RatesService;
 
 @Api(tags = {"Rates"}, value = "Rates", description = "Cryptocurrency rates API")

@@ -3,8 +3,8 @@ package ru.bandit.cryptobot.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.Bot;
+import ru.bandit.cryptobot.data_containers.RatesJSONContainer;
 import ru.bandit.cryptobot.entities.MailingListEntity;
-import ru.bandit.cryptobot.entities.RatesJSONContainer;
 import ru.bandit.cryptobot.repositories.MailingListRepository;
 
 import java.util.List;
@@ -60,7 +60,6 @@ public class RatesService {
         for (MailingListEntity entity : adaRubMailingList) {
             bot.sendDataToSubscribers(entity.getChat().getChatName(), "ADA/RUB: " + newRates.getEthRub().toString());
         }
-
-
     }
+
 }

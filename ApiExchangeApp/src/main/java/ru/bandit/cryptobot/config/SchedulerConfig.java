@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.timers;
+package ru.bandit.cryptobot.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

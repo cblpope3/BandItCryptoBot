@@ -26,4 +26,10 @@ public class MailingListEntity {
 
     @Column(name = "currency", nullable = false)
     private String currency;
+
+    @Override
+    public String toString() {
+        //FIXME this method is used to display subscriptions to user. This must be refactored
+        return currency;
+    }
 }
