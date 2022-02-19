@@ -1,6 +1,6 @@
 spring:
   profiles:
-    include: passwords
+    include: deploy
   datasource:
     driver-class-name: org.postgresql.Driver
     hibernate:

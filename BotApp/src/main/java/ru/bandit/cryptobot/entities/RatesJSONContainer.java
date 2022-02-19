@@ -18,4 +18,16 @@ public class RatesJSONContainer {
     @JsonProperty("ETHRUB")
     private Float ethRub;
 
+    @JsonProperty("USDTRUB")
+    private Float usdTRub;
+
+    @JsonProperty("BNBRUB")
+    private Float bnbRub;
+
+    @JsonProperty("XRPRUB")
+    private Float xrpRub;
+
+    @JsonProperty("ADARUB")
+    private Float adaRub;
+
 }

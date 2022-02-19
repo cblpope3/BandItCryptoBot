@@ -12,4 +12,6 @@ public interface MailingListRepository extends CrudRepository<MailingListEntity,
     List<MailingListEntity> findByCurrency(String currency);
 
     MailingListEntity findByChatAndCurrency(ChatEntity chat, String currency);
+
+    List<MailingListEntity> findByChat(ChatEntity chat);
 }
