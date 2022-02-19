@@ -11,7 +11,6 @@ public enum MenuItemsEnum {
                     TRIGGER_TYPE,
                         ONCE,
                         SIMPLE,
-                        PERIOD,
                             AVERAGE,
                         DIRECTION,
                             VALUE,

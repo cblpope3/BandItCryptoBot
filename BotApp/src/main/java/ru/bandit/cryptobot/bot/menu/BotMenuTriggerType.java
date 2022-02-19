@@ -19,12 +19,12 @@ public class BotMenuTriggerType implements MenuItem {
 
         InlineKeyboardButton button1 = new InlineKeyboardButton("Текущий курс");
         InlineKeyboardButton button2 = new InlineKeyboardButton("Рассылка");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("Среднее");
+        InlineKeyboardButton button3 = new InlineKeyboardButton("Среднее за минуту");
         InlineKeyboardButton button4 = new InlineKeyboardButton("Будильник");
 
         button1.setCallbackData(MenuItemsEnum.ONCE + "/" + String.join("/", param));
         button2.setCallbackData(MenuItemsEnum.SIMPLE + "/" + String.join("/", param));
-        button3.setCallbackData(MenuItemsEnum.PERIOD + "/" + String.join("/", param));
+        button3.setCallbackData(MenuItemsEnum.AVERAGE + "/" + String.join("/", param));
         button4.setCallbackData(MenuItemsEnum.DIRECTION + "/" + String.join("/", param));
 
         List<InlineKeyboardButton> keyboardRow1 = List.of(button1);
