@@ -1,36 +1,126 @@
 databaseChangeLog:
   - logicalFilePath: db/changelog/db.changelog-lesson1.yaml
   - changeSet:
-      id: create_active_chats_table
+      id: create_users_table
       author: nickolay_leonov
       changes:
         - createTable:
-            tableName: active_chats
+            tableName: users
             columns:
               - column:
-                  name: id
+                  name: telegram_userchat_id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: update_interval
+                  type: INTEGER
+              - column:
+                  name: is_paused
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: create_currency_table
+      author: nickolay_leonov
+      changes:
+        - createTable:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  type: VARCHAR(50)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: currency_symbol
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: currency_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_crypto
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: create_currency_pair_table
+      author: nickolay_leonov
+      changes:
+        - createTable:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
                   type: BIGINT
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: chat_name
-                  type: BIGINT
+                  name: currency_1
+                  type: VARCHAR(50)
                   constraints:
+                    foreignKeyName: fk_currency1_id
+                    references: currency(currency_id)
+                    nullable: false
+              - column:
+                  name: currency_2
+                  type: VARCHAR(50)
+                  constraints:
+                    foreignKeyName: fk_currency2_id
+                    references: currency(currency_id)
                     nullable: false
         - createSequence:
             cycle: true
             incrementBy: 1
             schemaName: public
-            sequenceName: users_sequence
+            sequenceName: currency_pair_sequence
             startValue: 1
   - changeSet:
-      id: create_mailing_list_table
+      id: create_trigger_type_table
       author: nickolay_leonov
       changes:
         - createTable:
-            tableName: mailing_list
+            tableName: trigger_type
+            columns:
+              - column:
+                  name: trigger_type_id
+                  type: INTEGER
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: trigger_type_name
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: trigger_type_description
+                  type: VARCHAR(50)
+        - createSequence:
+            cycle: true
+            incrementBy: 1
+            schemaName: public
+            sequenceName: trigger_id_sequence
+            startValue: 1
+  - changeSet:
+      id: create_user_triggers_table
+      author: nickolay_leonov
+      changes:
+        - createTable:
+            tableName: user_triggers
             columns:
               - column:
                   name: id
@@ -40,20 +130,234 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: chat_id
+                  name: user_id
                   type: BIGINT
                   constraints:
-                    foreignKeyName: fk_mail_list_chat
-                    references: active_chats(id)
+                    foreignKeyName: fk_user_id
+                    references: users(telegram_userchat_id)
                     nullable: false
               - column:
-                  name: currency
-                  type: VARCHAR
+                  name: pair_id
+                  type: INTEGER
                   constraints:
+                    foreignKeyName: fk_currency_pair_id
+                    references: currency_pair(pair_id)
                     nullable: false
+              - column:
+                  name: trigger_type_id
+                  type: INTEGER
+                  constraints:
+                    foreignKeyName: fk_trigger_type_id
+                    references: trigger_type(trigger_type_id)
+                    nullable: false
+              - column:
+                  name: period
+                  type: INTEGER
+              - column:
+                  name: trigger_target_value
+                  type: INTEGER
+              - column:
+                  name: last_message
+                  type: DATETIME
+              - column:
+                  name: is_archived
+                  type: BOOLEAN
         - createSequence:
             cycle: true
             incrementBy: 1
             schemaName: public
-            sequenceName: mailing_list_sequence
+            sequenceName: user_trigger_id_sequence
             startValue: 1
+
+  - changeSet:
+      id: fill_tables
+      author: nickolay_leonov
+      comment: "fill tables with test data"
+      changes:
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "BTC"
+              - column:
+                  name: currency_symbol
+                  value: "BTC"
+              - column:
+                  name: currency_name
+                  value: "Bitcoin"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "ETH"
+              - column:
+                  name: currency_symbol
+                  value: "ETH"
+              - column:
+                  name: currency_name
+                  value: "Ethereum"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "USDT"
+              - column:
+                  name: currency_symbol
+                  value: "USDT"
+              - column:
+                  name: currency_name
+                  value: "Tether"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "BNB"
+              - column:
+                  name: currency_symbol
+                  value: "BNB"
+              - column:
+                  name: currency_name
+                  value: "Binance Coin"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "XRP"
+              - column:
+                  name: currency_symbol
+                  value: "XRP"
+              - column:
+                  name: currency_name
+                  value: "Ripple"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "ADA"
+              - column:
+                  name: currency_symbol
+                  value: "ADA"
+              - column:
+                  name: currency_name
+                  value: "Cardano"
+              - column:
+                  name: is_crypto
+                  value: true
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "RUB"
+              - column:
+                  name: currency_symbol
+                  value: "RUB"
+              - column:
+                  name: currency_name
+                  value: "Russian rouble"
+              - column:
+                  name: is_crypto
+                  value: false
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "USD"
+              - column:
+                  name: currency_symbol
+                  value: "USD"
+              - column:
+                  name: currency_name
+                  value: "US Dollar"
+              - column:
+                  name: is_crypto
+                  value: false
+        - insert:
+            tableName: currency
+            columns:
+              - column:
+                  name: currency_id
+                  value: "EUR"
+              - column:
+                  name: currency_symbol
+                  value: "EUR"
+              - column:
+                  name: currency_name
+                  value: "Euro"
+              - column:
+                  name: is_crypto
+                  value: false
+
+
+        - insert:
+            tableName: trigger_type
+            columns:
+              - column:
+                  name: trigger_type_id
+                  value: 1
+              - column:
+                  name: trigger_type_name
+                  value: "simple"
+              - column:
+                  name: trigger_type_description
+                  value: "Periodical mailing currency rates"
+        - insert:
+            tableName: trigger_type
+            columns:
+              - column:
+                  name: trigger_type_id
+                  value: 2
+              - column:
+                  name: trigger_type_name
+                  value: "average"
+              - column:
+                  name: trigger_type_description
+                  value: "Periodical mailing averages"
+        - insert:
+            tableName: trigger_type
+            columns:
+              - column:
+                  name: trigger_type_id
+                  value: 3
+              - column:
+                  name: trigger_type_name
+                  value: "target"
+              - column:
+                  name: trigger_type_description
+                  value: "Sending alarm when target value reached"
+
+
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 1
+              - column:
+                  name: currency_1
+                  value: "BTC"
+              - column:
+                  name: currency_2
+                  value: "RUB"

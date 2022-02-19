@@ -10,7 +10,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.bandit.cryptobot.repositories.ActiveChatsRepository;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,9 +26,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Autowired
     BotRequestProcessor requestProcessor;
-
-    @Autowired
-    ActiveChatsRepository activeChatsRepository;
 
     Bot(@Value("${bot.token}") String token, @Value("${bot.username}") String username) {
         this.token = token;
@@ -53,7 +49,8 @@ public class Bot extends TelegramLongPollingBot {
 
             //get markup and message text
             BotResponse responseTemplate = requestProcessor.generateResponse(processQuery(incomingRequest),
-                    update.getMessage().getChatId());
+                    update.getMessage().getChatId(),
+                    update.getMessage().getFrom().getUserName());
 
             replyMessage.setChatId(update.getMessage().getChatId().toString());
             replyMessage.setReplyMarkup(responseTemplate.getKeyboard());
@@ -75,7 +72,8 @@ public class Bot extends TelegramLongPollingBot {
 
             //get markup and message text
             BotResponse responseTemplate = requestProcessor.generateResponse(processQuery(incomingRequest),
-                    update.getCallbackQuery().getMessage().getChatId());
+                    update.getCallbackQuery().getMessage().getChatId(),
+                    update.getCallbackQuery().getMessage().getFrom().getUserName());
 
             //preparing response
             replyMessage.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());

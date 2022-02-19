@@ -4,10 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.bandit.cryptobot.entities.ChatEntity;
-import ru.bandit.cryptobot.entities.MailingListEntity;
-import ru.bandit.cryptobot.repositories.ActiveChatsRepository;
-import ru.bandit.cryptobot.repositories.MailingListRepository;
+import ru.bandit.cryptobot.entities.UserEntity;
+import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.repositories.UserTriggersRepository;
+import ru.bandit.cryptobot.repositories.UsersRepository;
 
 import java.util.List;
 
@@ -15,17 +15,17 @@ import java.util.List;
 public class BotMenuShowAll implements MenuItem {
 
     @Autowired
-    MailingListRepository mailingListRepository;
+    UserTriggersRepository userTriggersRepository;
 
     @Autowired
-    ActiveChatsRepository activeChatsRepository;
+    UsersRepository usersRepository;
 
     @Override
     public String getText(Long userId, List<String> param) {
 
-        ChatEntity chat = activeChatsRepository.findByChatName(userId);
+        UserEntity user = usersRepository.findByChatId(userId);
 
-        List<MailingListEntity> subscriptionsList = mailingListRepository.findByChat(chat);
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(user);
 
         if (subscriptionsList.isEmpty()) return "У вас нет подписок";
         //FIXME output is not fine
