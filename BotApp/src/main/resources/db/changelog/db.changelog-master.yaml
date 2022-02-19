@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - logicalFilePath: db/changelog/db.changelog-lesson1.yaml
+  - changeSet:
+      id: create_active_chats_table
+      author: nickolay_leonov
+      changes:
+        - createTable:
+            tableName: active_chats
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chat_name
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - createSequence:
+            cycle: true
+            incrementBy: 1
+            schemaName: public
+            sequenceName: users_sequence
+            startValue: 1
+  - changeSet:
+      id: create_mailing_list_table
+      author: nickolay_leonov
+      changes:
+        - createTable:
+            tableName: mailing_list
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: chat_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_mail_list_chat
+                    references: active_chats(id)
+                    nullable: false
+              - column:
+                  name: currency
+                  type: VARCHAR
+                  constraints:
+                    nullable: false
+        - createSequence:
+            cycle: true
+            incrementBy: 1
+            schemaName: public
+            sequenceName: mailing_list_sequence
+            startValue: 1
