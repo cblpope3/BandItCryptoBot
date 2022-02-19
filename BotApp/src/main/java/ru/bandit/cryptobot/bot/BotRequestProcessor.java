@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.*;
+import ru.bandit.cryptobot.entities.MetricsEntity;
+import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.BotService;
 
 import java.util.List;
@@ -36,6 +38,9 @@ public class BotRequestProcessor {
     BotMenuValue menuValue;
     @Autowired
     BotMenuBack menuBack;
+
+    @Autowired
+    MetricsRepository metricsRepository;
 
     @Autowired
     BotService botService;
@@ -283,6 +288,10 @@ public class BotRequestProcessor {
                 menuItem = menuStop;
                 break;
             case HELP:
+                MetricsEntity metrics = metricsRepository.findById(1L);
+                if (metrics == null) metrics = new MetricsEntity();
+                metrics.setHelpCount(metrics.getHelpCount() + 1);
+                metricsRepository.save(metrics);
                 logger.trace("Got help command from {}", chatId);
                 menuItem = menuHelp;
                 break;
