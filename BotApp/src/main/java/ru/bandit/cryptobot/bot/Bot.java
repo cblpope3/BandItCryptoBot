@@ -1,20 +1,27 @@
-package ru.bandit.cryptobot;
+package ru.bandit.cryptobot.bot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.bandit.cryptobot.entities.ChatEntity;
 import ru.bandit.cryptobot.repositories.ActiveChatsRepository;
 
 @Component
 public class Bot extends TelegramLongPollingBot {
 
+    Logger logger = LoggerFactory.getLogger(Bot.class);
+
     private final String token;
     private final String username;
+
+    @Autowired
+    BotRequestProcessor requestProcessor;
 
     @Autowired
     ActiveChatsRepository activeChatsRepository;
@@ -27,39 +34,23 @@ public class Bot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
+            Message message = update.getMessage();
 
-            System.out.println("new bot query: " + update.getMessage().getText());
-            System.out.println("query came from: " + update.getMessage().getChatId().toString());
-
-            System.out.println("adding new user to repository.");
-            ChatEntity newChat = new ChatEntity();
-            newChat.setChatName(update.getMessage().getChatId());
-            activeChatsRepository.save(newChat);
-            System.out.println("chats in database: ");
-            for (ChatEntity chat : activeChatsRepository.findAll()) {
-                System.out.println(chat.toString());
-            }
-
-            SendMessage message = new SendMessage();
-            message.setChatId(update.getMessage().getChatId().toString());
-            message.setText(update.getMessage().getText());
-            try {
-                execute(message);
-            } catch (TelegramApiException e) {
-                e.printStackTrace();
-            }
+            logger.debug("Got message from {}: {}", message.getChatId(), message.getText());
+            sendMessage(message.getChatId(), requestProcessor.processRequest(message));
         }
     }
 
-    public void sendMessageToMe(String newRates) {
-        SendMessage message = new SendMessage();
+    public void sendDataToSubscribers(Long chatName, String data) {
+        sendMessage(chatName, data);
+    }
 
-        message.setChatId("637280094");
-        message.setText(newRates);
-
+    private void sendMessage(Long chatName, String message) {
+        SendMessage sendingMessage = new SendMessage(chatName.toString(), message);
         try {
-            execute(message);
+            execute(sendingMessage);
         } catch (TelegramApiException e) {
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
     }
