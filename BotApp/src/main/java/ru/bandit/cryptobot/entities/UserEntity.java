@@ -28,4 +28,10 @@ public class UserEntity {
 
     @Column(name = "is_paused", nullable = false)
     private boolean isPaused;
+    
+    @Column(name = "registration_date")
+    private Long registrationDate;
+
+    @Column(name = "start_count")
+    private Long startCount;
 }
