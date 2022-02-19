@@ -43,6 +43,9 @@ public class BotService {
     @Autowired
     CurrencyPairRepository currencyPairRepository;
 
+    @Autowired
+    TriggersService triggersService;
+
     public short addNewUser(long chatId, String username) {
         UserEntity newChat = usersRepository.findByChatId(chatId);
 
@@ -71,6 +74,10 @@ public class BotService {
             logger.warn("User {} trying to delete foreign subscription.", chatId);
             return NOT_FOUND_SUBSCRIPTION;
         } else {
+            if (userTrigger.getTriggerType().getTriggerName().equals("target-up") ||
+                    userTrigger.getTriggerType().getTriggerName().equals("target-down")) {
+                triggersService.deleteTargetTrigger(userTrigger.getId());
+            }
             userTriggersRepository.delete(userTrigger);
             logger.trace("Trigger #{} deleted successfully.", triggerId);
             return OK;
@@ -91,6 +98,12 @@ public class BotService {
             logger.debug("Subscriptions for user {} not found.", chatId);
             return NO_SUBSCRIPTIONS;
         } else {
+            for (UserTriggerEntity triggerEntity : foundSubscriptions) {
+                if (triggerEntity.getTriggerType().getTriggerName().equals("target-up") ||
+                        triggerEntity.getTriggerType().getTriggerName().equals("target-down")) {
+                    triggersService.deleteTargetTrigger(triggerEntity.getId());
+                }
+            }
             userTriggersRepository.deleteAll(foundSubscriptions);
             logger.debug("User {} unsubscribed from all subscriptions successfully.", chatId);
             return OK;
@@ -202,7 +215,7 @@ public class BotService {
         //todo check if this subscription is already in database
 
         userTriggersRepository.save(userTrigger);
-
+        triggersService.createTargetTrigger(userTrigger);
         return OK;
     }
 
