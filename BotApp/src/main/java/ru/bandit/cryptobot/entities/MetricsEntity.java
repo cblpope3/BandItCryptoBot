@@ -29,6 +29,6 @@ public class MetricsEntity {
     @Column(name = "interactive_command_count", nullable = false)
     Long interactiveCommandCount;
 
-    @Column(name = "donate_count", nullable = false)
+    @Column(name = "donate_command_count", nullable = false)
     Long donateCount;
 }

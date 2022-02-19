@@ -11,7 +11,9 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.StreamService;
 
 import java.util.Arrays;
@@ -32,6 +34,9 @@ public class Bot extends TelegramLongPollingBot {
     @Autowired
     StreamService streamService;
 
+    @Autowired
+    MetricsRepository metricsRepository;
+
     Bot(@Value("${bot.token}") String token, @Value("${bot.username}") String username) {
         this.token = token;
         this.username = username;
@@ -48,6 +53,11 @@ public class Bot extends TelegramLongPollingBot {
             //validating incoming request
             String incomingRequest = update.getMessage().getText().toUpperCase();
             if (!incomingRequest.matches("(/)[A-Z0-9_/]+")) {
+
+                MetricsEntity metrics = metricsRepository.findById(1L);
+                if (metrics == null) metrics = new MetricsEntity();
+                metrics.setTextCommandCount(metrics.getTextCommandCount());
+                metricsRepository.save(metrics);
                 logger.debug("Ignoring request because it is not a command: {}", incomingRequest);
 
                 replyMessage.setChatId(update.getMessage().getChatId().toString());
@@ -80,6 +90,12 @@ public class Bot extends TelegramLongPollingBot {
             //received button press
             logger.trace("Got button press from {}: {}", update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getData());
             EditMessageText replyMessage = new EditMessageText();
+
+            //calculating metrics
+            MetricsEntity metrics = metricsRepository.findById(1L);
+            if (metrics == null) metrics = new MetricsEntity();
+            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount());
+            metricsRepository.save(metrics);
 
             //preparing incoming request
             String incomingRequest = update.getCallbackQuery().getData().toUpperCase();

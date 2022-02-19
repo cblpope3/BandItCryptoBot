@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.entities.*;
 import ru.bandit.cryptobot.repositories.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,10 +55,19 @@ public class BotService {
             newChat.setChatId(chatId);
             newChat.setChatName(username);
             newChat.setPaused(false);
+            newChat.setStartCount(1L);
+
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            newChat.setRegistrationDate(timestamp);
             usersRepository.save(newChat);
             logger.debug("Successfully subscribed user {}.", chatId);
             return OK;
         } else {
+            //updating number of /start command counter
+            if (newChat.getStartCount() == null) newChat.setStartCount(1L);
+            else newChat.setStartCount(newChat.getStartCount() + 1);
+            usersRepository.save(newChat);
+
             logger.trace("User {} already in chat.", chatId);
             return ALREADY_IN_CHAT;
         }

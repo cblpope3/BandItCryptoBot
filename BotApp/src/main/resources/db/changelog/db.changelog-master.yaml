@@ -224,6 +224,24 @@ databaseChangeLog:
       comment: "fill tables with test data"
       changes:
         - insert:
+            tableName: metrics
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: help_count
+                  value: 0
+              - column:
+                  name: text_command_count
+                  value: 0
+              - column:
+                  name: interactive_command_count
+                  value: 0
+              - column:
+                  name: donate_command_count
+                  value: 0
+        - insert:
             tableName: currency
             columns:
               - column:

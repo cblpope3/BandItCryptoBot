@@ -6,6 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "users")
@@ -28,9 +29,9 @@ public class UserEntity {
 
     @Column(name = "is_paused", nullable = false)
     private boolean isPaused;
-    
+
     @Column(name = "registration_date")
-    private Long registrationDate;
+    private Timestamp registrationDate;
 
     @Column(name = "start_count")
     private Long startCount;
