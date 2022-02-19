@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.entities;
+package ru.bandit.cryptobot.data_containers;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,5 +29,4 @@ public class RatesJSONContainer {
 
     @JsonProperty("ADARUB")
     private Float adaRub;
-
 }

@@ -23,6 +23,7 @@ public class BotAppService {
 
         response = restTemplate.postForObject(botAppCurrencyUrl + "rates", newRates, String.class);
 
+        //TODO specify response status
         logger.debug("Rates have been sent to Bot App. Response is: {}", response);
     }
 
