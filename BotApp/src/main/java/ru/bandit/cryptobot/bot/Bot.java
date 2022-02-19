@@ -43,7 +43,16 @@ public class Bot extends TelegramLongPollingBot {
             //validating incoming request
             String incomingRequest = update.getMessage().getText().toUpperCase();
             if (!incomingRequest.matches("(/)[A-Z0-9_/]+")) {
-                logger.warn("Ignoring request because it is not a command: {}", incomingRequest);
+                logger.debug("Ignoring request because it is not a command: {}", incomingRequest);
+
+                replyMessage.setChatId(update.getMessage().getChatId().toString());
+                replyMessage.setText("В команде есть неподдерживаемые символы. Напишите /help для вызова списка возможных команд.");
+
+                try {
+                    execute(replyMessage);
+                } catch (TelegramApiException e) {
+                    logger.error("Error while trying to send new message: {}", e.getMessage());
+                }
                 return;
             }
 

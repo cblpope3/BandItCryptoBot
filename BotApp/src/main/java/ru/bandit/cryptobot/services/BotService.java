@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.entities.*;
 import ru.bandit.cryptobot.repositories.*;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,6 +21,8 @@ public class BotService {
     public static final short ALREADY_SUBSCRIBED = 5;
     public static final short NOT_FOUND_CURRENCY = 6;
     public static final short NO_SUBSCRIPTIONS = 7;
+    public static final short NOT_FOUND_TRIGGER_TYPE = 8;
+    public static final short NOT_VALID_PARAMETER = 9;
 
     private static final String USER_NOT_FOUND_MESSAGE = "User {} not found";
 
@@ -58,12 +60,15 @@ public class BotService {
         }
     }
 
-    public short unsubscribe(Long triggerId) {
+    public short unsubscribe(Long chatId, Long triggerId) {
         logger.trace("Trying to remove trigger #{}", triggerId);
 
         UserTriggerEntity userTrigger = userTriggersRepository.findById(triggerId);
         if (userTrigger == null) {
             logger.trace("Trigger #{} doesn't exist", triggerId);
+            return NOT_FOUND_SUBSCRIPTION;
+        } else if (!userTrigger.getUser().getChatId().equals(chatId)) {
+            logger.warn("User {} trying to delete foreign subscription.", chatId);
             return NOT_FOUND_SUBSCRIPTION;
         } else {
             userTriggersRepository.delete(userTrigger);
@@ -82,9 +87,9 @@ public class BotService {
 
         List<UserTriggerEntity> foundSubscriptions = userTriggersRepository.findByUser(user);
 
-        if (foundSubscriptions == null) {
+        if (foundSubscriptions == null || foundSubscriptions.isEmpty()) {
             logger.debug("Subscriptions for user {} not found.", chatId);
-            return NOT_FOUND_SUBSCRIPTION;
+            return NO_SUBSCRIPTIONS;
         } else {
             userTriggersRepository.deleteAll(foundSubscriptions);
             logger.debug("User {} unsubscribed from all subscriptions successfully.", chatId);
@@ -118,51 +123,83 @@ public class BotService {
         }
     }
 
-    public List<String> getAllSubscriptions(long chatId) {
+    public String getAllSubscriptions(long chatId) {
         UserEntity user = usersRepository.findByChatId(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
-            return Collections.emptyList();
+            return "";
         } else {
             List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(user);
             if (subscriptionsList == null) {
                 logger.debug("Not found any triggers for user {}.", chatId);
-                return Collections.emptyList();
+                return "";
             } else {
                 logger.trace("Returned subscriptions of user {}", chatId);
-                //FIXME work on this stream
                 return subscriptionsList.stream()
-                        .map(a -> a.toString())
-                        .collect(Collectors.toList());
+                        //FIXME subscription name is not fine for simple triggers
+                        .map(a -> String.format("№%d - %s/%s - %s - %d",
+                                a.getId(),
+                                a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                                a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                                a.getTriggerType().getTriggerName(),
+                                a.getTargetValue()))
+                        .collect(Collectors.joining("\n"));
             }
         }
     }
 
     public short createTarget(long chatId, List<String> params) {
+
+        if (params.size() < 4) {
+            logger.warn("not enough parameters");
+            return NOT_VALID_PARAMETER;
+        } else if (!params.get(3).matches("[0-9]+")) {
+            logger.warn("average period is not integer");
+            return NOT_VALID_PARAMETER;
+        }
+
         UserEntity user = usersRepository.findByChatId(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;
         }
 
-        //toDO implement params list check
-        //todo what happens if data not found in repo?
         CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
         CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        if (currency1 == null || currency2 == null) {
+            logger.trace("Currency not found in db.");
+            return NOT_FOUND_CURRENCY;
+        }
 
-        CurrencyPairEntity currencyPair = currencyPairRepository.findByCurrency1AndCurrency2(currency1, currency2);
+        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        if (currencyPair == null) {
+            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
+            return NOT_FOUND_CURRENCY;
+        }
 
-        //todo deal with trigger names
-        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("target");
+        TriggerTypeEntity triggerType;
+        String triggerTypeName = params.remove(0);
+        if (triggerTypeName.equals("UP")) triggerType = triggerTypeRepository.findByTriggerName("target-up");
+        else if (triggerTypeName.equals("DOWN")) triggerType = triggerTypeRepository.findByTriggerName("target-down");
+        else {
+            logger.warn("trigger type not recognized");
+            return NOT_VALID_PARAMETER;
+        }
+        if (triggerType == null) {
+            logger.error("Not found target trigger in database.");
+            return NOT_FOUND_TRIGGER_TYPE;
+        }
+
+        //fixme target value is not in %
+        Integer targetVal = Integer.parseInt(params.remove(0));
 
         UserTriggerEntity userTrigger = new UserTriggerEntity();
         userTrigger.setUser(user);
-
         userTrigger.setCurrencyPair(currencyPair);
-
         userTrigger.setTriggerType(triggerType);
+        userTrigger.setTargetValue(targetVal);
 
-        userTrigger.setTargetValue(Integer.parseInt(params.remove(0)));
+        //todo check if this subscription is already in database
 
         userTriggersRepository.save(userTrigger);
 
@@ -170,36 +207,94 @@ public class BotService {
     }
 
     public short createAverage(long chatId, List<String> params) {
-        //todo implement this
-        return OK;
-    }
 
-    public short createSimple(long chatId, List<String> params) {
-        //todo refactor this
+        if (params.size() < 3) {
+            logger.warn("not enough parameters");
+            return NOT_VALID_PARAMETER;
+        } else if (!params.get(2).matches("[0-9]+")) {
+            logger.warn("average period is not integer");
+            return NOT_VALID_PARAMETER;
+        }
+
         UserEntity user = usersRepository.findByChatId(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;
         }
 
-        //toDO implement params list check
-        //todo what happens if data not found in repo?
         CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
         CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        if (currency1 == null || currency2 == null) {
+            logger.trace("Currency not found in db.");
+            return NOT_FOUND_CURRENCY;
+        }
 
-        CurrencyPairEntity currencyPair = currencyPairRepository.findByCurrency1AndCurrency2(currency1, currency2);
+        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        if (currencyPair == null) {
+            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
+            return NOT_FOUND_CURRENCY;
+        }
 
-        //todo deal with trigger names
-        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("simple");
+        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("average");
+        if (triggerType == null) {
+            logger.error("Not found average trigger in database.");
+            return NOT_FOUND_TRIGGER_TYPE;
+        }
+
+        Integer period = Integer.parseInt(params.remove(0));
 
         UserTriggerEntity userTrigger = new UserTriggerEntity();
         userTrigger.setUser(user);
-
         userTrigger.setCurrencyPair(currencyPair);
+        userTrigger.setTriggerType(triggerType);
+        userTrigger.setTargetValue(period);
 
+        //todo check if this subscription is already in database
+
+        userTriggersRepository.save(userTrigger);
+
+        return OK;
+    }
+
+    public short createSimple(long chatId, List<String> params) {
+
+        if (params.size() < 2) {
+            logger.warn("not enough parameters");
+            return NOT_VALID_PARAMETER;
+        }
+
+        //todo add user if not already in database
+        UserEntity user = usersRepository.findByChatId(chatId);
+        if (user == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+            return NOT_FOUND_USER;
+        }
+
+        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        if (currency1 == null || currency2 == null) {
+            logger.trace("Currency not found in db.");
+            return NOT_FOUND_CURRENCY;
+        }
+
+        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        if (currencyPair == null) {
+            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
+            return NOT_FOUND_CURRENCY;
+        }
+
+        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("simple");
+        if (triggerType == null) {
+            logger.error("Not found simple trigger in database");
+            return NOT_FOUND_TRIGGER_TYPE;
+        }
+
+        UserTriggerEntity userTrigger = new UserTriggerEntity();
+        userTrigger.setUser(user);
+        userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
 
-        userTrigger.setTargetValue(Integer.parseInt(params.remove(0)));
+        //todo check if this subscription is already in database
 
         userTriggersRepository.save(userTrigger);
 
@@ -211,10 +306,27 @@ public class BotService {
         return "some currency rates";
     }
 
-    public List<String> getAllCurrenciesList() {
+    public String getAllCurrenciesList() {
 
         List<CurrencyEntity> allCurrenciesList = currencyRepository.findAll();
-        //todo refactor this stream
-        return allCurrenciesList.stream().map(CurrencyEntity::toString).collect(Collectors.toList());
+
+        return allCurrenciesList.stream()
+                .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
+                .collect(Collectors.joining("\n"));
+    }
+
+    private CurrencyPairEntity getCorrectPairFromCurrencies(CurrencyEntity currency1, CurrencyEntity currency2) {
+        //get all pairs with currency1
+        List<CurrencyPairEntity> pairsWithCur1 = new ArrayList<>();
+        pairsWithCur1.addAll(currencyPairRepository.findByCurrency1(currency1));
+        pairsWithCur1.addAll(currencyPairRepository.findByCurrency2(currency1));
+
+        //check found pairs if they contain currency2
+        for (CurrencyPairEntity currencyPair : pairsWithCur1) {
+            if (currencyPair.getCurrency1().getCurrencyNameUser().equals(currency2.getCurrencyNameUser()) ||
+                    currencyPair.getCurrency2().getCurrencyNameUser().equals(currency2.getCurrencyNameUser()))
+                return currencyPair;
+        }
+        return null;
     }
 }

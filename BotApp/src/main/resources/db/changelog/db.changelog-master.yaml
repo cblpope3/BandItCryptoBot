@@ -279,21 +279,21 @@ databaseChangeLog:
               - column:
                   name: is_crypto
                   value: false
-        - insert:
-            tableName: currency
-            columns:
-              - column:
-                  name: currency_id
-                  value: "USD"
-              - column:
-                  name: currency_symbol
-                  value: "USD"
-              - column:
-                  name: currency_name
-                  value: "US Dollar"
-              - column:
-                  name: is_crypto
-                  value: false
+#        - insert:
+#            tableName: currency
+#            columns:
+#              - column:
+#                  name: currency_id
+#                  value: "USD"
+#              - column:
+#                  name: currency_symbol
+#                  value: "USD"
+#              - column:
+#                  name: currency_name
+#                  value: "US Dollar"
+#              - column:
+#                  name: is_crypto
+#                  value: false
         - insert:
             tableName: currency
             columns:
@@ -343,7 +343,19 @@ databaseChangeLog:
                   value: 3
               - column:
                   name: trigger_type_name
-                  value: "target"
+                  value: "target-up"
+              - column:
+                  name: trigger_type_description
+                  value: "Sending alarm when target value reached"
+        - insert:
+            tableName: trigger_type
+            columns:
+              - column:
+                  name: trigger_type_id
+                  value: 4
+              - column:
+                  name: trigger_type_name
+                  value: "target-down"
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
@@ -361,3 +373,303 @@ databaseChangeLog:
               - column:
                   name: currency_2
                   value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 2
+              - column:
+                  name: currency_1
+                  value: "ETH"
+              - column:
+                  name: currency_2
+                  value: "BTC"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 3
+              - column:
+                  name: currency_1
+                  value: "BTC"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 4
+              - column:
+                  name: currency_1
+                  value: "BNB"
+              - column:
+                  name: currency_2
+                  value: "BTC"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 5
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "BTC"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 6
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "BTC"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 7
+              - column:
+                  name: currency_1
+                  value: "BTC"
+              - column:
+                  name: currency_2
+                  value: "EUR"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 8
+              - column:
+                  name: currency_1
+                  value: "ETH"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 9
+              - column:
+                  name: currency_1
+                  value: "BNB"
+              - column:
+                  name: currency_2
+                  value: "ETH"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 10
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "ETH"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 11
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "ETH"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 12
+              - column:
+                  name: currency_1
+                  value: "ETH"
+              - column:
+                  name: currency_2
+                  value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 13
+              - column:
+                  name: currency_1
+                  value: "ETH"
+              - column:
+                  name: currency_2
+                  value: "EUR"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 14
+              - column:
+                  name: currency_1
+                  value: "BNB"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 15
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 16
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 17
+              - column:
+                  name: currency_1
+                  value: "USDT"
+              - column:
+                  name: currency_2
+                  value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 18
+              - column:
+                  name: currency_1
+                  value: "EUR"
+              - column:
+                  name: currency_2
+                  value: "USDT"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 19
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "BNB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 20
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "BNB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 21
+              - column:
+                  name: currency_1
+                  value: "BNB"
+              - column:
+                  name: currency_2
+                  value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 22
+              - column:
+                  name: currency_1
+                  value: "BNB"
+              - column:
+                  name: currency_2
+                  value: "EUR"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 23
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 24
+              - column:
+                  name: currency_1
+                  value: "XRP"
+              - column:
+                  name: currency_2
+                  value: "EUR"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 25
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "RUB"
+        - insert:
+            tableName: currency_pair
+            columns:
+              - column:
+                  name: pair_id
+                  value: 26
+              - column:
+                  name: currency_1
+                  value: "ADA"
+              - column:
+                  name: currency_2
+                  value: "EUR"

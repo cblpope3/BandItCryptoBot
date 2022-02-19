@@ -1,13 +1,22 @@
 package ru.bandit.cryptobot.bot.menu;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
+import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class BotMenuCur1Select implements MenuItem {
+
+    @Autowired
+    CurrencyPairRepository currencyPairRepository;
 
     @Override
     public String getText(Long userId, List<String> param) {
@@ -17,30 +26,30 @@ public class BotMenuCur1Select implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        //TODO get this from database
-        InlineKeyboardButton button1 = new InlineKeyboardButton("BTC");
-        InlineKeyboardButton button2 = new InlineKeyboardButton("ETH");
-        InlineKeyboardButton button3 = new InlineKeyboardButton("USDT");
-        InlineKeyboardButton button4 = new InlineKeyboardButton("BNB");
-        InlineKeyboardButton button5 = new InlineKeyboardButton("XRP");
-        InlineKeyboardButton button6 = new InlineKeyboardButton("ADA");
+        Set<InlineKeyboardButton> currencyButtonSet = new HashSet<>();
 
-        button1.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/BTC");
-        button2.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/ETH");
-        button3.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/USDT");
-        button4.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/BNB");
-        button5.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/XRP");
-        button6.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/ADA");
+        //fixme this might work wrong. looking only in currency1 position
+        for (CurrencyPairEntity currencyPair : currencyPairRepository.findAll()) {
+            if (currencyPair.getCurrency1().isCrypto()) {
+                InlineKeyboardButton button = new InlineKeyboardButton(currencyPair.getCurrency1().getCurrencyNameUser());
+                button.setCallbackData(MenuItemsEnum.SELECT_2_CUR + "/" + currencyPair.getCurrency1().getCurrencyNameUser());
+                currencyButtonSet.add(button);
+            }
+        }
 
-        List<InlineKeyboardButton> keyboardRow1 = List.of(button1, button2, button3);
-        List<InlineKeyboardButton> keyboardRow2 = List.of(button4, button5, button6);
+        List<InlineKeyboardButton> currencyButtonList = new ArrayList<>(currencyButtonSet);
 
-        InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
-        buttonBack.setCallbackData(MenuItemsEnum.OPERATIONS.toString());
+        List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
 
-        List<InlineKeyboardButton> lastRow = List.of(buttonBack);
-
-        List<List<InlineKeyboardButton>> buttonsGrid = List.of(keyboardRow1, keyboardRow2, lastRow);
+        while (true) {
+            if (currencyButtonList.size() > 2) buttonsGrid.add(List.of(currencyButtonList.remove(0),
+                    currencyButtonList.remove(0),
+                    currencyButtonList.remove(0)));
+            else {
+                buttonsGrid.add(currencyButtonList);
+                break;
+            }
+        }
 
         return new InlineKeyboardMarkup(buttonsGrid);
     }

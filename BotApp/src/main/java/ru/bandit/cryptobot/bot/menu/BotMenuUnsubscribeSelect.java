@@ -34,9 +34,17 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
 
         for (UserTriggerEntity subscription : subscriptionsList) {
 
-            //FIXME button name is not fine
-            InlineKeyboardButton button = new InlineKeyboardButton(subscription.getCurrencyPair().toString());
-            button.setCallbackData(MenuItemsEnum.UNSUBSCRIBE.toString() + '/' + subscription.getCurrencyPair().toString());
+            //FIXME button name is not fine for simple triggers
+            //№ - XXX/YYY/Тип триггера/Период/Искомое значение
+            InlineKeyboardButton button = new InlineKeyboardButton(
+                    String.format("№%d - %s/%s - %s - %d",
+                            subscription.getId(),
+                            subscription.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                            subscription.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                            subscription.getTriggerType().getTriggerName(),
+                            subscription.getTargetValue()));
+
+            button.setCallbackData(MenuItemsEnum.UNSUBSCRIBE.toString() + '/' + subscription.getId().toString());
 
             List<InlineKeyboardButton> row = List.of(button);
 

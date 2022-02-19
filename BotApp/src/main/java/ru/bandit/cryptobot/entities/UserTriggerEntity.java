@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "user_triggers")
@@ -22,7 +23,7 @@ public class UserTriggerEntity {
     Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "telegram_userchat_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
 
     @ManyToOne(optional = false)
@@ -32,13 +33,13 @@ public class UserTriggerEntity {
     @ManyToOne(optional = false)
     @JoinColumn(name = "trigger_type_id", nullable = false)
     TriggerTypeEntity triggerType;
+
+    @Column(name = "trigger_target_value")
     Integer targetValue;
 
-    //TODO decide if this needed
     @Column(name = "last_message")
-    String lastMessage;
+    Timestamp lastMessage;
 
-    //TODO decide if this needed
     @Column(name = "is_archived")
     boolean isArchived;
 }
