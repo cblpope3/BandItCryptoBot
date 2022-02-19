@@ -1,6 +1,7 @@
 package ru.bandit.cryptobot;
 
 import junit.framework.TestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -24,6 +25,7 @@ public class ApiManagerCoolDownTest extends TestCase {
     CoinGeckoApiService reserveServiceMock;
 
     @Test
+    @Ignore("Take too much time!")
     public void testCoolDownTimer() throws InterruptedException {
 
         ApiManager apiManager = new ApiManager(mainServiceMock, reserveServiceMock);
