@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  apiapp:
+    image: 'api_app'
+    build:
+      context: ./ApiExchangeApp/
+      dockerfile: Dockerfile
+    container_name: Api-App
+    depends_on:
+      - botapp
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - BOT_APP_HOST=botapp
+
+  botapp:
+    image: 'bot_app'
+    build:
+      context: ./BotApp/
+      dockerfile: Dockerfile
+    container_name: Bot-App
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - API_APP_HOST=apiapp
+      - DATABASE_HOST=db
+
+  db:
+    image: postgres
+    container_name: cryptobot-db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=nickolay
+      - POSTGRES_USER=nickolay
+      - POSTGRES_DB=nickolay
+    ports:
+      - 5432:5432

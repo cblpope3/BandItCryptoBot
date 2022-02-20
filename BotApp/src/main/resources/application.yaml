@@ -1,0 +1,28 @@
+spring:
+  profiles:
+    include: deploy
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    hibernate:
+      ddl-auto: none
+    liquibase:
+      change-log: classpath:db/changelog/db.changelog-master.yaml
+
+server:
+  port: 8081
+
+api-app:
+  hostname: http://${API_APP_HOST:localhost}:8080/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true

@@ -1,0 +1,5 @@
+server:
+  port: 8080
+
+bot-app:
+  hostname: http://${BOT_APP_HOST:localhost}:8081/
