@@ -47,6 +47,9 @@ public class BotService {
     @Autowired
     TriggersService triggersService;
 
+    @Autowired
+    RatesRepository ratesRepository;
+
     public short addNewUser(long chatId, String username) {
         UserEntity newChat = usersRepository.findByChatId(chatId);
 
@@ -318,9 +321,20 @@ public class BotService {
         return OK;
     }
 
-    public String getOnce(String currency1, String currency2) {
-        //todo implement this
-        return "some currency rates";
+    public String getOnce(String currency1Input, String currency2Input) {
+        if (currency1Input == null || currency2Input == null) {
+            logger.warn("currencies symbol is null");
+            return "no data";
+        }
+
+        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(currency1Input);
+        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(currency2Input);
+        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+
+        if (currencyPair == null) return "no data";
+
+        return ratesRepository.findRatesBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
+                currencyPair.getCurrency2().getCurrencyNameUser()).toString();
     }
 
     public String getAllCurrenciesList() {
