@@ -1,0 +1,1179 @@
+Date: Sat, 19 Feb 2022 18:31:12 +0000 (UTC)
+Message-ID: <557227468.65.1645295472459@7326a30e9da7>
+Subject: Exported From Confluence
+MIME-Version: 1.0
+Content-Type: multipart/related; 
+	boundary="----=_Part_64_383976772.1645295472458"
+
+------=_Part_64_383976772.1645295472458
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Content-Location: file:///C:/exported.html
+
+<html xmlns:o=3D'urn:schemas-microsoft-com:office:office'
+      xmlns:w=3D'urn:schemas-microsoft-com:office:word'
+      xmlns:v=3D'urn:schemas-microsoft-com:vml'
+      xmlns=3D'urn:w3-org-ns:HTML'>
+<head>
+    <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8=
+">
+    <title>Use Case</title>
+    <!--[if gte mso 9]>
+    <xml>
+        <o:OfficeDocumentSettings>
+            <o:TargetScreenSize>1024x640</o:TargetScreenSize>
+            <o:PixelsPerInch>72</o:PixelsPerInch>
+            <o:AllowPNG/>
+        </o:OfficeDocumentSettings>
+        <w:WordDocument>
+            <w:View>Print</w:View>
+            <w:Zoom>90</w:Zoom>
+            <w:DoNotOptimizeForBrowser/>
+        </w:WordDocument>
+    </xml>
+    <![endif]-->
+    <style>
+                <!--
+        @page Section1 {
+            size: 8.5in 11.0in;
+            margin: 1.0in;
+            mso-header-margin: .5in;
+            mso-footer-margin: .5in;
+            mso-paper-source: 0;
+        }
+
+        table {
+            border: solid 1px;
+            border-collapse: collapse;
+        }
+
+        table td, table th {
+            border: solid 1px;
+            padding: 5px;
+        }
+
+        td {
+            page-break-inside: avoid;
+        }
+
+        tr {
+            page-break-after: avoid;
+        }
+
+        div.Section1 {
+            page: Section1;
+        }
+
+        /* Confluence print stylesheet. Common to all themes for print medi=
+a */
+/* Full of !important until we improve batching for print CSS */
+
+@media print {
+    #main {
+        padding-bottom: 1em !important; /* The default padding of 6em is to=
+o much for printouts */
+    }
+
+    body {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        font-size: 10pt;
+        line-height: 1.2;
+    }
+
+    body, #full-height-container, #main, #page, #content, .has-personal-sid=
+ebar #content {
+        background: #fff !important;
+        color: #000 !important;
+        border: 0 !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
+
+    a, a:link, a:visited, a:focus, a:hover, a:active {
+        color: #000;
+    }
+
+    #content h1,
+    #content h2,
+    #content h3,
+    #content h4,
+    #content h5,
+    #content h6 {
+        font-family: Arial, Helvetica, FreeSans, sans-serif;
+        page-break-after: avoid;
+    }
+
+    pre {
+        font-family: Monaco, "Courier New", monospace;
+    }
+
+    #header,
+    .aui-header-inner,
+    #navigation,
+    #sidebar,
+    .sidebar,
+    #personal-info-sidebar,
+    .ia-fixed-sidebar,
+    .page-actions,
+    .navmenu,
+    .ajs-menu-bar,
+    .noprint,
+    .inline-control-link,
+    .inline-control-link a,
+    a.show-labels-editor,
+    .global-comment-actions,
+    .comment-actions,
+    .quick-comment-container,
+    #addcomment {
+        display: none !important;
+    }
+
+    /* CONF-28544 cannot print multiple pages in IE */
+    #splitter-content {
+        position: relative !important;
+    }
+
+    .comment .date::before {
+        content: none !important; /* remove middot for print view */
+    }
+
+    h1.pagetitle img {
+        height: auto;
+        width: auto;
+    }
+
+    .print-only {
+        display: block;
+    }
+
+    #footer {
+        position: relative !important; /* CONF-17506 Place the footer at en=
+d of the content */
+        margin: 0;
+        padding: 0;
+        background: none;
+        clear: both;
+    }
+
+    #poweredby {
+        border-top: none;
+        background: none;
+    }
+
+    #poweredby li.print-only {
+        display: list-item;
+        font-style: italic;
+    }
+
+    #poweredby li.noprint {
+        display: none;
+    }
+
+    /* no width controls in print */
+    .wiki-content .table-wrap,
+    .wiki-content p,
+    .panel .codeContent,
+    .panel .codeContent pre,
+    .image-wrap {
+        overflow: visible !important;
+    }
+
+    /* TODO - should this work? */
+    #children-section,
+    #comments-section .comment,
+    #comments-section .comment .comment-body,
+    #comments-section .comment .comment-content,
+    #comments-section .comment p {
+        page-break-inside: avoid;
+    }
+
+    #page-children a {
+        text-decoration: none;
+    }
+
+    /**
+     hide twixies
+
+     the specificity here is a hack because print styles
+     are getting loaded before the base styles. */
+    #comments-section.pageSection .section-header,
+    #comments-section.pageSection .section-title,
+    #children-section.pageSection .section-header,
+    #children-section.pageSection .section-title,
+    .children-show-hide {
+        padding-left: 0;
+        margin-left: 0;
+    }
+
+    .children-show-hide.icon {
+        display: none;
+    }
+
+    /* personal sidebar */
+    .has-personal-sidebar #content {
+        margin-right: 0px;
+    }
+
+    .has-personal-sidebar #content .pageSection {
+        margin-right: 0px;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+}
+-->
+    </style>
+</head>
+<body>
+    <h1>Use Case</h1>
+    <div class=3D"Section1">
+        <p><strong>Bot-APP</strong></p>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC1. =D0=A0=D0=B5=D0=B3=D0=B8=D1=81=D1=82=D1=80=D0=B0=D1=86=D0=
+=B8=D1=8F =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=
+=BB=D1=8F</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB <strong>/start</strong></=
+p></li>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D0=B8=D1=82=D1=8C =D0=BD=D0=B0=
+=D0=BB=D0=B8=D1=87=D0=B8=D0=B5 =D1=8D=D1=82=D0=BE=D0=B3=D0=BE =D0=BF=D0=BE=
+=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8F =D0=B2 =D0=B1=
+=D0=B0=D0=B7=D0=B5 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D1=85.</p></li>
+<li><p>=D0=92 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B5 =D0=BE=D1=82=D1=81=D1=83=
+=D1=82=D1=81=D1=82=D0=B2=D0=B8=D1=8F =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=
+=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8F =D0=B4=D0=BE=D0=B1=D0=B0=D0=B2=D0=B8=
+=D1=82=D1=8C =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=
+=D0=BB=D1=8F =D0=B2 <strong>users.</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=9F=D1=80=D0=B8=D0=B2=D0=B5=D1=
+=82=D1=81=D1=82=D0=B2=D1=83=D0=B5=D0=BC =D0=B2 =D0=BD=D0=B0=D1=88=D0=B5=D0=
+=BC =D0=B1=D0=BE=D1=82=D0=B5 =D0=BA=D1=83=D1=80=D1=81=D0=BE=D0=B2 =D0=BA=D1=
+=80=D0=B8=D0=BF=D1=82=D0=BE=D0=B2=D0=B0=D0=BB=D1=8E=D1=82, $=D0=9D=D0=B8=D0=
+=BA =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=
+=8F. =D0=9E=D0=B7=D0=BD=D0=B0=D0=BA=D0=BE=D0=BC=D1=8C=D1=82=D0=B5=D1=81=D1=
+=8C =D1=81 =D0=B2=D0=BE=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D1=8B=D0=BC=D0=B8 =D0=
+=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D0=B0=D0=BC=D0=B8 =D0=BD=D0=B0=D1=88=D0=
+=B5=D0=B3=D0=BE =D0=B1=D0=BE=D1=82=D0=B0=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC2. =D0=97=D0=B0=D0=BF=D1=80=D0=BE=D1=81=D0=B8=D1=82=D1=8C =D0=
+=B8=D0=BD=D1=81=D1=82=D1=80=D1=83=D0=BA=D1=86=D0=B8=D0=B8 =D0=B8=D1=81=D0=
+=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D0=BD=D0=B8=D1=8F =D0=B1=D0=
+=BE=D1=82=D0=B0</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB <strong>/help </strong>=
+=D0=B8=D0=BB=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=
+=D0=BA=D1=83 <strong>=D0=9F=D0=BE=D0=BC=D0=BE=D1=89=D1=8C.</strong></p></li=
+>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BF=D0=B8=D1=81=
+=D0=BE=D0=BA =D0=B2=D0=BE=D0=B7=D0=BC=D0=BE=D0=B6=D0=BD=D1=8B=D1=85 =D0=BA=
+=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4 =D1=81=D1=82=D1=80=D0=B0=D0=BD=D0=B8=D1=86=
+=D1=83 <a href=3D"https://band-it-2022.atlassian.net/l/c/0uUDtAGD" data-car=
+d-appearance=3D"inline" class=3D"external-link" rel=3D"nofollow">https://ba=
+nd-it-2022.atlassian.net/l/c/0uUDtAGD</a> </p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=9D=D0=B0=D0=B7=D0=B0=D0=B4</stro=
+ng></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC3. =D0=9A=D0=BD=D0=BE=D0=BF=D0=BA=D0=B0 =D0=9D=D0=B0=D0=B7=D0=
+=B0=D0=B4</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+=D0=9D=D0=B0=D0=B7=D0=B0=D0=B4</p></li>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D0=B9=D1=82=D0=B8 =D0=B2 =D0=BF=D1=80=D0=B5=
+=D0=B4=D1=8B=D0=B4=D1=83=D1=89=D0=B5=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</p></li=
+>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC4. =D0=9A=D0=BD=D0=BE=D0=BF=D0=BA=D0=B0 =D0=B2 =D0=B3=D0=BB=D0=
+=B0=D0=B2=D0=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E. =D0=98=D0=BD=D1=82=D0=
+=B5=D1=80=D0=B0=D0=BA=D1=82=D0=B8=D0=B2=D0=BD=D1=8B=D0=B9 =D1=80=D0=B5=D0=
+=B6=D0=B8=D0=BC</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+=D0=B2 =D0=B3=D0=BB=D0=B0=D0=B2=D0=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E<=
+/p></li>
+<li><p>=D0=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D0=BA=D0=BE=
+=D0=BC=D0=B0=D0=BD=D0=B4=D1=83 <strong>/MAIN</strong></p></li>
+</ol>
+<p><strong>UC4. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D0=
+=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B /MAIN</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/MAIN</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=94=D0=BE=D1=81=D1=82=D1=83=D0=BF=
+=D0=BD=D1=8B=D0=B5 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D1=8B || =D0=9E=D0=BF=D0=
+=B5=D1=80=D0=B0=D1=86=D0=B8=D0=B8 =D1=81 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D0=
+=B0=D0=BC=D0=B8 || =D0=9F=D0=B0=D1=83=D0=B7=D0=B0 || =D0=92=D0=BE=D0=B7=D0=
+=BE=D0=B1=D0=BD=D0=BE=D0=B2=D0=B8=D1=82=D1=8C =D0=B2=D1=81=D0=B5 =D0=BF=D0=
+=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 || =D0=A1=D1=82=D0=BE=D0=BF || =D0=
+=9F=D0=BE=D0=BC=D0=BE=D1=89=D1=8C</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC5. =D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B6=D0=B5=D0=BD=D0=
+=B8=D0=B5 =D0=B2=D1=81=D0=B5=D1=85 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=
+=BE=D0=BA. =D0=98=D0=BD=D1=82=D0=B5=D1=80=D0=B0=D0=BA=D1=82=D0=B8=D0=B2=D0=
+=BD=D1=8B=D0=B9 =D1=80=D0=B5=D0=B6=D0=B8=D0=BC</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9E=D0=BF=D0=B5=D1=80=D0=B0=D1=86=D0=B8=D0=B8 =D1=81 =D0=B2=D0=
+=B0=D0=BB=D1=8E=D1=82=D0=B0=D0=BC=D0=B8</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=
+=D0=B0=D1=82=D1=8C=D1=81=D1=8F, =D0=9E=D1=82=D0=BF=D0=B8=D1=81=D0=B0=D1=82=
+=D1=8C=D1=81=D1=8F, =D0=A1=D0=BF=D0=B8=D1=81=D0=BE=D0=BA</strong></p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=A1=D0=BF=D0=B8=D1=81=D0=BE=D0=BA</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D0=BA=D0=BE=
+=D0=BC=D0=B0=D0=BD=D0=B4=D1=83 <strong>/SHOWALL</strong>. =D0=9F=D1=80=D0=
+=B8=D0=BC=D0=B5=D1=87=D0=B0=D0=BD=D0=B8=D0=B5: =D0=B7=D0=B4=D0=B5=D1=81=D1=
+=8C =D0=B8 =D0=B4=D0=B0=D0=BB=D0=B5=D0=B5 =D0=BF=D0=BE =D1=82=D0=B5=D0=BA=
+=D1=81=D1=82=D1=83 =D1=84=D1=80=D0=B0=D0=B7=D0=B0 =D0=9E=D1=82=D0=BF=D1=80=
+=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D1=82=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=
+=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=83 =D0=BE=D0=B7=D0=BD=
+=D0=B0=D1=87=D0=B0=D0=B5=D1=82, =D1=87=D1=82=D0=BE =D0=BD=D0=B0=D0=B6=D0=B0=
+=D1=82=D0=B8=D0=B5 =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 =D0=BF=D0=BE=D0=BB=
+=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D0=B5=D0=BC =D1=8D=D0=BC=
+=D1=83=D0=BB=D0=B8=D1=80=D1=83=D0=B5=D1=82 =D0=BD=D0=B0=D0=B1=D0=BE=D1=80 =
+=D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=
+=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D0=B5=D0=BC =D0=B8 =D0=BE=D1=82=D0=BF=
+=D1=80=D0=B0=D0=B2=D0=BA=D1=83 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B =
+=D0=BD=D0=B0 =D1=81=D0=B5=D1=80=D0=B2=D0=B5=D1=80. =D0=9E=D0=B1=D1=80=D0=B0=
+=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D0=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=
+=D0=B5=D0=BD=D0=BD=D1=8B=D1=85 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4 =D0=BE=
+=D0=BF=D0=B8=D1=81=D0=B0=D0=BD=D0=B0 =D0=B2 =D1=81=D0=BE=D0=BE=D1=82=D0=B2=
+=D0=B5=D1=82=D1=81=D1=82=D0=B2=D1=83=D1=8E=D1=89=D0=B5=D0=BC UC.</p></li>
+</ol>
+<p><strong>UC5. =D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B6=D0=B5=D0=BD=D0=
+=B8=D0=B5 =D0=B2=D1=81=D0=B5=D1=85 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=
+=BE=D0=BA. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D0=BA=D0=
+=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B /SHOWALL</strong></p>
+<ol>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=B2=
+ <strong>user_triggers</strong> =D0=BF=D0=BE <strong>user_id</strong></p></=
+li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D0=B2=D1=81=D0=B5 =D0=BF=
+=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 =D0=BD=D0=B0 =D1=8D=D0=BA=D1=80=
+=D0=B0=D0=BD =D0=B2 =D1=82=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D0=BE=D0=BC =
+=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=82=D0=B5 <strong>=E2=84=96 - XXX/YYY/=D0=
+=A2=D0=B8=D0=BF =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0/=D0=9F=D0=
+=B5=D1=80=D0=B8=D0=BE=D0=B4/=D0=98=D1=81=D0=BA=D0=BE=D0=BC=D0=BE=D0=B5 =D0=
+=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC6. =D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D0=B2=D1=81=D0=
+=B5 =D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=BD=D1=8B=D0=B5 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82=D1=8B. =D0=98=D0=BD=D1=82=D0=B5=D1=80=D0=B0=D0=BA=D1=82=D0=
+=B8=D0=B2=D0=BD=D1=8B=D0=B9 =D1=80=D0=B5=D0=B6=D0=B8=D0=BC</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83<=
+strong> =D0=94=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=BD=D1=8B=D0=B5 =D0=B2=D0=B0=
+=D0=BB=D1=8E=D1=82=D1=8B</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=82=
+=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=
+=D0=BD=D0=B4=D1=83<strong> /ALL_CUR</strong></p></li>
+</ol>
+<p><strong>UC6. =D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D0=B2=D1=81=D0=
+=B5 =D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=BD=D1=8B=D0=B5 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82=D1=8B. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=
+=B0 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B /ALL_CUR</strong></p>
+<ol>
+<li><p>=D0=92=D1=8B=D0=B1=D1=80=D0=B0=D1=82=D1=8C =D0=B2=D1=81=D0=B5 =D0=B7=
+=D0=B0=D0=BF=D0=B8=D1=81=D0=B8<strong> currency_figi_user</strong> =D0=B8<s=
+trong> currency_description </strong>=D0=B8=D0=B7<strong> currency</strong>=
+</p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=80=D0=B5=D0=B7=D1=83=
+=D0=BB=D1=8C=D1=82=D0=B0=D1=82 =D0=B2 =D0=B2=D0=B8=D0=B4=D0=B5 =D1=81=D0=BF=
+=D0=B8=D1=81=D0=BA=D0=B0 =D0=B2 =D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=82=D0=B5<=
+strong> currency_figi_user (upper case) - currency_description (lower case)=
+</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC7. =D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=B0=D1=82=D1=8C=D1=
+=81=D1=8F =D0=BD=D0=B0 =D1=80=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D1=83 =D0=
+=BA=D1=83=D1=80=D1=81=D0=B0 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D1=8B. =D0=98=D0=
+=BD=D1=82=D0=B5=D1=80=D0=B0=D0=BA=D1=82=D0=B8=D0=B2=D0=BD=D1=8B=D0=B9 =D1=
+=80=D0=B5=D0=B6=D0=B8=D0=BC.</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9E=D0=BF=D0=B5=D1=80=D0=B0=D1=86=D0=B8=D0=B8 =D1=81 =D0=B2=D0=
+=B0=D0=BB=D1=8E=D1=82=D0=B0=D0=BC=D0=B8,</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=
+=D0=B0=D1=82=D1=8C=D1=81=D1=8F, =D0=9E=D1=82=D0=BF=D0=B8=D1=81=D0=B0=D1=82=
+=D1=8C=D1=81=D1=8F, =D0=A1=D0=BF=D0=B8=D1=81=D0=BE=D0=BA</strong></p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=B0=D1=82=D1=8C=D1=81=D1=8F<=
+/strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D0=BF=D0=B5=D1=80=D0=B2=D1=83=D1=8E =D0=B2=D0=B0=D0=BB=D1=
+=8E=D1=82=D1=83=E2=80=9D,</p></li>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82, =D0=BD=D0=B0=D0=B7=D0=B2=
+=D0=B0=D0=BD=D0=B8=D1=8F =D0=BA=D0=BD=D0=BE=D0=BF=D0=BE=D0=BA =D0=B2=D1=8B=
+=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D0=B8=D0=B7 <strong>currency.currency_name,=
+ </strong>=D1=81=D0=BF=D0=B8=D1=81=D0=BE=D0=BA =D0=B2=D0=B0=D0=BB=D1=8E=D1=
+=82 <a href=3D"https://band-it-2022.atlassian.net/l/c/BKjgLpmf" data-card-a=
+ppearance=3D"inline" class=3D"external-link" rel=3D"nofollow">https://band-=
+it-2022.atlassian.net/l/c/BKjgLpmf</a> </p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+=D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D1=8B,</p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D0=B2=D1=82=D0=BE=D1=80=D1=83=D1=8E =D0=B2=D0=B0=D0=BB=D1=
+=8E=D1=82=D1=83=E2=80=9D</p></li>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82, =D0=BD=D0=B0=D0=B7=D0=B2=
+=D0=B0=D0=BD=D0=B8=D1=8F =D0=BA=D0=BD=D0=BE=D0=BF=D0=BE=D0=BA =D0=B2=D1=8B=
+=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D0=B8=D0=B7 <strong>currency.currency_name,=
+ </strong>=D1=81=D0=BF=D0=B8=D1=81=D0=BE=D0=BA =D0=B2=D0=B0=D0=BB=D1=8E=D1=
+=82 <a href=3D"https://band-it-2022.atlassian.net/l/c/BKjgLpmf" data-card-a=
+ppearance=3D"inline" class=3D"external-link" rel=3D"nofollow">https://band-=
+it-2022.atlassian.net/l/c/BKjgLpmf</a> </p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+=D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D1=8B,</p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D1=82=D0=B8=D0=BF =D0=BE=D1=82=D1=81=D0=BB=D0=B5=D0=B6=D0=
+=B8=D0=B2=D0=B0=D0=BD=D0=B8=D1=8F=E2=80=9D</p></li>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 <strong>=D0=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=D0=B9 =D0=
+=BA=D1=83=D1=80=D1=81 || =D0=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B0 |=
+| =D0=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5 =D0=B7=D0=B0 =D0=BC=D0=B8=D0=
+=BD=D1=83=D1=82=D1=83 || =D0=91=D1=83=D0=B4=D0=B8=D0=BB=D1=8C=D0=BD=D0=B8=
+=D0=BA</strong></p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=
+=D0=B9 =D0=BA=D1=83=D1=80=D1=81 </strong>=D0=BF=D0=B5=D1=80=D0=B5=D0=B9=D1=
+=82=D0=B8 =D0=BA <strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=
+=BA=D0=B0 =D1=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=
+=80=D0=B0</strong> <strong>=D0=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=D0=B9 =D0=
+=BA=D1=83=D1=80=D1=81.</strong></p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=
+=D0=BA=D0=B0 </strong>=D0=BF=D0=B5=D1=80=D0=B5=D0=B9=D1=82=D0=B8 =D0=BA <st=
+rong>UC8.</strong> <strong>=D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=
+=D0=B0 =D1=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=
+=D0=B0</strong> <strong>=D0=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B0.</=
+strong></p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=
+=D0=B5 </strong>=D0=BF=D0=B5=D1=80=D0=B5=D0=B9=D1=82=D0=B8 =D0=BA <strong>U=
+C8.</strong> <strong>=D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0=
+ =D1=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0<=
+/strong> <strong>=D0=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5.</strong></p></=
+li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=91=D1=83=D0=B4=D0=B8=D0=BB=D1=8C=
+=D0=BD=D0=B8=D0=BA</strong> =D0=BF=D0=B5=D1=80=D0=B5=D0=B9=D1=82=D0=B8 =D0=
+=BA <strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0 =D1=
+=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D0=
+=91=D1=83=D0=B4=D0=B8=D0=BB=D1=8C=D0=BD=D0=B8=D0=BA.</strong></p></li>
+</ol>
+<p>&nbsp;</p>
+<p><strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0 =D1=
+=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D0=
+=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=D0=B9 =D0=BA=D1=83=D1=80=D1=81.</strong><=
+/p>
+<ol>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=88=D0=BB=D0=B8 =D0=B8=D0=B7 <strong>UC7.=
+</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D1=82=D0=B5=
+=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=
+=D0=B4=D1=83<strong> /once/cur1/cur2. </strong>=D0=9F=D0=B5=D1=80=D0=B5=D0=
+=B9=D1=82=D0=B8 =D0=BA<strong> UC9. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D1=82=D0=
+=B8=D0=BF=D0=B0 =D0=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=D0=B9 =D0=BA=D1=83=D1=
+=80=D1=81.</strong></p></li>
+</ol>
+<p><strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0 =D1=
+=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D0=
+=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B0</strong></p>
+<ol>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=88=D0=BB=D0=B8 =D0=B8=D0=B7 <strong>UC7.=
+</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D1=82=D0=B5=
+=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=
+=D0=B4=D1=83<strong> /simple/cur1/cur2. </strong>=D0=9F=D0=B5=D1=80=D0=B5=
+=D0=B9=D1=82=D0=B8 =D0=BA<strong> UC9. =D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=
+=D0=B5=D0=BD=D0=B8=D0=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =
+=D1=82=D0=B8=D0=BF=D0=B0 =D0=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B0.<=
+/strong></p></li>
+</ol>
+<p><strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0 =D1=
+=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D0=
+=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5</strong></p>
+<ol>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=88=D0=BB=D0=B8 =D0=B8=D0=B7 <strong>UC7.=
+</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D1=82=D0=B5=
+=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=
+=D0=B4=D1=83 <strong>/average/cur1/cur2/period. </strong>=D0=9F=D0=B5=D1=80=
+=D0=B5=D0=B9=D1=82=D0=B8 =D0=BA<strong> UC9. =D0=A1=D0=BE=D1=85=D1=80=D0=B0=
+=D0=BD=D0=B5=D0=BD=D0=B8=D0=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=
+=D0=B0 =D1=82=D0=B8=D0=BF=D0=B0 =D0=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5.=
+</strong></p></li>
+</ol>
+<p><strong>UC8. =D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=BE=D0=B9=D0=BA=D0=B0 =D1=
+=82=D0=B8=D0=BF=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D0=
+=91=D1=83=D0=B4=D0=B8=D0=BB=D1=8C=D0=BD=D0=B8=D0=BA</strong></p>
+<ol>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=88=D0=BB=D0=B8 =D0=B8=D0=B7 <strong>UC7.=
+</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D0=B8=D1=81=D0=BA=D0=BE=D0=BC=D0=BE=D0=B5 =D0=BD=D0=B0=D0=
+=BF=D1=80=D0=B0=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B8=D0=B7=D0=BC=D0=
+=B5=D0=BD=D0=B5=D0=BD=D0=B8=D1=8F=E2=80=9D</p></li>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 <strong>=D0=9F=D0=BE=D0=B2=D1=8B=D1=88=D0=B5=D0=BD=D0=B8=
+=D0=B5 ||</strong> <strong>=D0=9F=D0=BE=D0=BD=D0=B8=D0=B6=D0=B5=D0=BD=D0=B8=
+=D0=B5,</strong></p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=B2=D1=8B=D0=B1=D1=80=D0=B0=D0=BB =D0=BD=D0=B0=D0=BF=D1=80=D0=B0=
+=D0=B2=D0=BB=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B8=D0=B7=D0=BC=D0=B5=D0=BD=D0=B5=
+=D0=BD=D0=B8=D1=8F. =D0=9F=D0=BE=D0=B2=D1=8B=D1=88=D0=B5=D0=BD=D0=B8=D0=B5 =
+=D1=81=D0=BE=D0=BE=D1=82=D0=B2=D0=B5=D1=82=D1=81=D1=82=D0=B2=D1=83=D0=B5=D1=
+=82 UP, =D0=9F=D0=BE=D0=BD=D0=B8=D0=B6=D0=B5=D0=BD=D0=B8=D0=B5 =D1=81=D0=BE=
+=D0=BE=D1=82=D0=B2=D0=B5=D1=82=D1=81=D1=82=D0=B2=D1=83=D0=B5=D1=82 DOWN,</p=
+></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=9D=D0=B0=D1=81=D1=82=D1=80=D0=
+=BE=D0=B9=D1=82=D0=B5 =D0=B2=D0=B5=D0=BB=D0=B8=D1=87=D0=B8=D0=BD=D1=83 =D0=
+=B8=D0=B7=D0=BC=D0=B5=D0=BD=D0=B5=D0=BD=D0=B8=D1=8F. =D0=A2=D0=B5=D0=BA=D1=
+=83=D1=89=D0=B5=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 $val=
+ue=E2=80=9D. =D0=97=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 $value =D0=BF=
+=D0=BE =D1=83=D0=BC=D0=BE=D0=BB=D1=87=D0=B0=D0=BD=D0=B8=D1=8E 5.</p></li>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 =E2=80=9C+=E2=80=9D || =E2=80=9C-=E2=80=9C || =D0=A1=D0=
+=BE=D0=B7=D0=B4=D0=B0=D1=82=D1=8C.</p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BE=D0=BA =E2=80=9C+=E2=80=9D || =E2=80=9C-=E2=80=9C =
+=D0=BF=D1=80=D0=BE=D0=B8=D0=B7=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D0=B8=D0=BD=
+=D0=BA=D1=80=D0=B5=D0=BC=D0=B5=D0=BD=D1=82 =D0=B8=D0=BB=D0=B8 =D0=B4=D0=B5=
+=D0=BA=D1=80=D0=B5=D0=BC=D0=B5=D0=BD=D1=82 $value, =D0=BF=D0=B5=D1=80=D0=B5=
+=D0=B9=D1=82=D0=B8 =D0=BA =D0=BF=D1=83=D0=BD=D0=BA=D1=82=D1=83 5.</p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B0=D0=B6=D0=B0=D1=82=D0=B8=D0=B8 =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 =E2=80=9C=D0=A1=D0=BE=D0=B7=D0=B4=D0=B0=D1=
+=82=D1=8C=E2=80=9D =D0=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =
+=D1=82=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/target/cur1/cur2/dir/val. </strong>=D0=9F=
+=D0=B5=D1=80=D0=B5=D0=B9=D1=82=D0=B8 =D0=BA <strong>UC9. =D0=A1=D0=BE=D1=85=
+=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B8=D0=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=
+=D0=B5=D1=80=D0=B0 =D1=82=D0=B8=D0=BF=D0=B0 =D0=91=D1=83=D0=B4=D0=B8=D0=BB=
+=D1=8C=D0=BD=D0=B8=D0=BA.</strong></p></li>
+</ol>
+<p>&nbsp;</p>
+<p><strong>UC9. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=
+=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D1=82=D0=B8=D0=BF=D0=B0 =D0=
+=A2=D0=B5=D0=BA=D1=83=D1=89=D0=B8=D0=B9 =D0=BA=D1=83=D1=80=D1=81</strong></=
+p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/once/cur1/cur2</strong></p></li>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2=
+ <strong>currency_pair</strong> =D1=81 currency_1 =3D cur1 =D0=B8 currency_=
+2 =3D cur2.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=
+=D0=B8=D0=BC, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=
+=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D1=80=D0=
+=B0=D0=BD=D0=BD=D1=8B=D0=B9 =D0=BD=D0=B0=D0=B1=D0=BE=D1=80 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82 =D0=BD=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=B5=D0=
+=BD=E2=80=9D. =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=97=D0=B0=D0=BF=D1=80=D0=B0=D1=88=D0=B8=D0=B2=D0=B0=D0=B5=D0=BC =
+=D1=82=D0=B5=D0=BA=D1=83=D1=89=D0=B5=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=
+=D0=BD=D0=B8=D0=B5 <strong>$current_value</strong> =D0=BF=D0=B0=D1=80=D1=8B=
+ <strong>cur1/cur2</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BD=D0=B0 =D1=8D=D0=BA=D1=80=D0=B0=D0=BD =
+=E2=80=9C<strong>cur1/cur2</strong> =3D <strong>$current_value=E2=80=9D</st=
+rong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p><strong>UC9. =D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D1=82=D0=B8=D0=BF=D0=
+=B0 =D0=A0=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B0</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/simple/cur1/cur2</strong></p></li>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2=
+ <strong>currency_pair</strong> =D1=81 currency_1 =3D cur1 =D0=B8 currency_=
+2 =3D cur2.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=
+=D0=B8=D0=BC, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=
+=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D1=80=D0=
+=B0=D0=BD=D0=BD=D1=8B=D0=B9 =D0=BD=D0=B0=D0=B1=D0=BE=D1=80 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82 =D0=BD=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=B5=D0=
+=BD=E2=80=9D. =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=97=D0=B0=D0=BF=D1=80=D0=B0=D1=88=D0=B8=D0=B2=D0=B0=D0=B5=D0=BC <=
+strong>trigger_type_id</strong> =D0=B8=D0=B7 <strong>trigger_type </strong>=
+=D0=BF=D0=BE =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D1=8E <strong>curre=
+ncy_pair</strong>.</p></li>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D1=8F=D0=B5=D0=BC, =D0=B5=D1=81=
+=D1=82=D1=8C =D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2 <stro=
+ng>user_triggers</strong> =D1=81 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=BC=D0=B8=
+ <strong>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_period=
+=3Dperiod.</strong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B5=
+=D1=81=D1=82=D1=8C, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=
+=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=A3 =D0=B2=D0=B0=D1=
+=81 =D1=83=D0=B6=D0=B5 =D0=B5=D1=81=D1=82=D1=8C =D1=82=D0=B0=D0=BA=D0=B0=D1=
+=8F =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B0=E2=80=9D. =D0=9A=D0=BE=
+=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=BD=
+=D0=B5=D1=82, =D1=81=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC =D0=B2=
+ <strong>user_triggers</strong> =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=B5 <stron=
+g>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_period, trigg=
+er_targetvalue</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=
+=81=D0=BA=D0=B0 =D1=83=D1=81=D0=BF=D0=B5=D1=88=D0=BD=D0=BE =D1=81=D0=BE=D0=
+=B7=D0=B4=D0=B0=D0=BD=D0=B0=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p><strong>UC9. =D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D1=82=D0=B8=D0=BF=D0=
+=B0 =D0=A1=D1=80=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/average/cur1/cur2/period</strong></p></li=
+>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2=
+ <strong>currency_pair</strong> =D1=81 currency_1 =3D cur1 =D0=B8 currency_=
+2 =3D cur2.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=
+=D0=B8=D0=BC, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=
+=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D1=80=D0=
+=B0=D0=BD=D0=BD=D1=8B=D0=B9 =D0=BD=D0=B0=D0=B1=D0=BE=D1=80 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82 =D0=BD=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=B5=D0=
+=BD=E2=80=9D. =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=97=D0=B0=D0=BF=D1=80=D0=B0=D1=88=D0=B8=D0=B2=D0=B0=D0=B5=D0=BC <=
+strong>trigger_type_id</strong> =D0=B8=D0=B7 <strong>trigger_type </strong>=
+=D0=BF=D0=BE =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D1=8E <strong>avera=
+ge</strong>.</p></li>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D1=8F=D0=B5=D0=BC, =D0=B5=D1=81=
+=D1=82=D1=8C =D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2 <stro=
+ng>user_triggers</strong> =D1=81 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=BC=D0=B8=
+ <strong>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_period=
+=3Dperiod.</strong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B5=
+=D1=81=D1=82=D1=8C, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=
+=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=A3 =D0=B2=D0=B0=D1=
+=81 =D1=83=D0=B6=D0=B5 =D0=B5=D1=81=D1=82=D1=8C =D1=82=D0=B0=D0=BA=D0=B0=D1=
+=8F =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B0=E2=80=9D. =D0=9A=D0=BE=
+=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=BD=
+=D0=B5=D1=82, =D1=81=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC =D0=B2=
+ <strong>user_triggers</strong> =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=B5 <stron=
+g>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_period, trigg=
+er_targetvalue</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=
+=81=D0=BA=D0=B0 =D1=83=D1=81=D0=BF=D0=B5=D1=88=D0=BD=D0=BE =D1=81=D0=BE=D0=
+=B7=D0=B4=D0=B0=D0=BD=D0=B0=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p><strong>UC9. =D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 =D1=82=D0=B8=D0=BF=D0=
+=B0 =D0=91=D1=83=D0=B4=D0=B8=D0=BB=D1=8C=D0=BD=D0=B8=D0=BA</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/target/cur1/cur2/dir/val</strong></p></li=
+>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2=
+ <strong>currency_pair</strong> =D1=81 currency_1 =3D cur1 =D0=B8 currency_=
+2 =3D cur2.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=
+=D0=B8=D0=BC, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=
+=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D1=80=D0=
+=B0=D0=BD=D0=BD=D1=8B=D0=B9 =D0=BD=D0=B0=D0=B1=D0=BE=D1=80 =D0=B2=D0=B0=D0=
+=BB=D1=8E=D1=82 =D0=BD=D0=B5=D0=B4=D0=BE=D1=81=D1=82=D1=83=D0=BF=D0=B5=D0=
+=BD=E2=80=9D. =D0=9A=D0=BE=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=97=D0=B0=D0=BF=D1=80=D0=B0=D1=88=D0=B8=D0=B2=D0=B0=D0=B5=D0=BC <=
+strong>trigger_type_id</strong> =D0=B8=D0=B7 <strong>trigger_type </strong>=
+=D0=BF=D0=BE =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D1=8E <strong>targe=
+t</strong>.</p></li>
+<li><p>=D0=97=D0=B0=D0=BF=D1=80=D0=B0=D1=88=D0=B8=D0=B2=D0=B0=D0=B5=D0=BC =
+=D1=82=D0=B5=D0=BA=D1=83=D1=89=D0=B5=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=
+=D0=BD=D0=B8=D0=B5 <strong>$current_value </strong>=D0=BF=D0=B0=D1=80=D1=8B=
+ <strong>cur1/cur2</strong>.</p></li>
+<li><p>=D0=92 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B5 dir=3Dup =D0=B2=D1=8B=D1=
+=87=D0=B8=D1=81=D0=BB=D1=8F=D0=B5=D0=BC <strong>$target_value</strong>=3D<s=
+trong>$current_value*(100+val)/100</strong></p></li>
+<li><p>=D0=92 =D1=81=D0=BB=D1=83=D1=87=D0=B0=D0=B5 dir=3Ddown =D0=B2=D1=8B=
+=D1=87=D0=B8=D1=81=D0=BB=D1=8F=D0=B5=D0=BC <strong>$target_value</strong>=
+=3D<strong>$current_value*(100-val)/100</strong></p></li>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D1=8F=D0=B5=D0=BC, =D0=B5=D1=81=
+=D1=82=D1=8C =D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2 <stro=
+ng>user_triggers</strong> =D1=81 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=BC=D0=B8=
+ <strong>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_target=
+value=3Dtarget_value.</strong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B5=
+=D1=81=D1=82=D1=8C, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=
+=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=A3 =D0=B2=D0=B0=D1=
+=81 =D1=83=D0=B6=D0=B5 =D0=B5=D1=81=D1=82=D1=8C =D1=82=D0=B0=D0=BA=D0=B0=D1=
+=8F =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B0=E2=80=9D. =D0=9A=D0=BE=
+=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=BD=
+=D0=B5=D1=82, =D1=81=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC =D0=B2=
+ <strong>user_triggers</strong> =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D0=B5 <stron=
+g>user_id</strong>, <strong>pair_id, trigger_type_id, trigger_period=3Dnull=
+, trigger_targetvalue=3Dtarget_value</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=B8=D1=82=D1=8C =D1=82=D1=80=
+=D0=B8=D0=B3=D0=B3=D0=B5=D1=80 =D0=B2 <strong>TriggerAPP</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B =D0=B1=D1=83=D0=B4=D0=
+=B5=D1=82=D0=B5 =D0=BE=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D1=8B =D0=
+=BF=D1=80=D0=B8 =D0=B4=D0=BE=D1=81=D1=82=D0=B8=D0=B6=D0=B5=D0=BD=D0=B8=D0=
+=B8 =D0=BF=D0=B0=D1=80=D1=8B cur1/cur2 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=
+=D0=B8=D1=8F $target_vallue=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC10. =D0=9E=D1=82=D0=BF=D0=B8=D1=81=D0=B0=D1=82=D1=8C=D1=81=D1=
+=8F =D0=BE=D1=82 =D1=80=D0=B0=D1=81=D1=81=D1=8B=D0=BB=D0=BA=D0=B8 =D0=BA=D1=
+=83=D1=80=D1=81=D0=B0 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D1=8B</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9E=D0=BF=D0=B5=D1=80=D0=B0=D1=86=D0=B8=D0=B8 =D1=81 =D0=B2=D0=
+=B0=D0=BB=D1=8E=D1=82=D0=B0=D0=BC=D0=B8,</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D0=B8 <strong>=D0=9F=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=
+=D0=B0=D1=82=D1=8C=D1=81=D1=8F, =D0=9E=D1=82=D0=BF=D0=B8=D1=81=D0=B0=D1=82=
+=D1=8C=D1=81=D1=8F, =D0=A1=D0=BF=D0=B8=D1=81=D0=BE=D0=BA</strong></p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9E=D1=82=D0=BF=D0=B8=D1=81=D0=B0=D1=82=D1=8C=D1=81=D1=8F</stron=
+g></p></li>
+<li><p>=D0=92=D1=8B=D0=BF=D0=BE=D0=BB=D0=BD=D0=B8=D1=82=D1=8C =D0=B4=D0=B5=
+=D0=B9=D1=81=D1=82=D0=B2=D0=B8=D1=8F <strong>UC5. =D0=9E=D1=82=D0=BE=D0=B1=
+=D1=80=D0=B0=D0=B6=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B2=D1=81=D0=B5=D1=85 =D0=BF=
+=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BE=D0=BA.</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B=D0=B1=D0=B5=D1=80=D0=
+=B8=D1=82=D0=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D1=83 =D0=B4=D0=
+=BB=D1=8F =D1=83=D0=B4=D0=B0=D0=BB=D0=B5=D0=BD=D0=B8=D1=8F=E2=80=9C</p></li=
+>
+<li><p>=D0=9F=D0=BE=D0=BA=D0=B0=D0=B7=D0=B0=D1=82=D1=8C =D0=BA=D0=BD=D0=BE=
+=D0=BF=D0=BA=D0=B8 =D1=81 =E2=80=9CId=E2=80=9D =D0=BF=D0=BE=D0=B4=D0=BF=D0=
+=B8=D1=81=D0=BE=D0=BA, =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B5=D0=BD=D0=BD=D1=
+=8B=D1=85 =D0=B2 =D0=BF 4.</p></li>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+=D1=81 =D1=81=D0=BE=D0=BE=D1=82=D0=B2=D0=B5=D1=82=D1=81=D1=82=D0=B2=D1=83=
+=D1=8E=D1=89=D0=B8=D0=BC Id.</p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=82=
+=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=
+=D0=BD=D0=B4=D1=83 <strong>/unsubscribe/sub_id</strong>.</p></li>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D0=BC =D0=BA <stron=
+g>UC10. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D0=BA=D0=BE=
+=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B</strong> <strong>/unsubscribe/sub_id</strong=
+></p></li>
+</ol>
+<p><strong>UC10. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D0=
+=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B</strong> <strong>/unsubscribe/sub_i=
+d</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/unsubscribe/sub_id</strong></p></li>
+<li><p>=D0=98=D1=89=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D1=8C =D0=B2=
+ <strong>user_triggers </strong>=D1=81 id =3D <strong>sub_id</strong></p></=
+li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=
+=D0=B8=D0=BC, =D0=B2=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=
+=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D1=82=D0=B0=D0=BA=D0=BE=D0=
+=B9 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 =D0=BD=D0=B5=D1=82=E2=
+=80=9D. =D0=BF=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D0=BC =D0=BA =D0=
+=BF=D1=83=D0=BD=D0=BA=D1=82=D1=83 5. =D0=BA=D0=BE=D0=BD=D0=B5=D1=86 UC.</p>=
+</li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B0=D1=85=D0=BE=D0=B4=D0=B8=D0=BC,=
+ =D1=83=D0=B4=D0=B0=D0=BB=D1=8F=D0=B5=D0=BC =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=
+=D1=8C =D0=B2 <strong>user_triggers </strong>=D1=81 id =3D <strong>sub_id</=
+strong>.</p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=
+=D0=B0 =E2=80=9C<strong>=E2=84=96 - XXX/YYY/=D0=A2=D0=B8=D0=BF =D1=82=D1=80=
+=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0/=D0=9F=D0=B5=D1=80=D0=B8=D0=BE=D0=B4/=
+=D0=98=D1=81=D0=BA=D0=BE=D0=BC=D0=BE=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=
+=D0=BD=D0=B8=D0=B5</strong> =D1=83=D0=B4=D0=B0=D0=BB=D0=B5=D0=BD=D0=B0=E2=
+=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC11. =D0=9F=D1=80=D0=B5=D0=BA=D1=80=D0=B0=D1=82=D0=B8=D1=82=D1=
+=8C =D0=BE=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D1=8F =D0=BF=D0=
+=BE =D0=B2=D1=81=D0=B5=D0=BC =D1=81=D0=BE=D0=B7=D0=B4=D0=B0=D0=BD=D0=BD=D1=
+=8B=D0=BC =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B0=D0=BC</strong></=
+p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=9F=D0=B0=D1=83=D0=B7=D0=B0 </strong>=D0=B8=D0=BB=D0=B8 =D0=B2=
+=D0=B2=D0=BE=D0=B4=D0=B8=D1=82 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=83<s=
+trong> /pause</strong></p></li>
+<li><p>=D0=90=D1=80=D1=85=D0=B8=D0=B2=D0=B8=D1=80=D1=83=D0=B5=D0=BC =D0=B2=
+=D1=81=D0=B5 =D0=B7=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=B2 <strong>user_trigg=
+ers</strong> =D0=BF=D0=BE <strong>user_id</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=81=
+=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=B2=D1=81=D0=
+=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 =D0=BE=D1=81=D1=82=D0=
+=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D1=8B. =D0=B2=D1=8B =D0=BC=D0=BE=D0=
+=B6=D0=B5=D1=82=D0=B5 =D0=BF=D0=BE=D1=81=D0=BC=D0=BE=D1=82=D1=80=D0=B5=D1=
+=82=D1=8C =D1=81=D0=B2=D0=BE=D0=B8 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=
+=BA=D0=B8 =D0=B8 =D0=B2=D0=BE=D0=B7=D0=BE=D0=B1=D0=BD=D0=BE=D0=B2=D0=B8=D1=
+=82=D1=8C =D0=B8=D1=85 =D0=B2 =D0=BB=D1=8E=D0=B1=D0=BE=D0=B9 =D0=BC=D0=BE=
+=D0=BC=D0=B5=D0=BD=D1=82=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC12. =D0=92=D0=BE=D0=B7=D0=BE=D0=B1=D0=BD=D0=BE=D0=B2=D0=B8=D1=
+=82=D1=8C =D0=BE=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D1=8F =D0=
+=BF=D0=BE =D0=B2=D1=81=D0=B5=D0=BC =D1=81=D0=BE=D0=B7=D0=B4=D0=B0=D0=BD=D0=
+=BD=D1=8B=D0=BC =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B0=D0=BC</str=
+ong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=92=D0=BE=D0=B7=D0=BE=D0=B1=D0=BD=D0=BE=D0=B2=D0=B8=D1=82=D1=8C =
+=D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 </strong>=D0=B8=D0=BB=D0=
+=B8 =D0=B2=D0=B2=D0=BE=D0=B4=D0=B8=D1=82 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=
+=B4=D1=83<strong> /resume</strong></p></li>
+<li><p>=D0=92=D0=BE=D0=B7=D0=B2=D1=80=D0=B0=D1=89=D0=B0=D0=B5=D0=BC =D0=B8=
+=D0=B7 =D0=B0=D1=80=D1=85=D0=B8=D0=B2=D0=B0 =D0=B2=D1=81=D0=B5 =D0=B7=D0=B0=
+=D0=BF=D0=B8=D1=81=D0=B8 =D0=B2 <strong>user_triggers</strong> =D0=BF=D0=BE=
+ <strong>user_id</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=81=
+=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=B2=D1=81=D0=
+=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 =D0=B2=D0=BE=D1=81=D1=
+=81=D1=82=D0=B0=D0=BD=D0=BE=D0=B2=D0=BB=D0=B5=D0=BD=D1=8B=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC 13. =D0=9F=D1=80=D0=B5=D0=BA=D1=80=D0=B0=D1=82=D0=B8=D1=82=D1=
+=8C =D0=B8=D1=81=D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D0=BD=D0=
+=B8=D0=B5 =D0=B1=D0=BE=D1=82=D0=B0. =D0=98=D0=BD=D1=82=D0=B5=D1=80=D0=B0=D0=
+=BA=D1=82=D0=B8=D0=B2=D0=BD=D1=8B=D0=B9 =D1=80=D0=B5=D0=B6=D0=B8=D0=BC</str=
+ong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=
+=D1=8C =D0=BD=D0=B0=D0=B6=D0=B0=D0=BB =D0=BA=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 =
+<strong>=D0=A1=D1=82=D0=BE=D0=BF</strong></p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D1=81=D0=BE=D0=BE=D0=B1=
+=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=92=D1=8B =D0=B4=D0=B5=D0=B9=D1=
+=81=D1=82=D0=B2=D0=B8=D1=82=D0=B5=D0=BB=D1=8C=D0=BD=D0=BE =D1=85=D0=BE=D1=
+=82=D0=B8=D1=82=D0=B5 =D1=83=D0=B4=D0=B0=D0=BB=D0=B8=D1=82=D1=8C =D0=B2=D1=
+=81=D0=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8? =D0=94=D0=B5=D0=
+=B9=D1=81=D1=82=D0=B2=D0=B8=D0=B5 =D0=BD=D0=B5=D0=BE=D0=B1=D1=80=D0=B0=D1=
+=82=D0=B8=D0=BC=D0=BE=E2=80=9D</p></li>
+<li><p>=D0=92=D1=8B=D0=B2=D0=BE=D0=B4=D0=B8=D0=BC =D0=BA=D0=BD=D0=BE=D0=BF=
+=D0=BA=D0=B8 <strong>=D0=94=D0=B0, =D0=9D=D0=B0=D0=B7=D0=B0=D0=B4</strong>.=
+</p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=82=
+=D0=B5=D0=BA=D1=81=D1=82=D0=BE=D0=B2=D1=83=D1=8E =D0=BA=D0=BE=D0=BC=D0=B0=
+=D0=BD=D0=B4=D1=83 <strong>/stop</strong></p></li>
+</ol>
+<p><strong>UC13. =D0=9F=D1=80=D0=B5=D0=BA=D1=80=D0=B0=D1=82=D0=B8=D1=82=D1=
+=8C =D0=B8=D1=81=D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D0=BD=D0=
+=B8=D0=B5 =D0=B1=D0=BE=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BA=D0=B0 =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B /stop</strong></=
+p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BA=D0=BE=D0=BC=
+=D0=B0=D0=BD=D0=B4=D1=83 <strong>/stop</strong>.</p></li>
+<li><p>=D0=A3=D0=B4=D0=B0=D0=BB=D1=8F=D0=B5=D0=BC =D0=B2=D1=81=D0=B5 =D0=B7=
+=D0=B0=D0=BF=D0=B8=D1=81=D0=B8 =D0=B2<strong> user_triggers </strong>=D0=BF=
+=D0=BE <strong>user_id</strong></p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D0=BC =D1=81=
+=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=B2=D1=81=D0=
+=B5 =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=BA=D0=B8 =D1=83=D0=B4=D0=B0=D0=
+=BB=D0=B5=D0=BD=D1=8B. =D0=B2=D1=8B =D0=BC=D0=BE=D0=B6=D0=B5=D1=82=D0=B5 =
+=D0=BF=D0=BE=D1=81=D0=BC=D0=BE=D1=82=D1=80=D0=B5=D1=82=D1=8C =D0=BD=D0=BE=
+=D0=B2=D1=8B=D0=B5 =D0=B2 =D0=BC=D0=B5=D0=BD=D1=8E =D0=9E=D0=BF=D0=B5=D1=80=
+=D0=B0=D1=86=D0=B8=D0=B8 =D1=81 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82=D0=B0=D0=BC=
+=D0=B8=E2=80=9D</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC14. =D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 =D0=
+=BD=D0=B5=D0=B8=D0=B7=D0=B2=D0=B5=D1=81=D1=82=D0=BD=D0=BE=D0=B9 =D0=BA=D0=
+=BE=D0=BC=D0=B0=D0=BD=D0=B4=D1=8B.</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B8=D0=BB=D0=B8 =D0=BE=D1=82 =D0=BF=
+=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8F =D1=81=
+=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5.</p></li>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D0=B8=D0=BB=D0=B8 =D1=81=D0=BE=
+=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BD=D0=B0 =D0=BF=D0=BE=D0=BB=
+=D0=BD=D0=BE=D0=B5 =D1=81=D0=BE=D0=BE=D1=82=D0=B2=D0=B5=D1=82=D1=81=D1=82=
+=D0=B2=D0=B8=D0=B5 =D0=BE=D0=B4=D0=BD=D0=BE=D0=B9 =D0=B8=D0=B7 =D0=BA=D0=BE=
+=D0=BC=D0=B0=D0=BD=D0=B4 <a href=3D"https://band-it-2022.atlassian.net/l/c/=
+3VW8Vc1G" data-card-appearance=3D"inline" class=3D"external-link" rel=3D"no=
+follow">https://band-it-2022.atlassian.net/l/c/3VW8Vc1G</a> </p></li>
+<li><p>=D0=9F=D1=80=D0=B8 =D0=BD=D0=B5=D1=81=D0=BE=D0=BE=D1=82=D0=B2=D0=B5=
+=D1=82=D1=81=D1=82=D0=B2=D0=B8=D0=B8 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B5=
+=D0=BD=D0=BD=D0=BE=D0=B3=D0=BE =D1=81=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=
+=D0=B8=D0=B5 =D0=BA=D0=B0=D0=BA=D0=BE=D0=B9-=D0=BD=D0=B8=D0=B1=D1=83=D0=B4=
+=D1=8C =D0=BA=D0=BE=D0=BC=D0=B0=D0=BD=D0=B4=D0=B5 =D0=B8=D0=B7 =D1=81=D0=BF=
+=D0=B8=D1=81=D0=BA=D0=B0 =D0=B2=D1=8B=D0=B2=D0=B5=D1=81=D1=82=D0=B8 =D1=81=
+=D0=BE=D0=BE=D0=B1=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =E2=80=9C=D0=9A=D0=BE=D0=
+=BC=D0=B0=D0=BD=D0=B4=D0=B0 =D0=BD=D0=B5 =D0=BE=D0=BF=D0=BE=D0=B7=D0=BD=D0=
+=B0=D0=BD=D0=B0=E2=80=9D.</p></li>
+<li><p>=D0=9E=D1=82=D0=BE=D0=B1=D1=80=D0=B0=D0=B7=D0=B8=D1=82=D1=8C =D0=BA=
+=D0=BD=D0=BE=D0=BF=D0=BA=D1=83 <strong>=D0=92 =D0=B3=D0=BB=D0=B0=D0=B2=D0=
+=BD=D0=BE=D0=B5 =D0=BC=D0=B5=D0=BD=D1=8E</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC15. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0</strong></p>
+<ol>
+<li><p>=D0=9C=D0=BE=D0=B4=D1=83=D0=BB=D1=8C =D0=BE=D0=BF=D0=BE=D0=B2=D0=B5=
+=D1=89=D0=B5=D0=BD=D0=B8=D1=8F =D1=80=D0=B5=D0=B3=D1=83=D0=BB=D1=8F=D1=80=
+=D0=BD=D0=BE (=D0=BF=D1=80=D0=B8 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B5=D0=BD=
+=D0=B8=D0=B8 =D0=B4=D0=B0=D0=BD=D0=BD=D1=8B=D1=85 =D1=81=D0=BE =D1=81=D1=82=
+=D1=80=D0=B8=D0=BC=D0=B0) =D1=87=D0=B8=D1=82=D0=B0=D0=B5=D1=82 =D1=82=D0=B0=
+=D0=B1=D0=BB=D0=B8=D1=86=D1=83 <strong>user_triggers</strong></p></li>
+<li><p>=D0=A7=D0=B8=D1=82=D0=B0=D0=B5=D1=82 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=
+=D0=B5=D1=80=D1=8B, =D0=BD=D0=B0 =D0=BA=D0=BE=D1=82=D0=BE=D1=80=D1=8B=D0=B5=
+ =D0=BF=D0=BE=D0=B4=D0=BF=D0=B8=D1=81=D0=B0=D0=BD =D0=BF=D0=BE=D0=BB=D1=8C=
+=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8C.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 <strong>trigger_type_name =3D simple </stro=
+ng>=D0=BF=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D0=BC =D0=B2<strong> UC=
+16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BA=D0=
+=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 simple</st=
+rong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 <strong>trigger_type_name =3D average </str=
+ong>=D0=BF=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D0=BC =D0=B2<strong> U=
+C16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BA=D0=
+=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 average</s=
+trong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 <strong>trigger_type_name =3D target </stro=
+ng>=D0=BF=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D0=BC =D0=B2<strong> UC=
+16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BA=D0=
+=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=
+=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 target</st=
+rong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 <strong>$result</strong> =3D null, =D0=9A=
+=D0=BE=D0=BD=D0=B5=D1=86 UC.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 <strong>$result</strong> !=3D null =D1=84=
+=D0=BE=D1=80=D0=BC=D0=B8=D1=80=D1=83=D0=B5=D1=82 =D0=BE=D1=82=D0=B2=D0=B5=
+=D1=82 =D0=BF=D0=BE =D0=BA=D0=B0=D0=B6=D0=B4=D0=BE=D0=B9 =D1=81=D1=82=D1=80=
+=D0=BE=D0=BA=D0=B5.</p></li>
+<li><p>=D0=9E=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D1=82 =D0=BF=
+=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8E <strong>=
+$result</strong></p></li>
+<li><p>=D0=9F=D0=B5=D1=80=D0=B5=D1=85=D0=BE=D0=B4=D0=B8=D1=82 =D0=BA =D1=81=
+=D0=BB=D0=B5=D0=B4=D1=83=D1=8E=D1=89=D0=B5=D0=B9 =D1=81=D1=82=D1=80=D0=BE=
+=D0=BA=D0=B5 <strong>user_triggers</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=
+=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=
+=B0 simple</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B5=D0=BC =D0=B7=D0=BD=D0=B0=
+=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=
+=D0=B5 =D0=BA=D1=83=D1=80=D1=81=D0=B0 =D0=BE=D1=82 <strong>Trigger-APP</str=
+ong> (=D1=81=D1=82=D1=80=D0=B8=D0=BC 1)</p></li>
+<li><p>=D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC =D0=B2<strong=
+> $result</strong></p></li>
+<li><p>=D0=92=D0=BE=D0=B7=D0=B2=D1=80=D0=B0=D1=89=D0=B0=D0=B5=D0=BC <strong=
+>$result</strong> =D0=B2 <strong>UC15. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=
+=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0</strong=
+></p></li>
+</ol>
+<p><strong>UC16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=
+=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=
+=B0 average</strong></p>
+<ol>
+<li><p>=D0=9F=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B5=D0=BC =D1=81=D1=80=D0=B5=
+=D0=B4=D0=BD=D0=B5=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 =
+=D0=BF=D0=B0=D1=80=D1=8B =D0=BE=D1=82 <strong>Trigger-APP </strong>(=D1=81=
+=D1=82=D1=80=D0=B8=D0=BC 2)</p></li>
+<li><p>=D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC =D0=B2 <stron=
+g>$result</strong></p></li>
+<li><p>=D0=92=D0=BE=D0=B7=D0=B2=D1=80=D0=B0=D1=89=D0=B0=D0=B5=D0=BC<strong>=
+ $result =D0=B2 UC15. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=
+=B8=D0=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0</strong></p></li>
+</ol>
+<p><strong>UC16. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=B8=D0=
+=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0. =D0=9E=D0=B1=D1=80=D0=B0=D0=
+=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=
+=B0 target</strong></p>
+<ol>
+<li><p>=D0=9F=D1=80=D0=BE=D0=B2=D0=B5=D1=80=D1=8F=D0=B5=D0=BC, =D0=BF=D1=80=
+=D0=B8=D1=88=D0=B5=D0=BB =D0=BB=D0=B8 =D0=A2=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=
+=D1=80 =D0=BE=D1=82 <strong>Trigger-APP</strong></p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BF=D1=80=D0=B8=D1=88=D0=B5=D0=BB - <str=
+ong>$result</strong> =3D =D0=B8=D1=81=D0=BA=D0=BE=D0=BC=D0=BE=D0=B5 =D0=B7=
+=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BF=D0=B0=D1=80=D1=8B =D0=B2=
+=D0=B0=D0=BB=D1=8E=D1=82.</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=BD=D0=B5=D1=82 - <strong>$result =3D nu=
+ll</strong></p></li>
+<li><p>=D0=92=D0=BE=D0=B7=D0=B2=D1=80=D0=B0=D1=89=D0=B0=D0=B5=D0=BC<strong>=
+ $result =D0=B2 UC15. =D0=9E=D0=BF=D0=BE=D0=B2=D0=B5=D1=89=D0=B5=D0=BD=D0=
+=B8=D0=B5 =D0=BA=D0=BB=D0=B8=D0=B5=D0=BD=D1=82=D0=B0</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>Trigger-App</strong></p>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p><strong>UC17. =D0=97=D0=B0=D0=B3=D1=80=D1=83=D0=B7=D0=BA=D0=B0 =D0=B8=D0=
+=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=B8 =D0=BE=D1=82 =D0=BF=D0=
+=BE=D1=81=D1=82=D0=B0=D0=B2=D1=89=D0=B8=D0=BA=D0=B0 =D0=B8=D0=BD=D1=84=D0=
+=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=B8.</strong></p>
+<ol>
+<li><p><strong>Trigger-APP</strong> =D0=BF=D1=80=D0=B8 =D1=81=D1=82=D0=B0=
+=D1=80=D1=82=D0=B5 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B5=D1=82 =D0=B8=
+=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=BE =D0=BD=D0=B5=
+=D0=BE=D0=B1=D1=85=D0=BE=D0=B4=D0=B8=D0=BC=D1=8B=D1=85 =D0=BF=D0=B0=D1=80=
+=D0=B0=D1=85 =D0=B2=D0=B0=D0=BB=D1=8E=D1=82 =D0=BE=D1=82 <strong>Bot-APP, <=
+/strong>=D0=BA=D0=BE=D1=82=D0=BE=D1=80=D1=8B=D0=B5 =D1=81=D0=BE=D0=B4=D0=B5=
+=D1=80=D0=B6=D0=B0=D1=82=D1=81=D1=8F =D0=B2<strong> currency</strong>, =D1=
+=82=D0=B0=D0=BA=D0=B6=D0=B5 =D0=BF=D0=BE=D0=BB=D1=83=D1=87=D0=B0=D0=B5=D1=
+=82 =D1=81=D0=BF=D0=B8=D1=81=D0=BE=D0=BA =D0=B2=D1=81=D0=B5=D1=85 <strong>=
+=D0=A2=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=BE=D0=B2 </strong>=D1=82=D0=
+=B8=D0=BF=D0=B0 <strong>target</strong>.</p></li>
+<li><p>=D0=9C=D0=BE=D0=B4=D1=83=D0=BB=D1=8C =D1=81=D0=B2=D1=8F=D0=B7=D0=B8 =
+=D1=81 =D0=BF=D0=BE=D1=81=D1=82=D0=B0=D0=B2=D1=89=D0=B8=D0=BA=D0=BE=D0=BC =
+=D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=B8 =D0=BE =D0=BA=
+=D1=83=D1=80=D1=81=D0=B5 =D0=BA=D1=80=D0=B8=D0=BF=D1=82=D0=BE=D0=B2=D0=B0=
+=D0=BB=D1=8E=D1=82=D1=8B =D0=BF=D0=B5=D1=80=D0=B8=D0=BE=D0=B4=D0=B8=D1=87=
+=D0=B5=D1=81=D0=BA=D0=B8 =D0=B7=D0=B0=D0=B3=D1=80=D1=83=D0=B6=D0=B0=D0=B5=
+=D1=82 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=BF=
+=D0=BE =D0=B2=D1=81=D0=B5=D0=BC =D0=BA=D1=80=D0=B8=D0=BF=D1=82=D0=BE=D0=B2=
+=D0=B0=D0=BB=D1=8E=D1=82=D0=B0=D0=BC =D0=BE=D1=82 =D0=B8=D1=81=D1=82=D0=BE=
+=D1=87=D0=BD=D0=B8=D0=BA=D0=B0.</p></li>
+<li><p>=D0=9F=D0=B0=D1=80=D1=81=D0=B8=D1=82 =D0=BE=D1=82=D0=B2=D0=B5=D1=82 =
+=D0=B8 =D0=B7=D0=B0=D0=B1=D0=B8=D1=80=D0=B0=D0=B5=D1=82 =D1=82=D0=BE=D0=BB=
+=D1=8C=D0=BA=D0=BE =D0=BF=D0=B0=D1=80=D1=8B =D0=B2=D0=B0=D0=BB=D1=8E=D1=82,=
+ =D0=BA=D0=BE=D1=82=D0=BE=D1=80=D1=8B=D0=B5 =D1=81=D0=BE=D0=B4=D0=B5=D1=80=
+=D0=B6=D0=B0=D1=82=D1=81=D1=8F =D0=B2 <strong>currency</strong>.</p></li>
+<li><p>=D0=92=D1=8B=D1=87=D0=B8=D1=81=D0=BB=D1=8F=D0=B5=D1=82 min/avg/max =
+=D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D1=8F =D0=B7=D0=B0 =D0=B2=D1=81=
+=D0=B5 =D0=B2=D1=80=D0=B5=D0=BC=D1=8F =D1=80=D0=B0=D0=B1=D0=BE=D1=82=D1=8B =
+=D0=BF=D1=80=D0=B8=D0=BB=D0=BE=D0=B6=D0=B5=D0=BD=D0=B8=D1=8F</p></li>
+<li><p>=D0=92=D1=8B=D1=87=D0=B8=D1=81=D0=BB=D1=8F=D0=B5=D1=82 =D1=81=D0=BA=
+=D0=BE=D0=BB=D1=8C=D0=B7=D1=8F=D1=89=D0=B5=D0=B5 min/avg/max =D0=B7=D0=B0 1=
+, 5, 10 =D0=BC=D0=B8=D0=BD=D1=83=D1=82</p></li>
+<li><p>=D0=9E=D0=BF=D1=80=D0=B5=D0=B4=D0=B5=D0=BB=D1=8F=D0=B5=D1=82, =D1=81=
+=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=B0=D0=BB=D0=B8 =D0=BB=D0=B8 <strong>=D0=
+=A2=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D1=8B target (UC17. =D0=9E=D0=B1=D1=
+=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=
+=B5=D1=80=D0=B0 target)</strong>. =D0=9F=D1=80=D0=B8 =D1=81=D1=80=D0=B0=D0=
+=B1=D0=B0=D1=82=D1=8B=D0=B2=D0=B0=D0=BD=D0=B8=D0=B8 =D0=B3=D0=BE=D1=82=D0=
+=BE=D0=B2=D0=B8=D1=82 =D0=BA =D0=BE=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BA=D0=
+=B5 =D0=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=B2 =D0=
+=B2=D0=B8=D0=B4=D0=B5 <strong>Id =D1=81=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=B0=
+=D0=B2=D1=88=D0=B5=D0=B3=D0=BE =D1=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=
+=D0=B0.</strong></p></li>
+<li><p>=D0=98=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D1=8E =D0=BE=
+=D1=82=D0=BF=D1=80=D0=B0=D0=B2=D0=BB=D1=8F=D0=B5=D1=82 =D0=BC=D0=BE=D0=B4=
+=D1=83=D0=BB=D1=8E <strong>Bot-APP</strong>.</p></li>
+</ol>
+<p><strong>UC17. =D0=9E=D0=B1=D1=80=D0=B0=D0=B1=D0=BE=D1=82=D0=BA=D0=B0 =D1=
+=82=D1=80=D0=B8=D0=B3=D0=B3=D0=B5=D1=80=D0=B0 target</strong></p>
+<ol>
+<li><p>=D0=92=D1=8B=D0=B1=D0=B8=D1=80=D0=B0=D0=B5=D0=BC =D0=BF=D0=BE=D1=81=
+=D0=BB=D0=B5=D0=B4=D0=BD=D0=B5=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=
+=D0=B8=D0=B5 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=D0=B5 =D0=BA=D1=83=
+=D1=80=D1=81=D0=B0 =D0=BF=D0=B0=D1=80=D1=8B =D0=B2 =D1=82=D1=80=D0=B8=D0=B3=
+=D0=B3=D0=B5=D1=80=D0=B5</p></li>
+<li><p>=D0=95=D1=81=D0=BB=D0=B8 =D0=B7=D0=BD=D0=B0=D1=87=D0=B5=D0=BD=D0=B8=
+=D0=B5 =D0=BF=D0=B0=D1=80=D1=8B =3D=3D <strong>trigger_targetvalue, </stron=
+g>=D0=A1=D0=BE=D1=85=D1=80=D0=B0=D0=BD=D1=8F=D0=B5=D0=BC <strong>$result =
+=3D trigger_id.</strong> </p></li>
+<li><p>=D0=98=D0=BD=D0=B0=D1=87=D0=B5 <strong>$result =3D null</strong></p>=
+</li>
+<li><p>=D0=92=D0=BE=D0=B7=D0=B2=D1=80=D0=B0=D1=89=D0=B0=D0=B5=D0=BC<strong>=
+ $result =D0=B2 UC15. =D0=97=D0=B0=D0=B3=D1=80=D1=83=D0=B7=D0=BA=D0=B0 =D0=
+=B8=D0=BD=D1=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=B8 =D0=BE=D1=82 =D0=
+=BF=D0=BE=D1=81=D1=82=D0=B0=D0=B2=D1=89=D0=B8=D0=BA=D0=B0 =D0=B8=D0=BD=D1=
+=84=D0=BE=D1=80=D0=BC=D0=B0=D1=86=D0=B8=D0=B8.</strong></p></li>
+</ol>
+<p>=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D</p>
+<p></p>
+    </div>
+</body>
+</html>
+------=_Part_64_383976772.1645295472458--
