@@ -13,3 +13,16 @@ server:
 
 api-app:
   hostname: http://${API_APP_HOST:localhost}:8080/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    distribution:
+      percentiles-histogram:
+        "[http.server.requests]": true
