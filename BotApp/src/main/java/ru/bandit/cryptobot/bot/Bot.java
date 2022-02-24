@@ -28,6 +28,7 @@ public class Bot extends TelegramLongPollingBot {
     private final String token;
     private final String username;
     Logger logger = LoggerFactory.getLogger(Bot.class);
+
     @Autowired
     BotRequestProcessor requestProcessor;
 
@@ -56,7 +57,7 @@ public class Bot extends TelegramLongPollingBot {
 
                 MetricsEntity metrics = metricsRepository.findById(1L);
                 if (metrics == null) metrics = new MetricsEntity();
-                metrics.setTextCommandCount(metrics.getTextCommandCount());
+                metrics.setTextCommandCount(metrics.getTextCommandCount() + 1);
                 metricsRepository.save(metrics);
                 logger.debug("Ignoring request because it is not a command: {}", incomingRequest);
 
@@ -94,7 +95,7 @@ public class Bot extends TelegramLongPollingBot {
             //calculating metrics
             MetricsEntity metrics = metricsRepository.findById(1L);
             if (metrics == null) metrics = new MetricsEntity();
-            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount());
+            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount() + 1);
             metricsRepository.save(metrics);
 
             //preparing incoming request
