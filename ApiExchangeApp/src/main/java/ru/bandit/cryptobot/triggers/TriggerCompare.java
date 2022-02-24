@@ -1,7 +1,7 @@
 package ru.bandit.cryptobot.triggers;
 
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.data_containers.Trigger;
+import ru.bandit.cryptobot.DTO.Trigger;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -12,7 +12,7 @@ import ru.bandit.cryptobot.DAO.RatesDAO;
 import ru.bandit.cryptobot.DAO.TriggersDAO;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
 import ru.bandit.cryptobot.clients.BotAppClient;
-import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
+import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.triggers.TriggerCompare;
 

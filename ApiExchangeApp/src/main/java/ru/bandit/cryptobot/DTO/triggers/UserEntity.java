@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.data_containers.triggers;
+package ru.bandit.cryptobot.DTO.triggers;
 
 import lombok.*;
 

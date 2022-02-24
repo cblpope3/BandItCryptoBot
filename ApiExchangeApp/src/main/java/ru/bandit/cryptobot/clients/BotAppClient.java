@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.data_containers.BinanceResponse;
-import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
+import ru.bandit.cryptobot.DTO.CurrencyRatesDTO;
+import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,15 +103,15 @@ public class BotAppClient {
     }
 
     /**
-     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link BinanceResponse}>.
+     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
      * @param input convertable {@link Map} of currency rates
-     * @return {@link List} of {@link BinanceResponse}
+     * @return {@link List} of {@link CurrencyRatesDTO}
      */
-    private List<BinanceResponse> convertData(Map<String, Double> input) {
-        List<BinanceResponse> result = new ArrayList<>();
+    private List<CurrencyRatesDTO> convertData(Map<String, Double> input) {
+        List<CurrencyRatesDTO> result = new ArrayList<>();
 
         for (Map.Entry<String, Double> rate : input.entrySet()) {
-            result.add(new BinanceResponse(rate.getKey(), rate.getValue().toString()));
+            result.add(new CurrencyRatesDTO(rate.getKey(), rate.getValue().toString()));
         }
 
         return result;

@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.data_containers;
+package ru.bandit.cryptobot.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
