@@ -225,7 +225,12 @@ public class BotService {
         userTrigger.setTriggerType(triggerType);
         userTrigger.setTargetValue(targetVal);
 
-        //todo check if this subscription is already in database
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        existingTriggerList.forEach(a -> a.setId(null));
+        if (existingTriggerList.contains(userTrigger)) {
+            logger.debug("User already subscribed to this trigger");
+            return ALREADY_SUBSCRIBED;
+        }
 
         userTriggersRepository.save(userTrigger);
         triggersService.createTargetTrigger(userTrigger);
@@ -269,7 +274,12 @@ public class BotService {
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
 
-        //todo check if this subscription is already in database
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        existingTriggerList.forEach(a -> a.setId(null));
+        if (existingTriggerList.contains(userTrigger)) {
+            logger.debug("User already subscribed to this trigger");
+            return ALREADY_SUBSCRIBED;
+        }
 
         userTriggersRepository.save(userTrigger);
 
@@ -283,7 +293,6 @@ public class BotService {
             return NOT_VALID_PARAMETER;
         }
 
-        //todo add user if not already in database
         UserEntity user = usersRepository.findByChatId(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
@@ -314,7 +323,12 @@ public class BotService {
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
 
-        //todo check if this subscription is already in database
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        existingTriggerList.forEach(a -> a.setId(null));
+        if (existingTriggerList.contains(userTrigger)) {
+            logger.debug("User already subscribed to this trigger");
+            return ALREADY_SUBSCRIBED;
+        }
 
         userTriggersRepository.save(userTrigger);
 
