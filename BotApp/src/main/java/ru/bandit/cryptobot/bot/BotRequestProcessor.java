@@ -224,7 +224,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully resumed");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Ваши рассылки восстановлены!");
+                            "Все подписки восстановлены!");
                 } else if (commandStatus == BotService.NOT_FOUND_USER) {
                     logger.trace(userNotFoundLog);
                     return new BotResponse(menuBack.getMarkup(null, null),
