@@ -1,10 +1,8 @@
 package ru.bandit.cryptobot.DAO;
 
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,7 +23,7 @@ public class RatesDAO {
     }
 
     /**
-     * Replace all stored currency rates by new {@link List} of {@link UserTriggerEntity}
+     * Replace all stored currency rates by new {@link Map} of currency rates
      *
      * @param currencyRates {@link Map} <{@link String}, {@link Double}> of new currency rates to save.
      */

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.bandit.cryptobot.DTO.TriggerDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.services.TriggersService;
 
@@ -44,9 +45,9 @@ public class TriggersController {
             @ApiResponse(code = 200, message = "OK.", response = UserTriggerEntity.class, responseContainer = "List"),
             @ApiResponse(code = 204, message = "No content.")})
     @GetMapping("/getAllTarget")
-    public ResponseEntity<List<UserTriggerEntity>> refreshTriggers() {
+    public ResponseEntity<List<TriggerDTO>> refreshTriggers() {
 
-        List<UserTriggerEntity> response = triggersService.getTargetTriggersList();
+        List<TriggerDTO> response = triggersService.getTargetTriggersList();
 
         if (response == null || response.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

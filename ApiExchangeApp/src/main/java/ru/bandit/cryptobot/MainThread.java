@@ -10,9 +10,9 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.bandit.cryptobot.DAO.Avg1MinuteRatesDAO;
 import ru.bandit.cryptobot.DAO.RatesDAO;
 import ru.bandit.cryptobot.DAO.TriggersDAO;
+import ru.bandit.cryptobot.DTO.TriggerDTO;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
 import ru.bandit.cryptobot.clients.BotAppClient;
-import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.triggers.TriggerCompare;
 
@@ -77,8 +77,9 @@ public class MainThread {
 
     @Scheduled(fixedDelay = 15000)
     private void generateRandomTrigger() {
+        //fixme this is mock worked trigger generator
         logger.trace("generating trigger");
-        List<UserTriggerEntity> triggers = triggersDAO.getTriggersList();
+        List<TriggerDTO> triggers = triggersDAO.getTriggersList();
         if (triggers == null || triggers.isEmpty()) return;
         botAppClient.postWorkedTrigger(triggers.remove(0).getId(), 36.6);
     }

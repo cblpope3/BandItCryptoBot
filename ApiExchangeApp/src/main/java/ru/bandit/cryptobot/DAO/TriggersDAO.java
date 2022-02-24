@@ -1,7 +1,7 @@
 package ru.bandit.cryptobot.DAO;
 
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
+import ru.bandit.cryptobot.DTO.TriggerDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,23 +11,24 @@ import java.util.List;
  */
 @Component
 public class TriggersDAO {
-    private final List<UserTriggerEntity> triggersList = new ArrayList<>();
+
+    private final List<TriggerDTO> triggersList = new ArrayList<>();
 
     /**
      * Get all triggers stored in this class
      *
-     * @return {@link List} of {@link UserTriggerEntity}
+     * @return {@link List} of {@link TriggerDTO}
      */
-    public List<UserTriggerEntity> getTriggersList() {
+    public List<TriggerDTO> getTriggersList() {
         return triggersList;
     }
 
     /**
-     * Replace all stored triggers by new {@link List} of {@link UserTriggerEntity}
+     * Replace all stored triggers by new {@link List} of {@link TriggerDTO}
      *
-     * @param triggersList {@link List} of new {@link UserTriggerEntity} to save.
+     * @param triggersList {@link List} of new {@link TriggerDTO} to save.
      */
-    public void setTriggersList(List<UserTriggerEntity> triggersList) {
+    public void setTriggersList(List<TriggerDTO> triggersList) {
         this.triggersList.clear();
         this.triggersList.addAll(triggersList);
     }
@@ -35,9 +36,9 @@ public class TriggersDAO {
     /**
      * Add new trigger to trigger storage
      *
-     * @param trigger new {@link UserTriggerEntity} to save in storage.
+     * @param trigger new {@link TriggerDTO} to save in storage.
      */
-    public void addTrigger(UserTriggerEntity trigger) {
+    public void addTrigger(TriggerDTO trigger) {
         this.triggersList.add(trigger);
     }
 

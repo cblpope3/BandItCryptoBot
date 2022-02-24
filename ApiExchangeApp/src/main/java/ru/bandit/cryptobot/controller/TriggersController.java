@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bandit.cryptobot.DTO.triggers.UserTriggerEntity;
 import ru.bandit.cryptobot.DAO.TriggersDAO;
+import ru.bandit.cryptobot.DTO.TriggerDTO;
 
 @Api(tags = {"Triggers"}, value = "Triggers", description = "Triggers API")
 @RestController
@@ -23,20 +23,31 @@ public class TriggersController {
     @ApiOperation(value = "Добавить новый триггер.", nickname = "newTrigger",
             notes = "Добавление нового триггера для дальнейшего отслеживания.", tags = {"Triggers",})
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "OK.")})
+            @ApiResponse(code = 200, message = "OK."),
+            @ApiResponse(code = 400, message = "Bad request.")})
     @PostMapping("")
-    public ResponseEntity<Object> addTrigger(@RequestBody UserTriggerEntity trigger) {
+    public ResponseEntity<Object> addTrigger(@RequestBody TriggerDTO trigger) {
+
+        System.out.println("Got new trigger: " + trigger.getCurrencyPair());
+
+        if (trigger.getId() == null
+                || trigger.getCurrencyPair() == null
+                || trigger.getTargetValue() == null
+                || trigger.getTriggerType() == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
         triggersDAO.addTrigger(trigger);
 
-        if (logger.isDebugEnabled()) logger.debug("New trigger saved: {}", trigger.toString());
-        return new ResponseEntity<>(HttpStatus.OK);
+        if (logger.isDebugEnabled()) logger.debug("New trigger saved: {}", trigger);
+        return new ResponseEntity<>("", HttpStatus.ACCEPTED);
     }
 
     @ApiOperation(value = "Удаление триггера.", nickname = "deleteTrigger",
             notes = "Удаление триггера с заданным id из списка отслеживаемых триггеров.", tags = {"Triggers",})
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "OK."),
+            @ApiResponse(code = 400, message = "Bad request."),
             @ApiResponse(code = 404, message = "Not found.")})
     @DeleteMapping("{triggerId}")
     public ResponseEntity<Object> deleteTrigger(@ApiParam(value = "Id удаляемого триггера.")
