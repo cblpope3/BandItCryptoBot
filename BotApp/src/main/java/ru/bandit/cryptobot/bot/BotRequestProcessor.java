@@ -204,7 +204,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully paused");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Ваши рассылки на паузе.");
+                            "Все подписки остановлены. Вы можете посмотреть свои подписки и возобновить их в любой момент.");
                 } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
                     logger.trace("no subscriptions");
                     return new BotResponse(menuBack.getMarkup(null, null),
