@@ -3,8 +3,12 @@ package ru.bandit.cryptobot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.server.ResponseStatusException;
+import ru.bandit.cryptobot.DAO.Avg1MinuteRatesDAO;
+import ru.bandit.cryptobot.DAO.RatesDAO;
 import ru.bandit.cryptobot.DAO.TriggersDAO;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
 import ru.bandit.cryptobot.clients.BotAppClient;
@@ -12,9 +16,7 @@ import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.triggers.TriggerCompare;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class MainThread {
@@ -22,36 +24,55 @@ public class MainThread {
 
     @Autowired
     BotAppClient botAppClient;
+
     @Autowired
     AverageCountService averageCountService;
+
     @Autowired
     TriggersDAO triggersDAO;
+
+    @Autowired
+    RatesDAO ratesDAO;
+
+    @Autowired
+    Avg1MinuteRatesDAO averageRates;
+
     @Autowired
     private TriggerCompare triggerCompare;
+
     @Autowired
     private BinanceApiClient binanceApiClient;
-    private Map<String, Double> currencyRates = new HashMap<>();
-    private Map<String, Double> average1MinuteRates = new HashMap<>();
 
     @Scheduled(fixedDelay = 5000)
-    public void performDataCycle() {
+    public void performDataCycle() throws InterruptedException {
 
-        //save new data
-        currencyRates = binanceApiClient.getAllCurrencyPrices();
-        logger.debug("Got new data from api.");
+        //fetch new data from remote api
+        try {
+            ratesDAO.setCurrencyRates(binanceApiClient.getAllCurrencyPrices());
+            logger.debug("Got new data from api.");
+        } catch (ResponseStatusException e) {
+            if (e.getStatus() == HttpStatus.TOO_MANY_REQUESTS) {
+                logger.error("Too frequent requests, need to cool down. Sleeping for 60 seconds.");
+                Thread.sleep(60000);
+                logger.info("Woke up from sleeping.");
+            } else if (e.getStatus() == HttpStatus.I_AM_A_TEAPOT) {
+                logger.error("We banned from Binance.com.");
+                System.exit(1);
+            }
+        }
 
         //update triggers
         triggersDAO.setTriggersList(botAppClient.getAllTriggers());
 
         //check triggers
-        triggerCompare.checkTriggers(currencyRates);
+        triggerCompare.checkTriggers(ratesDAO.getCurrencyRates());
 
         //calculating average
-        average1MinuteRates = averageCountService.get1MinuteAverage(currencyRates);
+        averageRates.setAverageCurrencyRates(averageCountService.get1MinuteAverage(ratesDAO.getCurrencyRates()));
 
         //send new rates
-        botAppClient.postNewRates(currencyRates);
-        botAppClient.postAverageRates(average1MinuteRates);
+        botAppClient.postNewRates(ratesDAO.getCurrencyRates());
+        botAppClient.postAverageRates(averageRates.getAverageCurrencyRates());
     }
 
     @Scheduled(fixedDelay = 15000)
