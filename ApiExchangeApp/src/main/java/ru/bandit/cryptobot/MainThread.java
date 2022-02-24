@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.TriggersRepository;
+import ru.bandit.cryptobot.DAO.TriggersDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.service.BinanceApiService;
 import ru.bandit.cryptobot.service.BotAppService;
@@ -30,7 +30,7 @@ public class MainThread {
     AverageCountService averageCountService;
 
     @Autowired
-    TriggersRepository triggersRepository;
+    TriggersDAO triggersDAO;
 
     private Map<String, Double> currencyRates = new HashMap<>();
     private Map<String, Double> average1MinuteRates = new HashMap<>();
@@ -43,7 +43,7 @@ public class MainThread {
         logger.debug("Got new data from api.");
 
         //update triggers
-        triggersRepository.setTriggersList(botAppService.requestAllTriggers());
+        triggersDAO.setTriggersList(botAppService.requestAllTriggers());
 
         //check triggers
         triggerCompare.checkTriggers(currencyRates);
@@ -59,7 +59,7 @@ public class MainThread {
     @Scheduled(fixedDelay = 15000)
     private void generateRandomTrigger() {
         logger.trace("generating trigger");
-        List<UserTriggerEntity> triggers = triggersRepository.getTriggersList();
+        List<UserTriggerEntity> triggers = triggersDAO.getTriggersList();
         if (triggers == null || triggers.isEmpty()) return;
         botAppService.sendWorkedTrigger(triggers.remove(0).getId(), 36.6);
     }
