@@ -11,7 +11,7 @@ public class BotMenuStop implements MenuItem {
 
     @Override
     public String getText(Long userId, List<String> param) {
-        return "Это безвозвратно удалит все ваши подписки. Вы уверены?";
+        return "Вы действительно хотите удалить все подписки? Действие необратимо.";
     }
 
     @Override

@@ -28,6 +28,7 @@ public class Bot extends TelegramLongPollingBot {
     private final String token;
     private final String username;
     Logger logger = LoggerFactory.getLogger(Bot.class);
+
     @Autowired
     BotRequestProcessor requestProcessor;
 
@@ -54,10 +55,6 @@ public class Bot extends TelegramLongPollingBot {
             String incomingRequest = update.getMessage().getText().toUpperCase();
             if (!incomingRequest.matches("(/)[A-Z0-9_/]+")) {
 
-                MetricsEntity metrics = metricsRepository.findById(1L);
-                if (metrics == null) metrics = new MetricsEntity();
-                metrics.setTextCommandCount(metrics.getTextCommandCount());
-                metricsRepository.save(metrics);
                 logger.debug("Ignoring request because it is not a command: {}", incomingRequest);
 
                 replyMessage.setChatId(update.getMessage().getChatId().toString());
@@ -70,6 +67,12 @@ public class Bot extends TelegramLongPollingBot {
                 }
                 return;
             }
+
+            //counting metrics
+            MetricsEntity metrics = metricsRepository.findById(1L);
+            if (metrics == null) metrics = new MetricsEntity();
+            metrics.setTextCommandCount(metrics.getTextCommandCount() + 1);
+            metricsRepository.save(metrics);
 
             //get markup and message text
             BotResponse responseTemplate = requestProcessor.generateResponse(processQuery(incomingRequest),
@@ -94,7 +97,7 @@ public class Bot extends TelegramLongPollingBot {
             //calculating metrics
             MetricsEntity metrics = metricsRepository.findById(1L);
             if (metrics == null) metrics = new MetricsEntity();
-            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount());
+            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount() + 1);
             metricsRepository.save(metrics);
 
             //preparing incoming request

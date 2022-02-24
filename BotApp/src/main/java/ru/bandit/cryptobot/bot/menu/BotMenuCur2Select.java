@@ -68,6 +68,12 @@ public class BotMenuCur2Select implements MenuItem {
             }
         }
 
+        InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
+        buttonBack.setCallbackData(MenuItemsEnum.SELECT_1_CUR.toString());
+
+        List<InlineKeyboardButton> lastRow = List.of(buttonBack);
+        buttonsGrid.add(lastRow);
+
         return new InlineKeyboardMarkup(buttonsGrid);
     }
 }

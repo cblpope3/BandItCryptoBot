@@ -11,7 +11,7 @@ public class BotMenuDirection implements MenuItem {
 
     @Override
     public String getText(Long userId, List<String> param) {
-        return "Выберите тип уведомления:";
+        return "Выберите искомое направление изменения:";
     }
 
     @Override
