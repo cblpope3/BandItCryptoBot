@@ -9,7 +9,7 @@ import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
 import ru.bandit.cryptobot.DAO.TriggersDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.service.BinanceApiService;
-import ru.bandit.cryptobot.service.BotAppService;
+import ru.bandit.cryptobot.clients.BotAppClient;
 import ru.bandit.cryptobot.triggers.TriggerCompare;
 
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class MainThread {
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    BotAppService botAppService;
+    BotAppClient botAppClient;
     @Autowired
     private TriggerCompare triggerCompare;
     @Autowired
@@ -43,7 +43,7 @@ public class MainThread {
         logger.debug("Got new data from api.");
 
         //update triggers
-        triggersDAO.setTriggersList(botAppService.requestAllTriggers());
+        triggersDAO.setTriggersList(botAppClient.getAllTriggers());
 
         //check triggers
         triggerCompare.checkTriggers(currencyRates);
@@ -52,8 +52,8 @@ public class MainThread {
         average1MinuteRates = averageCountService.get1MinuteAverage(currencyRates);
 
         //send new rates
-        botAppService.publishNewRates(currencyRates);
-        botAppService.publishAverageRates(average1MinuteRates);
+        botAppClient.postNewRates(currencyRates);
+        botAppClient.postAverageRates(average1MinuteRates);
     }
 
     @Scheduled(fixedDelay = 15000)
@@ -61,6 +61,6 @@ public class MainThread {
         logger.trace("generating trigger");
         List<UserTriggerEntity> triggers = triggersDAO.getTriggersList();
         if (triggers == null || triggers.isEmpty()) return;
-        botAppService.sendWorkedTrigger(triggers.remove(0).getId(), 36.6);
+        botAppClient.postWorkedTrigger(triggers.remove(0).getId(), 36.6);
     }
 }
