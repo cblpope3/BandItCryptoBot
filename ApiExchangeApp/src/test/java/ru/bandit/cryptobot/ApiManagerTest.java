@@ -5,13 +5,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import ru.bandit.cryptobot.service.BinanceApiService;
+import ru.bandit.cryptobot.clients.BinanceApiClient;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApiManagerTest extends TestCase {
 
     @Mock
-    BinanceApiService mainServiceMock;
+    BinanceApiClient mainServiceMock;
 
     @Test
     public void testApiManager() {

@@ -5,11 +5,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.DAO.TriggersDAO;
+import ru.bandit.cryptobot.clients.BinanceApiClient;
+import ru.bandit.cryptobot.clients.BotAppClient;
 import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.TriggersRepository;
 import ru.bandit.cryptobot.service.AverageCountService;
-import ru.bandit.cryptobot.service.BinanceApiService;
-import ru.bandit.cryptobot.service.BotAppService;
 import ru.bandit.cryptobot.triggers.TriggerCompare;
 
 import java.util.HashMap;
@@ -21,17 +21,15 @@ public class MainThread {
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    BotAppService botAppService;
+    BotAppClient botAppClient;
+    @Autowired
+    AverageCountService averageCountService;
+    @Autowired
+    TriggersDAO triggersDAO;
     @Autowired
     private TriggerCompare triggerCompare;
     @Autowired
-    private BinanceApiService binanceApiService;
-    @Autowired
-    AverageCountService averageCountService;
-
-    @Autowired
-    TriggersRepository triggersRepository;
-
+    private BinanceApiClient binanceApiClient;
     private Map<String, Double> currencyRates = new HashMap<>();
     private Map<String, Double> average1MinuteRates = new HashMap<>();
 
@@ -39,11 +37,11 @@ public class MainThread {
     public void performDataCycle() {
 
         //save new data
-        currencyRates = binanceApiService.getAllCurrencyPrices();
+        currencyRates = binanceApiClient.getAllCurrencyPrices();
         logger.debug("Got new data from api.");
 
         //update triggers
-        triggersRepository.setTriggersList(botAppService.requestAllTriggers());
+        triggersDAO.setTriggersList(botAppClient.getAllTriggers());
 
         //check triggers
         triggerCompare.checkTriggers(currencyRates);
@@ -52,15 +50,15 @@ public class MainThread {
         average1MinuteRates = averageCountService.get1MinuteAverage(currencyRates);
 
         //send new rates
-        botAppService.publishNewRates(currencyRates);
-        botAppService.publishAverageRates(average1MinuteRates);
+        botAppClient.postNewRates(currencyRates);
+        botAppClient.postAverageRates(average1MinuteRates);
     }
 
     @Scheduled(fixedDelay = 15000)
     private void generateRandomTrigger() {
         logger.trace("generating trigger");
-        List<UserTriggerEntity> triggers = triggersRepository.getTriggersList();
+        List<UserTriggerEntity> triggers = triggersDAO.getTriggersList();
         if (triggers == null || triggers.isEmpty()) return;
-        botAppService.sendWorkedTrigger(triggers.remove(0).getId(), 36.6);
+        botAppClient.postWorkedTrigger(triggers.remove(0).getId(), 36.6);
     }
 }
