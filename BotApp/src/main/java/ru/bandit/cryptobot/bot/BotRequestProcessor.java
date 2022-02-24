@@ -102,7 +102,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -129,7 +129,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -156,7 +156,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
