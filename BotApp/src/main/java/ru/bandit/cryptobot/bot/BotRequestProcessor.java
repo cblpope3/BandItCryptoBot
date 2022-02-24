@@ -205,6 +205,10 @@ public class BotRequestProcessor {
                     logger.trace("successfully paused");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Ваши рассылки на паузе.");
+                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                    logger.trace("no subscriptions");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас нет подписок.");
                 } else if (commandStatus == BotService.NOT_FOUND_USER) {
                     logger.trace(userNotFoundLog);
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -225,6 +229,10 @@ public class BotRequestProcessor {
                     logger.trace(userNotFoundLog);
                     return new BotResponse(menuBack.getMarkup(null, null),
                             userNotFound);
+                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                    logger.trace("no subscriptions");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас нет подписок.");
                 } else {
                     logger.error("Error while trying to resume");
                     return new BotResponse(menuBack.getMarkup(null, null),
