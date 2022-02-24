@@ -83,7 +83,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("Unsubscribed successfully.");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписки успешно удалены.");
+                            "Все подписки удалены. Вы можете посмотреть новые в меню \"Операции с валютами\".");
                 } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
                     logger.trace("No subscriptions found.");
                     return new BotResponse(menuBack.getMarkup(null, null),
