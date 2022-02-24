@@ -3,27 +3,20 @@ package ru.bandit.cryptobot.service;
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
-import ru.bandit.cryptobot.data_containers.BinanceResponse;
-
-import java.util.List;
+import ru.bandit.cryptobot.clients.BinanceApiClient;
 
 @RunWith(MockitoJUnitRunner.class)
-public class BinanceApiServiceTest extends TestCase {
+public class BinanceApiClientTest extends TestCase {
 
     @Mock
     private RestTemplate restTemplate;
 
     @InjectMocks
-    private BinanceApiService testingService;
+    private BinanceApiClient testingService;
 
     @Test
     public void testGetAllCurrencyPricesFineResponse() {
