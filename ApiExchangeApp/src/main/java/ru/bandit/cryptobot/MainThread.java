@@ -28,9 +28,6 @@ public class MainThread {
     private RatesDAO ratesDAO;
 
     @Autowired
-    private Avg1MinuteRatesDAO averageRates;
-
-    @Autowired
     private TriggersService triggersService;
 
     @Autowired
@@ -61,11 +58,11 @@ public class MainThread {
         triggersService.checkTriggers(ratesDAO.getCurrencyRates());
 
         //calculating average
-        averageRates.setAverageCurrencyRates(averageCountService.get1MinuteAverage(ratesDAO.getCurrencyRates()));
+        averageCountService.calculateNew1MinuteAverages();
 
         //send new rates
         botAppClient.postNewRates(ratesDAO.getCurrencyRates());
-        botAppClient.postAverageRates(averageRates.getAverageCurrencyRates());
+        botAppClient.postAverageRates(averageCountService.get1MinuteAverages());
     }
 
 }
