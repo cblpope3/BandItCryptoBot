@@ -41,10 +41,17 @@
             <version>${spring.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <modules>
         <module>ApiExchangeApp</module>
         <module>BotApp</module>
+        <module>CommonDTOLibrary</module>
     </modules>
 </project>

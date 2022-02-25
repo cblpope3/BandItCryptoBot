@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import ru.bandit.cryptobot.data_containers.BinanceResponse;
+import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public class BinanceApiClient {
      * @throws ResponseStatusException in case of too frequent requests.
      */
     public Map<String, Double> getAllCurrencyPrices() throws ResponseStatusException {
-        ResponseEntity<List<BinanceResponse>> responseEntity = null;
+        ResponseEntity<List<CurrencyRatesDTO>> responseEntity = null;
 
         //trying to get new data
         try {
@@ -68,15 +68,15 @@ public class BinanceApiClient {
     /**
      * This method filters all data that got from external api accordingly to allowed currency rates list hardcoded here.
      *
-     * @param unfilteredData {@link List} of {@link BinanceResponse}: all currencies rates got from external api.
+     * @param unfilteredData {@link List} of {@link CurrencyRatesDTO}: all currencies rates got from external api.
      * @return {@link Map} of filtered data: key - {@link String}: rate name (for example 'BTCRUB'),
      * value - {@link Double}: currencies rate value
      */
-    public Map<String, Double> filterRates(List<BinanceResponse> unfilteredData) {
+    public Map<String, Double> filterRates(List<CurrencyRatesDTO> unfilteredData) {
         Map<String, Double> unfilteredMap = unfilteredData.stream()
                 .collect(Collectors.toMap(
-                        BinanceResponse::getSymbol,
-                        (BinanceResponse item) -> Double.parseDouble(item.getPrice())));
+                        CurrencyRatesDTO::getSymbol,
+                        (CurrencyRatesDTO item) -> Double.parseDouble(item.getPrice())));
         Map<String, Double> filteredData = new HashMap<>();
 
         List<String> allowedRates = List.of(

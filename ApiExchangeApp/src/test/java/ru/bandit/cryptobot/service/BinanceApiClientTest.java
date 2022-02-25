@@ -21,15 +21,15 @@ public class BinanceApiClientTest extends TestCase {
     @Test
     public void testGetAllCurrencyPricesFineResponse() {
 
-//        BinanceResponse testResponse1 = new BinanceResponse("BTCUSD", "89.99");
-//        BinanceResponse testResponse2 = new BinanceResponse("BTCRUB", "8999.99");
+//        CurrencyRatesDTO testResponse1 = new CurrencyRatesDTO("BTCUSD", "89.99");
+//        CurrencyRatesDTO testResponse2 = new CurrencyRatesDTO("BTCRUB", "8999.99");
 //
-//        List<BinanceResponse> receivedList = List.of(testResponse1, testResponse2);
+//        List<CurrencyRatesDTO> receivedList = List.of(testResponse1, testResponse2);
 //
 //        HttpHeaders header = new HttpHeaders();
 //        header.setContentType(MediaType.APPLICATION_JSON);
 //
-//        ResponseEntity<List<BinanceResponse>> goodResponse = new ResponseEntity<>(receivedList,
+//        ResponseEntity<List<CurrencyRatesDTO>> goodResponse = new ResponseEntity<>(receivedList,
 //                header,
 //                HttpStatus.OK);
 //
@@ -37,7 +37,7 @@ public class BinanceApiClientTest extends TestCase {
 //                        ArgumentMatchers.anyString(),
 //                        ArgumentMatchers.any(HttpMethod.class),
 //                        ArgumentMatchers.isNull(),
-//                        ArgumentMatchers.<ParameterizedTypeReference<List<BinanceResponse>>>any()))
+//                        ArgumentMatchers.<ParameterizedTypeReference<List<CurrencyRatesDTO>>>any()))
 //                .thenReturn(goodResponse);
 //
 //
@@ -52,7 +52,7 @@ public class BinanceApiClientTest extends TestCase {
 //        HttpHeaders header = new HttpHeaders();
 //        header.setContentType(MediaType.APPLICATION_JSON);
 //
-//        ResponseEntity<List<BinanceResponse>> badResponse = new ResponseEntity<>(null,
+//        ResponseEntity<List<CurrencyRatesDTO>> badResponse = new ResponseEntity<>(null,
 //                header,
 //                HttpStatus.TOO_MANY_REQUESTS);
 //
@@ -60,7 +60,7 @@ public class BinanceApiClientTest extends TestCase {
 //                        ArgumentMatchers.anyString(),
 //                        ArgumentMatchers.any(HttpMethod.class),
 //                        ArgumentMatchers.isNull(),
-//                        ArgumentMatchers.<ParameterizedTypeReference<List<BinanceResponse>>>any()))
+//                        ArgumentMatchers.<ParameterizedTypeReference<List<CurrencyRatesDTO>>>any()))
 //                .thenReturn(badResponse);
 //
 //        try {

@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.data_containers.BinanceResponse;
-import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
+import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class BotAppClient {
 
         try {
             ResponseEntity<String> response;
-            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates", convertData(newRates), String.class);
+            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates", convertCurrencyRatesToList(newRates), String.class);
             logger.trace("Rates have been sent to Bot App. Response status code is: {}", response.getStatusCode());
         } catch (RestClientException e) {
             logger.error("Got exception while sending new rates to Bot-App: {}", e.getMessage());
@@ -52,7 +52,7 @@ public class BotAppClient {
 
         try {
             ResponseEntity<String> response;
-            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates/1m_avg", convertData(averageRates), String.class);
+            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates/1m_avg", convertCurrencyRatesToList(averageRates), String.class);
             logger.trace("Average values have been sent to Bot App. Response code is: {}", response.getStatusCode());
         } catch (RestClientException e) {
             logger.error("Got exception while sending new average values to Bot-App: {}", e.getMessage());
@@ -61,11 +61,11 @@ public class BotAppClient {
 
     /**
      * Request all active triggers from Bot-App api.
-     * @return {@link List} of available triggers ({@link UserTriggerEntity}).
+     * @return {@link List} of available triggers ({@link TriggerDTO}).
      */
-    public List<UserTriggerEntity> getAllTriggers() {
+    public List<TriggerDTO> getAllTriggers() {
 
-        ResponseEntity<List<UserTriggerEntity>> responseEntity = null;
+        ResponseEntity<List<TriggerDTO>> responseEntity = null;
 
         try {
             responseEntity = restTemplate.exchange(botAppCurrencyUrl + "trigger/getAllTarget", HttpMethod.GET, null,
@@ -103,15 +103,15 @@ public class BotAppClient {
     }
 
     /**
-     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link BinanceResponse}>.
+     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
      * @param input convertable {@link Map} of currency rates
-     * @return {@link List} of {@link BinanceResponse}
+     * @return {@link List} of {@link CurrencyRatesDTO}
      */
-    private List<BinanceResponse> convertData(Map<String, Double> input) {
-        List<BinanceResponse> result = new ArrayList<>();
+    private List<CurrencyRatesDTO> convertCurrencyRatesToList(Map<String, Double> input) {
+        List<CurrencyRatesDTO> result = new ArrayList<>();
 
         for (Map.Entry<String, Double> rate : input.entrySet()) {
-            result.add(new BinanceResponse(rate.getKey(), rate.getValue().toString()));
+            result.add(new CurrencyRatesDTO(rate.getKey(), rate.getValue().toString()));
         }
 
         return result;
