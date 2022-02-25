@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
 import ru.bandit.cryptobot.clients.BotAppClient;
-import ru.bandit.cryptobot.dao.Avg1MinuteRatesDAO;
 import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.service.TriggersService;
@@ -57,12 +56,8 @@ public class MainThread {
         //check triggers
         triggersService.checkTriggers(ratesDAO.getCurrencyRates());
 
-        //calculating average
-        averageCountService.calculateNew1MinuteAverages();
-
         //send new rates
         botAppClient.postNewRates(ratesDAO.getCurrencyRates());
-        botAppClient.postAverageRates(averageCountService.get1MinuteAverages());
+        botAppClient.postAverageRates(averageCountService.calculateNew1MinuteAverages());
     }
-
 }
