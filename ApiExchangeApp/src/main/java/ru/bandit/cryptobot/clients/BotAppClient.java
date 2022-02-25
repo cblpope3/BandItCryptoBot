@@ -9,8 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.DTO.CurrencyRatesDTO;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
+import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.DTO;
+package ru.bandit.cryptobot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.bot.Bot;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;

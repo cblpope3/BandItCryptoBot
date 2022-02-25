@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.DAO;
+package ru.bandit.cryptobot.dao;
 
 import org.springframework.stereotype.Component;
 

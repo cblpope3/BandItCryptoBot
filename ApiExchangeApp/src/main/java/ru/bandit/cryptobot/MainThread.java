@@ -7,38 +7,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
-import ru.bandit.cryptobot.DAO.Avg1MinuteRatesDAO;
-import ru.bandit.cryptobot.DAO.RatesDAO;
-import ru.bandit.cryptobot.DAO.TriggersDAO;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
 import ru.bandit.cryptobot.clients.BotAppClient;
+import ru.bandit.cryptobot.dao.Avg1MinuteRatesDAO;
+import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
-import ru.bandit.cryptobot.triggers.TriggerCompare;
-
-import java.util.List;
+import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
 public class MainThread {
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    BotAppClient botAppClient;
+    private BotAppClient botAppClient;
 
     @Autowired
-    AverageCountService averageCountService;
+    private AverageCountService averageCountService;
 
     @Autowired
-    TriggersDAO triggersDAO;
+    private RatesDAO ratesDAO;
 
     @Autowired
-    RatesDAO ratesDAO;
+    private Avg1MinuteRatesDAO averageRates;
 
     @Autowired
-    Avg1MinuteRatesDAO averageRates;
-
-    @Autowired
-    private TriggerCompare triggerCompare;
+    private TriggersService triggersService;
 
     @Autowired
     private BinanceApiClient binanceApiClient;
@@ -62,10 +55,10 @@ public class MainThread {
         }
 
         //update triggers
-        triggersDAO.setTriggersList(botAppClient.getAllTriggers());
+        triggersService.updateTriggerList();
 
         //check triggers
-        triggerCompare.checkTriggers(ratesDAO.getCurrencyRates());
+        triggersService.checkTriggers(ratesDAO.getCurrencyRates());
 
         //calculating average
         averageRates.setAverageCurrencyRates(averageCountService.get1MinuteAverage(ratesDAO.getCurrencyRates()));
@@ -75,12 +68,4 @@ public class MainThread {
         botAppClient.postAverageRates(averageRates.getAverageCurrencyRates());
     }
 
-    @Scheduled(fixedDelay = 15000)
-    private void generateRandomTrigger() {
-        //fixme this is mock worked trigger generator
-        logger.trace("generating trigger");
-        List<TriggerDTO> triggers = triggersDAO.getTriggersList();
-        if (triggers == null || triggers.isEmpty()) return;
-        botAppClient.postWorkedTrigger(triggers.remove(0).getId(), 36.6);
-    }
 }

@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bandit.cryptobot.DAO.TriggersDAO;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
+import ru.bandit.cryptobot.dao.TriggersDAO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 
 @Api(tags = {"Triggers"}, value = "Triggers", description = "Triggers API")
 @RestController

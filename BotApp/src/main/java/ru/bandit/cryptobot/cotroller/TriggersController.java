@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.services.TriggersService;
 

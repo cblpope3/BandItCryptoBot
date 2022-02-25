@@ -1,7 +1,7 @@
-package ru.bandit.cryptobot.DAO;
+package ru.bandit.cryptobot.dao;
 
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.DTO.TriggerDTO;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 
 import java.util.ArrayList;
 import java.util.List;

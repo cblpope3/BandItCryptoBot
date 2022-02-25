@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-import ru.bandit.cryptobot.DTO.CurrencyRatesDTO;
+import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
 import java.util.Collections;
 import java.util.HashMap;
