@@ -3,66 +3,58 @@ package ru.bandit.cryptobot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
-import ru.bandit.cryptobot.clients.BinanceApiClient;
-import ru.bandit.cryptobot.clients.BotAppClient;
-import ru.bandit.cryptobot.dao.Avg1MinuteRatesDAO;
-import ru.bandit.cryptobot.dao.RatesDAO;
-import ru.bandit.cryptobot.service.AverageCountService;
+import ru.bandit.cryptobot.service.AverageRatesService;
+import ru.bandit.cryptobot.service.BinanceApiService;
+import ru.bandit.cryptobot.service.CurrentRatesService;
 import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
 public class MainThread {
+
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    private BotAppClient botAppClient;
+    CurrentRatesService currentRatesService;
 
     @Autowired
-    private AverageCountService averageCountService;
+    AverageRatesService averageRatesService;
 
     @Autowired
-    private RatesDAO ratesDAO;
+    TriggersService triggersService;
 
     @Autowired
-    private TriggersService triggersService;
+    BinanceApiService binanceApiService;
 
-    @Autowired
-    private BinanceApiClient binanceApiClient;
-
+    /**
+     * Method perform periodic cycle to update currency rates.
+     */
     @Scheduled(fixedDelay = 5000)
-    public void performDataCycle() throws InterruptedException {
+    public void performDataCycle() {
 
         //fetch new data from remote api
         try {
-            ratesDAO.setCurrencyRates(binanceApiClient.getAllCurrencyPrices());
-            logger.debug("Got new data from api.");
-        } catch (ResponseStatusException e) {
-            if (e.getStatus() == HttpStatus.TOO_MANY_REQUESTS) {
-                logger.error("Too frequent requests, need to cool down. Sleeping for 60 seconds.");
-                Thread.sleep(60000);
-                logger.info("Woke up from sleeping.");
-            } else if (e.getStatus() == HttpStatus.I_AM_A_TEAPOT) {
-                logger.error("We banned from Binance.com.");
-                System.exit(1);
-            }
+            binanceApiService.getNewCurrencyRates();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage());
+            Thread.currentThread().interrupt();
         }
 
-        //update triggers
-        triggersService.updateTriggerList();
-
         //check triggers
-        triggersService.checkTriggers(ratesDAO.getCurrencyRates());
-
-        //calculating average
-        averageCountService.calculateNew1MinuteAverages();
+        triggersService.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
-        botAppClient.postNewRates(ratesDAO.getCurrencyRates());
-        botAppClient.postAverageRates(averageCountService.get1MinuteAverages());
+        currentRatesService.publishNewRates(currentRatesService.getCurrencyRates());
+        averageRatesService.publishNewRates(averageRatesService.calculateNew1MinuteAverages());
     }
 
+    /**
+     * Method perform periodic active triggers list synchronisation with Bot-App.
+     */
+    @Scheduled(fixedDelay = 20000)
+    public void periodicTriggersSync() {
+        //update triggers
+        triggersService.updateTriggerList();
+    }
 }

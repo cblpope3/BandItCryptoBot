@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.bot.Bot;
+import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
@@ -45,7 +45,7 @@ public class TriggersService {
                             triggerDTO.setId(trigger.getId());
                             //fixme this must be double in database
                             triggerDTO.setTargetValue(trigger.getTargetValue().doubleValue());
-                            if (trigger.getTriggerType().getTriggerName().toLowerCase() == "target-up") {
+                            if (trigger.getTriggerType().getTriggerName().equalsIgnoreCase("target-up")) {
                                 triggerDTO.setTriggerType(TriggerDTO.TriggerType.UP);
                             } else {
                                 triggerDTO.setTriggerType(TriggerDTO.TriggerType.DOWN);
@@ -100,8 +100,8 @@ public class TriggersService {
         triggerDTO.setTargetValue(newTrigger.getTargetValue().doubleValue());
         triggerDTO.setCurrencyPair(newTrigger.getCurrencyPair().getCurrency1().getCurrencyNameSource().toUpperCase() +
                 newTrigger.getCurrencyPair().getCurrency2().getCurrencyNameSource().toUpperCase());
-        if (newTrigger.getTriggerType().getTriggerName().toLowerCase() == "target-up") {
-
+        if (newTrigger.getTriggerType().getTriggerName().equalsIgnoreCase("target-up")) {
+            triggerDTO.setTriggerType(TriggerDTO.TriggerType.UP);
         } else {
             triggerDTO.setTriggerType(TriggerDTO.TriggerType.DOWN);
         }
