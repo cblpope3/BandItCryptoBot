@@ -8,9 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
-import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.service.AverageRatesService;
-import ru.bandit.cryptobot.service.RatesService;
+import ru.bandit.cryptobot.service.CurrentRatesService;
 import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
@@ -19,14 +18,10 @@ public class MainThread {
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    RatesService ratesService;
+    CurrentRatesService currentRatesService;
 
     @Autowired
     AverageRatesService averageRatesService;
-
-    //todo replace dao with service
-    @Autowired
-    RatesDAO ratesDAO;
 
     @Autowired
     TriggersService triggersService;
@@ -45,7 +40,7 @@ public class MainThread {
 
         //fetch new data from remote api
         try {
-            ratesDAO.setCurrencyRates(binanceApiClient.getAllCurrencyPrices());
+            currentRatesService.setCurrencyRates(binanceApiClient.getAllCurrencyPrices());
             logger.debug("Got new data from api.");
         } catch (ResponseStatusException e) {
             if (e.getStatus() == HttpStatus.TOO_MANY_REQUESTS) {
@@ -62,8 +57,8 @@ public class MainThread {
         triggersService.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
-        ratesService.publishNewRates(ratesDAO.getCurrencyRates());
-        ratesService.publishNew1MinuteAverageRates(averageRatesService.calculateNew1MinuteAverages());
+        currentRatesService.publishNewRates(currentRatesService.getCurrencyRates());
+        averageRatesService.publishNewRates(averageRatesService.calculateNew1MinuteAverages());
     }
 
     /**
