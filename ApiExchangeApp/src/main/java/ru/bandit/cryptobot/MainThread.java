@@ -8,7 +8,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
-import ru.bandit.cryptobot.clients.BotAppClient;
+import ru.bandit.cryptobot.clients.BotAppRatesClient;
+import ru.bandit.cryptobot.clients.BotAppTriggersClient;
 import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
 import ru.bandit.cryptobot.service.TriggersService;
@@ -18,18 +19,25 @@ public class MainThread {
 
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
+    //todo replace client with service
     @Autowired
-    BotAppClient botAppClient;
+    BotAppRatesClient botAppRatesClient;
+
+    //todo replace client with service
+    @Autowired
+    BotAppTriggersClient botAppTriggersClient;
 
     @Autowired
     AverageCountService averageCountService;
 
+    //todo replace dao with service
     @Autowired
     RatesDAO ratesDAO;
 
     @Autowired
     TriggersService triggersService;
 
+    //todo replace client with service
     @Autowired
     BinanceApiClient binanceApiClient;
 
@@ -57,11 +65,11 @@ public class MainThread {
         }
 
         //check triggers
-        botAppClient.postWorkedTriggersCollection(triggersService.checkTriggers());
+        botAppTriggersClient.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
-        botAppClient.postNewRates(ratesDAO.getCurrencyRates());
-        botAppClient.postAverageRates(averageCountService.calculateNew1MinuteAverages());
+        botAppRatesClient.postNewRates(ratesDAO.getCurrencyRates());
+        botAppRatesClient.postAverageRates(averageCountService.calculateNew1MinuteAverages());
     }
 
     /**

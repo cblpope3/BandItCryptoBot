@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.clients.BotAppClient;
+import ru.bandit.cryptobot.clients.BotAppTriggersClient;
 import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.dao.TriggersDAO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
@@ -26,7 +26,7 @@ public class TriggersService {
     TriggersDAO activeTriggers;
 
     @Autowired
-    BotAppClient botAppClient;
+    BotAppTriggersClient botAppTriggersClient;
 
     @Autowired
     RatesDAO ratesDAO;
@@ -107,7 +107,7 @@ public class TriggersService {
 
         int randomTriggerId = (int) (Math.random() * triggers.size());
 
-        botAppClient.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
+        botAppTriggersClient.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
     }
 
     /**
@@ -135,6 +135,6 @@ public class TriggersService {
      */
     public void updateTriggerList() {
         logger.trace("Got update trigger list command.");
-        activeTriggers.setTriggersList(botAppClient.getAllTriggers());
+        activeTriggers.setTriggersList(botAppTriggersClient.getAllTriggers());
     }
 }
