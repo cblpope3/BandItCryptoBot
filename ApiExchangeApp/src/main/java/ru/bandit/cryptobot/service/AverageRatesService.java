@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
  * This class performs calculation average values of currency rates.
  */
 @Service
-public class AverageCountService {
+public class AverageRatesService {
 
     @Autowired
     RatesArchiveDAO ratesArchiveDAO;

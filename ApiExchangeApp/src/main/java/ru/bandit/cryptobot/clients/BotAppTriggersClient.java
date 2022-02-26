@@ -11,13 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class that communicates with Bot-App api about triggers.
@@ -79,37 +76,5 @@ public class BotAppTriggersClient {
         } catch (RestClientException e) {
             logger.error("Error while trying to send worked trigger to Bot-App: {}", e.getMessage());
         }
-    }
-
-    /**
-     * Send {@link Map} of worked triggers to Bot-App
-     *
-     * @param triggersCollection {@link Map} of trigger id ({@link Long}) -> currency rate ({@link Double})
-     */
-    public void postWorkedTriggersCollection(Map<Long, Double> triggersCollection) {
-
-        if (triggersCollection == null || triggersCollection.isEmpty()) return;
-
-        logger.trace("Posting worked triggers collection: {}", triggersCollection);
-
-        for (Map.Entry<Long, Double> workedTrigger : triggersCollection.entrySet()) {
-            this.postWorkedTrigger(workedTrigger.getKey(), workedTrigger.getValue());
-        }
-    }
-
-    /**
-     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
-     *
-     * @param input convertable {@link Map} of currency rates
-     * @return {@link List} of {@link CurrencyRatesDTO}
-     */
-    private List<CurrencyRatesDTO> convertCurrencyRatesToList(Map<String, Double> input) {
-        List<CurrencyRatesDTO> result = new ArrayList<>();
-
-        for (Map.Entry<String, Double> rate : input.entrySet()) {
-            result.add(new CurrencyRatesDTO(rate.getKey(), rate.getValue().toString()));
-        }
-
-        return result;
     }
 }

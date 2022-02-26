@@ -94,6 +94,22 @@ public class TriggersService {
     }
 
     /**
+     * Send {@link Map} of worked triggers to Bot-App
+     *
+     * @param triggersCollection {@link Map} of trigger id ({@link Long}) -> currency rate ({@link Double})
+     */
+    public void postWorkedTriggersCollection(Map<Long, Double> triggersCollection) {
+
+        if (triggersCollection == null || triggersCollection.isEmpty()) return;
+
+        logger.trace("Posting worked triggers collection: {}", triggersCollection);
+
+        for (Map.Entry<Long, Double> workedTrigger : triggersCollection.entrySet()) {
+            botAppTriggersClient.postWorkedTrigger(workedTrigger.getKey(), workedTrigger.getValue());
+        }
+    }
+
+    /**
      * Method randomly generates worked trigger. Used for test purposes.
      *
      * @param newData {@link Map} of new currency rates.
@@ -107,7 +123,7 @@ public class TriggersService {
 
         int randomTriggerId = (int) (Math.random() * triggers.size());
 
-        botAppTriggersClient.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
+        this.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
     }
 
     /**

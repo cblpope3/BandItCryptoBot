@@ -15,13 +15,13 @@ import java.util.Map;
  * This class contains logic to interact with {@link BotAppRatesClient}.
  */
 @Service
-public class BotAppRatesService {
+public class RatesService {
 
     private final BotAppRatesClient botAppRatesClient;
-    Logger logger = LoggerFactory.getLogger(BotAppRatesService.class);
+    Logger logger = LoggerFactory.getLogger(RatesService.class);
 
     @Autowired
-    public BotAppRatesService(BotAppRatesClient botAppRatesClient) {
+    public RatesService(BotAppRatesClient botAppRatesClient) {
         this.botAppRatesClient = botAppRatesClient;
     }
 
@@ -48,7 +48,7 @@ public class BotAppRatesService {
             logger.error("Trying to publish empty average rates.");
             return;
         }
-        botAppRatesClient.postNewRates(convertCurrencyRatesToList(newRates));
+        botAppRatesClient.postAverageRates(convertCurrencyRatesToList(newRates));
     }
 
     /**
