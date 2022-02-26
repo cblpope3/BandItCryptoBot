@@ -31,6 +31,7 @@ public class BotAppClient {
 
     /**
      * Post new currencies rates. Makes POST-request to Bot-App api.
+     *
      * @param newRates {@link Map} <{@link String}><{@link Double}> of current currency rates
      */
     public void postNewRates(Map<String, Double> newRates) {
@@ -46,6 +47,7 @@ public class BotAppClient {
 
     /**
      * Post new 1-minute average currencies rates. Makes POST-request to Bot-App api.
+     *
      * @param averageRates {@link Map} <{@link String}, {@link Double}> of current 1-minute average currency rates
      */
     public void postAverageRates(Map<String, Double> averageRates) {
@@ -61,6 +63,7 @@ public class BotAppClient {
 
     /**
      * Request all active triggers from Bot-App api.
+     *
      * @return {@link List} of available triggers ({@link TriggerDTO}).
      */
     public List<TriggerDTO> getAllTriggers() {
@@ -86,8 +89,9 @@ public class BotAppClient {
 
     /**
      * Send worked trigger to Bot-App api.
+     *
      * @param triggerId id of worked trigger.
-     * @param value value of trigger-watched currency rate.
+     * @param value     value of trigger-watched currency rate.
      */
     public void postWorkedTrigger(Long triggerId, Double value) {
 
@@ -103,7 +107,24 @@ public class BotAppClient {
     }
 
     /**
+     * Send {@link Map} of worked triggers to Bot-App
+     *
+     * @param triggersCollection {@link Map} of trigger id ({@link Long}) -> currency rate ({@link Double})
+     */
+    public void postWorkedTriggersCollection(Map<Long, Double> triggersCollection) {
+
+        if (triggersCollection == null || triggersCollection.isEmpty()) return;
+
+        logger.trace("Posting worked triggers collection: {}", triggersCollection);
+
+        for (Map.Entry<Long, Double> workedTrigger : triggersCollection.entrySet()) {
+            this.postWorkedTrigger(workedTrigger.getKey(), workedTrigger.getValue());
+        }
+    }
+
+    /**
      * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
+     *
      * @param input convertable {@link Map} of currency rates
      * @return {@link List} of {@link CurrencyRatesDTO}
      */

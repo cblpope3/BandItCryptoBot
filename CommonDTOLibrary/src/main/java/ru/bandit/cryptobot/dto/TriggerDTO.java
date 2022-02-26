@@ -30,11 +30,32 @@ public class TriggerDTO {
     @JsonProperty("triggerType")
     private TriggerType triggerType;
 
+    @Override
+    public String toString() {
+        return "TriggerDTO{" +
+                "id=" + id +
+                ", currencyPair='" + currencyPair + '\'' +
+                ", targetValue=" + targetValue +
+                ", triggerType=" + triggerType +
+                '}';
+    }
+
     /**
      * Enumerate that contains possible trigger type values: "UP" and "DOWN".
      */
     public enum TriggerType {
-        UP,
-        DOWN
+        UP("UP"),
+        DOWN("DOWN");
+
+        private final String type;
+
+        TriggerType(String type) {
+            this.type = type;
+        }
+
+        @Override
+        public String toString() {
+            return "Trigger type = " + type;
+        }
     }
 }

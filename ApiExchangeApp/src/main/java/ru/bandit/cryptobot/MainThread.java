@@ -15,23 +15,29 @@ import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
 public class MainThread {
+
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    private BotAppClient botAppClient;
+    BotAppClient botAppClient;
 
     @Autowired
-    private AverageCountService averageCountService;
+    AverageCountService averageCountService;
 
     @Autowired
-    private RatesDAO ratesDAO;
+    RatesDAO ratesDAO;
 
     @Autowired
-    private TriggersService triggersService;
+    TriggersService triggersService;
 
     @Autowired
-    private BinanceApiClient binanceApiClient;
+    BinanceApiClient binanceApiClient;
 
+    /**
+     * Method perform periodic cycle to update currency rates.
+     *
+     * @throws InterruptedException if cool down timer is interrupted.
+     */
     @Scheduled(fixedDelay = 5000)
     public void performDataCycle() throws InterruptedException {
 
@@ -50,14 +56,20 @@ public class MainThread {
             }
         }
 
-        //update triggers
-        triggersService.updateTriggerList();
-
         //check triggers
-        triggersService.checkTriggers(ratesDAO.getCurrencyRates());
+        botAppClient.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
         botAppClient.postNewRates(ratesDAO.getCurrencyRates());
         botAppClient.postAverageRates(averageCountService.calculateNew1MinuteAverages());
+    }
+
+    /**
+     * Method perform periodic active triggers list synchronisation with Bot-App.
+     */
+    @Scheduled(fixedDelay = 20000)
+    public void periodicTriggersSync() {
+        //update triggers
+        triggersService.updateTriggerList();
     }
 }
