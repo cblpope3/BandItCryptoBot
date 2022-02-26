@@ -18,7 +18,7 @@ import java.util.Map;
 @Service
 public class BotAppAverageRatesClient extends BotAppRatesClient {
 
-    Logger logger = LoggerFactory.getLogger(BotAppAverageRatesClient.class);
+    private final Logger logger = LoggerFactory.getLogger(BotAppAverageRatesClient.class);
 
     @Autowired
     public BotAppAverageRatesClient(RestTemplateBuilder restTemplateBuilder) {

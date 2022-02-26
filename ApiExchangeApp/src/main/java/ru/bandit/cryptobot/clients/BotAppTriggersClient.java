@@ -23,7 +23,7 @@ import java.util.List;
 public class BotAppTriggersClient {
 
     private final RestTemplate restTemplate;
-    Logger logger = LoggerFactory.getLogger(BotAppTriggersClient.class);
+    private final Logger logger = LoggerFactory.getLogger(BotAppTriggersClient.class);
 
     @Value("${bot-app.hostname}")
     private String botAppCurrencyUrl;

@@ -2,6 +2,8 @@ package ru.bandit.cryptobot.clients;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -21,8 +23,13 @@ import java.util.List;
 @Service
 public class BinanceApiClient {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    Logger logger = LoggerFactory.getLogger(BinanceApiClient.class);
+    private final RestTemplate restTemplate;
+    private final Logger logger = LoggerFactory.getLogger(BinanceApiClient.class);
+
+    @Autowired
+    public BinanceApiClient(RestTemplateBuilder restTemplateBuilder) {
+        this.restTemplate = restTemplateBuilder.build();
+    }
 
     /**
      * Get latest currency rates
