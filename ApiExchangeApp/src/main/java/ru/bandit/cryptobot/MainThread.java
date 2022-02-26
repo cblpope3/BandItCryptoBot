@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 import ru.bandit.cryptobot.clients.BinanceApiClient;
-import ru.bandit.cryptobot.clients.BotAppRatesClient;
 import ru.bandit.cryptobot.clients.BotAppTriggersClient;
 import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.service.AverageCountService;
+import ru.bandit.cryptobot.service.BotAppRatesService;
 import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
@@ -19,9 +19,8 @@ public class MainThread {
 
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
-    //todo replace client with service
     @Autowired
-    BotAppRatesClient botAppRatesClient;
+    BotAppRatesService botAppRatesService;
 
     //todo replace client with service
     @Autowired
@@ -68,8 +67,8 @@ public class MainThread {
         botAppTriggersClient.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
-        botAppRatesClient.postNewRates(ratesDAO.getCurrencyRates());
-        botAppRatesClient.postAverageRates(averageCountService.calculateNew1MinuteAverages());
+        botAppRatesService.publishNewRates(ratesDAO.getCurrencyRates());
+        botAppRatesService.publishNew1MinuteAverageRates(averageCountService.calculateNew1MinuteAverages());
     }
 
     /**

@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -37,11 +36,11 @@ public class BotAppRatesClient {
      *
      * @param newRates {@link Map} <{@link String}><{@link Double}> of current currency rates
      */
-    public void postNewRates(Map<String, Double> newRates) {
+    public void postNewRates(List<CurrencyRatesDTO> newRates) {
 
         try {
             ResponseEntity<String> response;
-            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates", convertCurrencyRatesToList(newRates), String.class);
+            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates", newRates, String.class);
             logger.trace("Rates have been sent to Bot App. Response status code is: {}", response.getStatusCode());
         } catch (RestClientException e) {
             logger.error("Got exception while sending new rates to Bot-App: {}", e.getMessage());
@@ -53,30 +52,14 @@ public class BotAppRatesClient {
      *
      * @param averageRates {@link Map} <{@link String}, {@link Double}> of current 1-minute average currency rates
      */
-    public void postAverageRates(Map<String, Double> averageRates) {
+    public void postAverageRates(List<CurrencyRatesDTO> averageRates) {
 
         try {
             ResponseEntity<String> response;
-            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates/1m_avg", convertCurrencyRatesToList(averageRates), String.class);
+            response = restTemplate.postForEntity(botAppCurrencyUrl + "rates/1m_avg", averageRates, String.class);
             logger.trace("Average values have been sent to Bot App. Response code is: {}", response.getStatusCode());
         } catch (RestClientException e) {
             logger.error("Got exception while sending new average values to Bot-App: {}", e.getMessage());
         }
-    }
-
-    /**
-     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
-     *
-     * @param input convertable {@link Map} of currency rates
-     * @return {@link List} of {@link CurrencyRatesDTO}
-     */
-    private List<CurrencyRatesDTO> convertCurrencyRatesToList(Map<String, Double> input) {
-        List<CurrencyRatesDTO> result = new ArrayList<>();
-
-        for (Map.Entry<String, Double> rate : input.entrySet()) {
-            result.add(new CurrencyRatesDTO(rate.getKey(), rate.getValue().toString()));
-        }
-
-        return result;
     }
 }
