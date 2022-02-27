@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClientException;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withStatus;
 
@@ -32,10 +31,10 @@ class BotAppAverageRatesClientTest {
     void postNewRates() {
         this.server.expect(requestTo(botAppCurrencyUrl + "rates/1m_avg"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().json(ClientsTestData.getExpectedResponse()))
+                .andExpect(content().json(ClientsTestData.getTestJson()))
                 .andRespond(withStatus(HttpStatus.ACCEPTED));
 
-        botAppAverageRatesClient.postNewRates(ClientsTestData.getTestData());
+        botAppAverageRatesClient.postNewRates(ClientsTestData.getTestArrayList());
     }
 
     @Test
@@ -43,11 +42,11 @@ class BotAppAverageRatesClientTest {
 
         this.server.expect(requestTo(botAppCurrencyUrl + "rates/1m_avg"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().json(ClientsTestData.getExpectedResponse()))
+                .andExpect(content().json(ClientsTestData.getTestJson()))
                 .andRespond(response -> {
                     throw new RestClientException("Test exception");
                 });
 
-        botAppAverageRatesClient.postNewRates(ClientsTestData.getTestData());
+        botAppAverageRatesClient.postNewRates(ClientsTestData.getTestArrayList());
     }
 }

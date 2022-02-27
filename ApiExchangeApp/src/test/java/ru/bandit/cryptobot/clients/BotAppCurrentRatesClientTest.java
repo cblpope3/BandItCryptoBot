@@ -32,10 +32,10 @@ class BotAppCurrentRatesClientTest {
 
         this.server.expect(requestTo(botAppCurrencyUrl + "rates"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().json(ClientsTestData.getExpectedResponse()))
+                .andExpect(content().json(ClientsTestData.getTestJson()))
                 .andRespond(withStatus(HttpStatus.ACCEPTED));
 
-        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestData());
+        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArrayList());
     }
 
     @Test
@@ -43,11 +43,11 @@ class BotAppCurrentRatesClientTest {
 
         this.server.expect(requestTo(botAppCurrencyUrl + "rates"))
                 .andExpect(method(HttpMethod.POST))
-                .andExpect(content().json(ClientsTestData.getExpectedResponse()))
+                .andExpect(content().json(ClientsTestData.getTestJson()))
                 .andRespond(response -> {
                     throw new RestClientException("Test exception");
                 });
 
-        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestData());
+        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArrayList());
     }
 }
