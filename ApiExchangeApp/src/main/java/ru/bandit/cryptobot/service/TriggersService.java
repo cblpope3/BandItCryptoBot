@@ -20,16 +20,17 @@ import java.util.Map;
 @Component
 public class TriggersService {
 
-    Logger logger = LoggerFactory.getLogger(TriggersService.class);
+    private final TriggersDAO triggersDAO;
+    private final BotAppTriggersClient botAppTriggersClient;
+    private final RatesDAO ratesDAO;
+    private final Logger logger = LoggerFactory.getLogger(TriggersService.class);
 
     @Autowired
-    TriggersDAO activeTriggers;
-
-    @Autowired
-    BotAppTriggersClient botAppTriggersClient;
-
-    @Autowired
-    RatesDAO ratesDAO;
+    public TriggersService(TriggersDAO triggersDAO, BotAppTriggersClient botAppTriggersClient, RatesDAO ratesDAO) {
+        this.triggersDAO = triggersDAO;
+        this.botAppTriggersClient = botAppTriggersClient;
+        this.ratesDAO = ratesDAO;
+    }
 
     /**
      * Method checks which of active triggers are worked.
@@ -40,7 +41,7 @@ public class TriggersService {
 
         logger.trace("Checking active triggers:");
 
-        List<TriggerDTO> triggers = activeTriggers.getTriggersList();
+        List<TriggerDTO> triggers = triggersDAO.getTriggersList();
         Map<String, Double> currencyRates = ratesDAO.getCurrencyRates();
 
         if (triggers == null || triggers.isEmpty()) {
@@ -48,46 +49,22 @@ public class TriggersService {
             return Collections.emptyMap();
         }
 
-
         //making list of worked triggers
         Map<Long, Double> workedTriggers = new HashMap<>();
 
         for (TriggerDTO trigger : triggers) {
             Double rateValue = currencyRates.get(trigger.getCurrencyPair());
 
-            if (trigger.getTriggerType().equals(TriggerDTO.TriggerType.UP)) {
-                //if trigger direction is "up"
+            if (this.isTriggerWorked(trigger, rateValue)) {
 
-                if (rateValue > trigger.getTargetValue()) {
-                    //this trigger worked!
-
-                    logger.trace("Got worked trigger: {}! Currency rate for {} is {}.", trigger, trigger.getCurrencyPair(), rateValue);
-
-                    workedTriggers.put(trigger.getId(), rateValue);
-                }
-
-            } else if (trigger.getTriggerType().equals(TriggerDTO.TriggerType.DOWN)) {
-                //if trigger direction is "down"
-
-                if (rateValue < trigger.getTargetValue()) {
-                    //this trigger worked!
-
-                    logger.trace("Got worked trigger: {}! Currency rate for {} is {}.", trigger, trigger.getCurrencyPair(), rateValue);
-
-                    workedTriggers.put(trigger.getId(), rateValue);
-                }
-
-            } else {
-                //unreachable statement
-                if (logger.isErrorEnabled())
-                    logger.error("Unknown trigger type: {}", trigger.getTriggerType().toString());
-                throw new IllegalArgumentException("Trigger type value is not supported!");
+                logger.trace("Got worked trigger: {}! Currency rate for {} is {}.", trigger, trigger.getCurrencyPair(), rateValue);
+                workedTriggers.put(trigger.getId(), rateValue);
             }
         }
 
         //delete worked triggers from triggers dao
         for (Map.Entry<Long, Double> workedTrigger : workedTriggers.entrySet()) {
-            activeTriggers.deleteTrigger(workedTrigger.getKey());
+            triggersDAO.deleteTrigger(workedTrigger.getKey());
         }
 
         return workedTriggers;
@@ -100,7 +77,10 @@ public class TriggersService {
      */
     public void postWorkedTriggersCollection(Map<Long, Double> triggersCollection) {
 
-        if (triggersCollection == null || triggersCollection.isEmpty()) return;
+        if (triggersCollection == null || triggersCollection.isEmpty()) {
+            logger.trace("Abort posting worked triggers to Bot-App: triggers map is empty.");
+            return;
+        }
 
         logger.trace("Posting worked triggers collection: {}", triggersCollection);
 
@@ -109,22 +89,22 @@ public class TriggersService {
         }
     }
 
-    /**
-     * Method randomly generates worked trigger. Used for test purposes.
-     *
-     * @param newData {@link Map} of new currency rates.
-     */
-    public void checkTriggersRandom(Map<String, Double> newData) {
-        logger.warn("Generating random trigger.");
-
-        List<TriggerDTO> triggers = activeTriggers.getTriggersList();
-
-        if (triggers == null || triggers.isEmpty()) return;
-
-        int randomTriggerId = (int) (Math.random() * triggers.size());
-
-        this.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
-    }
+//    /**
+//     * Method randomly generates worked trigger. Used for test purposes.
+//     *
+//     * @param newData {@link Map} of new currency rates.
+//     */
+//    public void checkTriggersRandom(Map<String, Double> newData) {
+//        logger.warn("Generating random trigger.");
+//
+//        List<TriggerDTO> triggers = triggersDAO.getTriggersList();
+//
+//        if (triggers == null || triggers.isEmpty()) return;
+//
+//        int randomTriggerId = (int) (Math.random() * triggers.size());
+//
+//        this.postWorkedTriggersCollection(Map.of(triggers.remove(randomTriggerId).getId(), 36.6));
+//    }
 
     /**
      * Method adds new trigger to {@link TriggersDAO}.
@@ -133,7 +113,7 @@ public class TriggersService {
      */
     public void addTrigger(TriggerDTO newTrigger) {
         logger.trace("Trying to save new trigger: {}.", newTrigger);
-        activeTriggers.addTrigger(newTrigger);
+        triggersDAO.addTrigger(newTrigger);
     }
 
     /**
@@ -143,7 +123,7 @@ public class TriggersService {
      */
     public boolean deleteTrigger(Long triggerId) {
         logger.trace("Got command to delete trigger with id={}", triggerId);
-        return activeTriggers.deleteTrigger(triggerId);
+        return triggersDAO.deleteTrigger(triggerId);
     }
 
     /**
@@ -151,6 +131,16 @@ public class TriggersService {
      */
     public void updateTriggerList() {
         logger.trace("Got update trigger list command.");
-        activeTriggers.setTriggersList(botAppTriggersClient.getAllTriggers());
+        triggersDAO.setTriggersList(botAppTriggersClient.getAllTriggers());
+    }
+
+    private boolean isTriggerWorked(TriggerDTO trigger, Double rateValue) {
+
+        return (trigger.getTriggerType().equals(TriggerDTO.TriggerType.UP)
+                && rateValue > trigger.getTargetValue())
+                ||
+                (trigger.getTriggerType().equals(TriggerDTO.TriggerType.DOWN)
+                        && rateValue < trigger.getTargetValue());
+
     }
 }
