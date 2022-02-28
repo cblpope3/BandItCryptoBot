@@ -12,11 +12,11 @@ import ru.bandit.cryptobot.clients.BinanceApiClient;
 @RunWith(MockitoJUnitRunner.class)
 public class BinanceApiClientTest extends TestCase {
 
-    @Mock
-    private RestTemplate restTemplate;
-
-    @InjectMocks
-    private BinanceApiClient testingService;
+//    @Mock
+//    private RestTemplate restTemplate;
+//
+//    @InjectMocks
+//    private BinanceApiClient testingService;
 
     @Test
     public void testGetAllCurrencyPricesFineResponse() {

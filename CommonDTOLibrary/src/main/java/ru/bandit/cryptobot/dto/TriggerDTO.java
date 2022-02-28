@@ -53,6 +53,10 @@ public class TriggerDTO {
             this.type = type;
         }
 
+        public String getTitle() {
+            return type;
+        }
+
         @Override
         public String toString() {
             return "Trigger type = " + type;
