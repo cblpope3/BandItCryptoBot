@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>bot_app</artifactId>
-  <version>0.2.0</version>
+  <version>0.3.0</version>
   <packaging>jar</packaging>
 
   <name>Application that works with bot.</name>
@@ -38,10 +38,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>${lombok.version}</version>
-      <scope>provided</scope>
+      <groupId>ru.bandit</groupId>
+      <artifactId>CommonDtoLibrary</artifactId>
+      <version>1.0.0</version>
     </dependency>
 
     <dependency>

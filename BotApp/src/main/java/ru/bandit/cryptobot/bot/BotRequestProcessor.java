@@ -83,7 +83,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("Unsubscribed successfully.");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписки успешно удалены.");
+                            "Все подписки удалены. Вы можете посмотреть новые в меню \"Операции с валютами\".");
                 } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
                     logger.trace("No subscriptions found.");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -102,7 +102,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -129,7 +129,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -156,7 +156,7 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Подписка создана успешно!");
+                            "Подписка успешно создана!");
                 } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
                     logger.trace("not found currency");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -204,7 +204,11 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully paused");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Ваши рассылки на паузе.");
+                            "Все подписки остановлены. Вы можете посмотреть свои подписки и возобновить их в любой момент.");
+                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                    logger.trace("no subscriptions");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас нет подписок.");
                 } else if (commandStatus == BotService.NOT_FOUND_USER) {
                     logger.trace(userNotFoundLog);
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -220,11 +224,15 @@ public class BotRequestProcessor {
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully resumed");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "Ваши рассылки восстановлены!");
+                            "Все подписки восстановлены!");
                 } else if (commandStatus == BotService.NOT_FOUND_USER) {
                     logger.trace(userNotFoundLog);
                     return new BotResponse(menuBack.getMarkup(null, null),
                             userNotFound);
+                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                    logger.trace("no subscriptions");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "У вас нет подписок.");
                 } else {
                     logger.error("Error while trying to resume");
                     return new BotResponse(menuBack.getMarkup(null, null),

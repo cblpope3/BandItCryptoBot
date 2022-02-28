@@ -5,62 +5,56 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.data_containers.triggers.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.TriggersRepository;
-import ru.bandit.cryptobot.service.AverageCountService;
+import ru.bandit.cryptobot.service.AverageRatesService;
 import ru.bandit.cryptobot.service.BinanceApiService;
-import ru.bandit.cryptobot.service.BotAppService;
-import ru.bandit.cryptobot.triggers.TriggerCompare;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import ru.bandit.cryptobot.service.CurrentRatesService;
+import ru.bandit.cryptobot.service.TriggersService;
 
 @Component
 public class MainThread {
+
     Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
-    BotAppService botAppService;
-    @Autowired
-    private TriggerCompare triggerCompare;
-    @Autowired
-    private BinanceApiService binanceApiService;
-    @Autowired
-    AverageCountService averageCountService;
+    CurrentRatesService currentRatesService;
 
     @Autowired
-    TriggersRepository triggersRepository;
+    AverageRatesService averageRatesService;
 
-    private Map<String, Double> currencyRates = new HashMap<>();
-    private Map<String, Double> average1MinuteRates = new HashMap<>();
+    @Autowired
+    TriggersService triggersService;
 
+    @Autowired
+    BinanceApiService binanceApiService;
+
+    /**
+     * Method perform periodic cycle to update currency rates.
+     */
     @Scheduled(fixedDelay = 5000)
     public void performDataCycle() {
 
-        //save new data
-        currencyRates = binanceApiService.getAllCurrencyPrices();
-        logger.debug("Got new data from api.");
-
-        //update triggers
-        triggersRepository.setTriggersList(botAppService.requestAllTriggers());
+        //fetch new data from remote api
+        try {
+            binanceApiService.getNewCurrencyRates();
+        } catch (InterruptedException e) {
+            logger.error(e.getMessage());
+            Thread.currentThread().interrupt();
+        }
 
         //check triggers
-        triggerCompare.checkTriggers(currencyRates);
-
-        //calculating average
-        average1MinuteRates = averageCountService.get1MinuteAverage(currencyRates);
+        triggersService.postWorkedTriggersCollection(triggersService.checkTriggers());
 
         //send new rates
-        botAppService.publishNewRates(currencyRates);
-        botAppService.publishAverageRates(average1MinuteRates);
+        currentRatesService.publishNewRates(currentRatesService.getCurrencyRates());
+        averageRatesService.publishNewRates(averageRatesService.calculateNew1MinuteAverages());
     }
 
-    @Scheduled(fixedDelay = 15000)
-    private void generateRandomTrigger() {
-        logger.trace("generating trigger");
-        List<UserTriggerEntity> triggers = triggersRepository.getTriggersList();
-        if (triggers == null || triggers.isEmpty()) return;
-        botAppService.sendWorkedTrigger(triggers.remove(0).getId(), 36.6);
+    /**
+     * Method perform periodic active triggers list synchronisation with Bot-App.
+     */
+    @Scheduled(fixedDelay = 20000)
+    public void periodicTriggersSync() {
+        //update triggers
+        triggersService.updateTriggerList();
     }
 }
