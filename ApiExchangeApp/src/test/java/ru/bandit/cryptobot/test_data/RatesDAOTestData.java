@@ -26,4 +26,8 @@ public class RatesDAOTestData extends CommonData {
     public static Map<String, Double> getFilteredBinanceData() {
         return Map.of(testRateSymbol1, testRateValue1_1, testRateSymbol2, testRateValue2_1);
     }
+
+    public static List<CurrencyRatesDTO> getCurrentRatesList() {
+        return List.of(currencyRate1, currencyRate2);
+    }
 }
