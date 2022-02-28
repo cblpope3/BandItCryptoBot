@@ -95,7 +95,7 @@ public class BinanceApiService {
 
         for (String rate : allowedRates) {
             if (unfilteredData.get(rate) == null) {
-                logger.error("not found rate in list of allowed rates!");
+                logger.error("Not found allowed rate in new rates list: " + rate);
             } else {
                 filteredData.put(rate, unfilteredData.get(rate));
             }
