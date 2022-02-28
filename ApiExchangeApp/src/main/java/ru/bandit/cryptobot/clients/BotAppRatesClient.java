@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.client.RestTemplate;
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
-import java.util.List;
+import java.util.Set;
 
 public abstract class BotAppRatesClient {
 
@@ -17,5 +17,5 @@ public abstract class BotAppRatesClient {
         this.restTemplate = restTemplate;
     }
 
-    public abstract void postNewRates(List<CurrencyRatesDTO> newRates);
+    public abstract void postNewRates(Set<CurrencyRatesDTO> newRates);
 }

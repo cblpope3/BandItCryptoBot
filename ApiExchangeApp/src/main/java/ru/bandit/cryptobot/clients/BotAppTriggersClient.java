@@ -23,7 +23,7 @@ import java.util.List;
 public class BotAppTriggersClient {
 
     private final RestTemplate restTemplate;
-    Logger logger = LoggerFactory.getLogger(BotAppTriggersClient.class);
+    private final Logger logger = LoggerFactory.getLogger(BotAppTriggersClient.class);
 
     @Value("${bot-app.hostname}")
     private String botAppCurrencyUrl;
@@ -66,6 +66,12 @@ public class BotAppTriggersClient {
      * @param value     value of trigger-watched currency rate.
      */
     public void postWorkedTrigger(Long triggerId, Double value) {
+
+        //check input params
+        if (triggerId == null || value == null) {
+            logger.error("Trying to send null in params. TriggerId = {}, Value = {}", triggerId, value);
+            throw new NullPointerException("Arguments cannot be null!");
+        }
 
         String requestUrl = String.format("%strigger/worked?triggerId=%d&value=%f", botAppCurrencyUrl, triggerId, value);
 

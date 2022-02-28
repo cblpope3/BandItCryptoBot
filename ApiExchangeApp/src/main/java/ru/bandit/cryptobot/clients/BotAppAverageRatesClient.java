@@ -9,8 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 /**
  * Class that sends new rates to Bot-App api.
@@ -18,7 +17,7 @@ import java.util.Map;
 @Service
 public class BotAppAverageRatesClient extends BotAppRatesClient {
 
-    Logger logger = LoggerFactory.getLogger(BotAppAverageRatesClient.class);
+    private final Logger logger = LoggerFactory.getLogger(BotAppAverageRatesClient.class);
 
     @Autowired
     public BotAppAverageRatesClient(RestTemplateBuilder restTemplateBuilder) {
@@ -28,10 +27,10 @@ public class BotAppAverageRatesClient extends BotAppRatesClient {
     /**
      * Post new 1-minute average currencies rates. Makes POST-request to Bot-App api.
      *
-     * @param averageRates {@link Map} <{@link String}, {@link Double}> of current 1-minute average currency rates
+     * @param averageRates {@link Set} <{@link CurrencyRatesDTO}> of current 1-minute average currency rates
      */
     @Override
-    public void postNewRates(List<CurrencyRatesDTO> averageRates) {
+    public void postNewRates(Set<CurrencyRatesDTO> averageRates) {
 
         try {
             ResponseEntity<String> response;
