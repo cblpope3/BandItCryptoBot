@@ -11,6 +11,8 @@ public class ClientsTestData {
 
     public final static Long trigger1Id = 234L;
     public final static Long trigger2Id = 432L;
+    public final static Long triggerIdWrong = 11L;
+
     public final static Double trigger1Value = 23.4;
     public final static Double trigger2Value = 43.2;
     private final static CurrencyRatesDTO currencyRates1 = new CurrencyRatesDTO("BTCRUB", "100.1");
@@ -32,6 +34,35 @@ public class ClientsTestData {
 
     public static List<CurrencyRatesDTO> getTestArrayList() {
         return testArrayList;
+    }
+
+    public static String getTriggerJson() {
+        return String.format("{\"triggerId\":%d,\"currencyPair\":\"%s\",\"targetValue\":%s,\"triggerType\":\"%s\"}",
+                testTrigger1.getId(), testTrigger1.getCurrencyPair(), testTrigger1.getTargetValue().toString(),
+                testTrigger1.getTriggerType().getTitle());
+    }
+
+    public static String getWrongTriggerJson1() {
+        return String.format("{\"currencyPair\":\"%s\",\"targetValue\":%s,\"triggerType\":\"%s\"}",
+                testTrigger1.getCurrencyPair(), testTrigger1.getTargetValue().toString(),
+                testTrigger1.getTriggerType().getTitle());
+    }
+
+    public static String getWrongTriggerJson2() {
+        return String.format("{\"triggerId\":%d,\"targetValue\":%s,\"triggerType\":\"%s\"}",
+                testTrigger1.getId(), testTrigger1.getTargetValue().toString(),
+                testTrigger1.getTriggerType().getTitle());
+    }
+
+    public static String getWrongTriggerJson3() {
+        return String.format("{\"triggerId\":%d,\"currencyPair\":\"%s\",\"triggerType\":\"%s\"}",
+                testTrigger1.getId(), testTrigger1.getCurrencyPair(),
+                testTrigger1.getTriggerType().getTitle());
+    }
+
+    public static String getWrongTriggerJson4() {
+        return String.format("{\"triggerId\":%d,\"currencyPair\":\"%s\",\"targetValue\":%s}",
+                testTrigger1.getId(), testTrigger1.getCurrencyPair(), testTrigger1.getTargetValue().toString());
     }
 
     public static String getTriggersJson() {
