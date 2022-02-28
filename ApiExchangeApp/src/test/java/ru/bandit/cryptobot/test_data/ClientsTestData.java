@@ -2,13 +2,12 @@ package ru.bandit.cryptobot.test_data;
 
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class ClientsTestData extends CommonData {
 
     private final static List<CurrencyRatesDTO> testArrayList = new ArrayList<>(Arrays.asList(currencyRate1, currencyRate2));
+    private final static Set<CurrencyRatesDTO> testArraySet = new HashSet<>(testArrayList);
 
     private final static String expectedResponse = String.format("[{\"symbol\":\"%s\",\"price\":\"%s\"},{\"symbol\":\"%s\",\"price\":\"%s\"}]",
             currencyRate1.getSymbol(), currencyRate1.getPrice(),
@@ -20,6 +19,10 @@ public class ClientsTestData extends CommonData {
 
     public static List<CurrencyRatesDTO> getTestArrayList() {
         return testArrayList;
+    }
+
+    public static Set<CurrencyRatesDTO> getTestArraySet() {
+        return testArraySet;
     }
 
     public static String getTriggerJson() {

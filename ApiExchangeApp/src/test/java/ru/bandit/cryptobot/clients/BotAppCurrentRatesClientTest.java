@@ -36,7 +36,7 @@ class BotAppCurrentRatesClientTest {
                 .andExpect(content().json(ClientsTestData.getTestJson()))
                 .andRespond(withStatus(HttpStatus.ACCEPTED));
 
-        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArrayList());
+        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArraySet());
     }
 
     @Test
@@ -49,6 +49,6 @@ class BotAppCurrentRatesClientTest {
                     throw new RestClientException("Test exception");
                 });
 
-        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArrayList());
+        botAppCurrentRatesClient.postNewRates(ClientsTestData.getTestArraySet());
     }
 }

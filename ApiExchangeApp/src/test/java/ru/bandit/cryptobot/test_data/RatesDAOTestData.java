@@ -4,6 +4,7 @@ import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class RatesDAOTestData extends CommonData {
 
@@ -29,5 +30,9 @@ public class RatesDAOTestData extends CommonData {
 
     public static List<CurrencyRatesDTO> getCurrentRatesList() {
         return List.of(currencyRate1, currencyRate2);
+    }
+
+    public static Set<CurrencyRatesDTO> getCurrentRatesSet() {
+        return Set.of(currencyRate1, currencyRate2);
     }
 }

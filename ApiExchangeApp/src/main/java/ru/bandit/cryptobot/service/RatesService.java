@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import ru.bandit.cryptobot.clients.BotAppRatesClient;
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class RatesService {
 
@@ -16,13 +16,13 @@ public abstract class RatesService {
     protected BotAppRatesClient botAppRatesClient;
 
     /**
-     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link List}<{@link CurrencyRatesDTO}>.
+     * Converts data from {@link Map} <{@link String}, {@link Double}> format to {@link Set}<{@link CurrencyRatesDTO}>.
      *
      * @param input convertable {@link Map} of currency rates.
-     * @return {@link List} of {@link CurrencyRatesDTO}.
+     * @return {@link Set} of {@link CurrencyRatesDTO}.
      */
-    protected List<CurrencyRatesDTO> convertCurrencyRatesToList(Map<String, Double> input) {
-        List<CurrencyRatesDTO> result = new ArrayList<>();
+    protected Set<CurrencyRatesDTO> convertCurrencyRatesToList(Map<String, Double> input) {
+        Set<CurrencyRatesDTO> result = new HashSet<>();
 
         for (Map.Entry<String, Double> rate : input.entrySet()) {
             result.add(new CurrencyRatesDTO(rate.getKey(), rate.getValue().toString()));

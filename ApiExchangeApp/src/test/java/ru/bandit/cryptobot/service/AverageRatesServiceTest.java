@@ -68,7 +68,7 @@ class AverageRatesServiceTest {
         averageRatesService.publishNewRates(RatesDAOTestData.testCurrencyRatesMap1);
 
         //verifying other methods interaction
-        verify(botAppAverageRatesClient, times(1)).postNewRates(RatesDAOTestData.getCurrentRatesList());
+        verify(botAppAverageRatesClient, times(1)).postNewRates(RatesDAOTestData.getCurrentRatesSet());
 
     }
 

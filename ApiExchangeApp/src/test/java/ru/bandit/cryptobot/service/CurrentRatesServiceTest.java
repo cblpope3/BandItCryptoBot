@@ -62,9 +62,9 @@ class CurrentRatesServiceTest {
 
         //simulating service method call
         currentRatesService.publishNewRates(RatesDAOTestData.testCurrencyRatesMap1);
-
+        
         //verifying other methods interaction
-        verify(botAppCurrentRatesClient, times(1)).postNewRates(RatesDAOTestData.getCurrentRatesList());
+        verify(botAppCurrentRatesClient, times(1)).postNewRates(RatesDAOTestData.getCurrentRatesSet());
 
     }
 
