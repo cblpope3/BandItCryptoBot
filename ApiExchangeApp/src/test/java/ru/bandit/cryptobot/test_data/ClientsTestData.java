@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.clients;
+package ru.bandit.cryptobot.test_data;
 
 import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
