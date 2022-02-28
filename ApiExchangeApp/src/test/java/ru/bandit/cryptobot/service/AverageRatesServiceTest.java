@@ -10,6 +10,7 @@ import ru.bandit.cryptobot.dao.RatesArchiveDAO;
 import ru.bandit.cryptobot.dao.RatesDAO;
 import ru.bandit.cryptobot.test_data.RatesDAOTestData;
 
+import java.util.Collections;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -57,5 +58,30 @@ class AverageRatesServiceTest {
         verify(ratesArchiveDAO, times(1)).appendNewRatesToArchive(RatesDAOTestData.testCurrencyRatesMap1);
         verify(ratesArchiveDAO, times(1)).getCurrencyRatesArchive();
         verify(ratesDAO, times(1)).getCurrencyRates();
+    }
+
+    //testing fine rates publishing
+    @Test
+    void publishNewRates() {
+
+        //simulating service method call
+        averageRatesService.publishNewRates(RatesDAOTestData.testCurrencyRatesMap1);
+
+        //verifying other methods interaction
+        verify(botAppAverageRatesClient, times(1)).postNewRates(RatesDAOTestData.getCurrentRatesList());
+
+    }
+
+    //testing null rates publishing
+    @Test
+    void publishNewRatesNull() {
+
+        //simulating service method call
+        averageRatesService.publishNewRates(null);
+        averageRatesService.publishNewRates(Collections.emptyMap());
+
+        //verifying other methods interaction
+        verify(botAppAverageRatesClient, times(0)).postNewRates(any());
+
     }
 }
