@@ -5,9 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import ru.bandit.cryptobot.bot.Bot;
+import ru.bandit.cryptobot.clients.TriggersClient;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
@@ -21,13 +20,20 @@ import java.util.stream.Collectors;
 @Service
 public class TriggersService {
 
-    Logger logger = LoggerFactory.getLogger(TriggersService.class);
+    private final Logger logger = LoggerFactory.getLogger(TriggersService.class);
+
     @Autowired
     UserTriggersRepository userTriggersRepository;
+
     @Autowired
     TriggerTypeRepository triggerTypeRepository;
+
     @Autowired
     Bot bot;
+
+    @Autowired
+    TriggersClient triggersClient;
+
     @Value("${api-app.hostname}")
     private String apiAppCurrencyUrl;
 
@@ -78,16 +84,7 @@ public class TriggersService {
     }
 
     public void deleteTargetTrigger(Long triggerId) {
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            restTemplate.delete(apiAppCurrencyUrl + "trigger/" + triggerId.toString());
-        } catch (RestClientException e) {
-            logger.warn("Exception during sending 'delete trigger #{}' request to api-app by address {}trigger/{}: {}",
-                    triggerId,
-                    apiAppCurrencyUrl,
-                    triggerId,
-                    e.getMessage());
-        }
+        triggersClient.deleteTrigger(triggerId);
 
         logger.debug("sending command to api-app: delete trigger #{}.", triggerId);
     }
@@ -106,14 +103,7 @@ public class TriggersService {
             triggerDTO.setTriggerType(TriggerDTO.TriggerType.DOWN);
         }
 
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            restTemplate.postForEntity(apiAppCurrencyUrl + "trigger", triggerDTO, TriggerDTO.class);
-        } catch (RestClientException e) {
-            logger.warn("Exception during sending 'create new trigger' request to api-app by address {}trigger/: {}",
-                    apiAppCurrencyUrl,
-                    e.getMessage());
-        }
+        triggersClient.addNewTrigger(triggerDTO);
 
         logger.debug("sending command to api-app: create trigger.");
     }

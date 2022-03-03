@@ -40,6 +40,15 @@ public class TriggerDTO {
                 '}';
     }
 
+    public String toJson() {
+        return "{" +
+                "\"triggerId\":" + id +
+                ",\"currencyPair\":\"" + currencyPair + '\"' +
+                ",\"targetValue\":" + targetValue +
+                ",\"triggerType\":\"" + triggerType.getTitle() +
+                "\"}";
+    }
+
     /**
      * Enumerate that contains possible trigger type values: "UP" and "DOWN".
      */
