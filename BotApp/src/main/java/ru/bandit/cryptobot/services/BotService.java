@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.*;
 import ru.bandit.cryptobot.repositories.*;
 
@@ -48,7 +49,7 @@ public class BotService {
     TriggersService triggersService;
 
     @Autowired
-    RatesRepository ratesRepository;
+    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
     public short addNewUser(long chatId, String username) {
         UserEntity newChat = usersRepository.findByChatId(chatId);
@@ -363,7 +364,7 @@ public class BotService {
 
         if (currencyPair == null) return "no data";
 
-        return ratesRepository.findRatesBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
+        return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
                 currencyPair.getCurrency2().getCurrencyNameUser()).toString();
     }
 

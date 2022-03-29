@@ -2,10 +2,10 @@ package ru.bandit.cryptobot.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.repositories.Rates1MinAverageRepository;
-import ru.bandit.cryptobot.repositories.RatesRepository;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 public class StreamService {
 
     @Autowired
-    RatesRepository ratesRepository;
+    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
     @Autowired
     Rates1MinAverageRepository rates1MinAverageRepository;
@@ -52,7 +52,7 @@ public class StreamService {
 
             Double foundRate;
             if (stream.getTriggerType().equals(simpleTrigger)) {
-                foundRate = ratesRepository.findRatesBySymbol(currency1 + currency2);
+                foundRate = currentCurrencyRatesDAO.getRateBySymbol(currency1 + currency2);
             } else {
                 foundRate = rates1MinAverageRepository.findRatesBySymbol(currency1 + currency2);
             }
