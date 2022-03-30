@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
-import ru.bandit.cryptobot.data_containers.RatesJsonContainer;
+import ru.bandit.cryptobot.dto.CurrencyRatesDTO;
 
 import java.util.List;
 import java.util.Map;
@@ -40,12 +40,12 @@ public class RatesController {
             @ApiResponse(code = 400, message = "Bad request.")})
     @PostMapping("")
     public ResponseEntity<Object> gotNewRates(@ApiParam(value = "Новые котировки криптовалют как JSON объект.")
-                                              @RequestBody List<RatesJsonContainer> newRates) {
+                                              @RequestBody List<CurrencyRatesDTO> newRates) {
 
         Map<String, Double> newRatesMap = Objects.requireNonNull(newRates).stream()
                 .collect(Collectors.toMap(
-                        RatesJsonContainer::getSymbol,
-                        (RatesJsonContainer item) -> Double.parseDouble(item.getPrice())));
+                        CurrencyRatesDTO::getSymbol,
+                        (CurrencyRatesDTO item) -> Double.parseDouble(item.getPrice())));
         logger.trace("Got new rates from api container. For example, BTC/RUB is: {}", newRatesMap.get("BTCRUB"));
 
         currentCurrencyRatesDAO.setCurrencyRates(newRatesMap);
@@ -60,12 +60,12 @@ public class RatesController {
             @ApiResponse(code = 400, message = "Bad request.")})
     @PostMapping("/1m_avg")
     public ResponseEntity<Object> gotAvgRates(@ApiParam(value = "Новые котировки криптовалют как JSON объект.")
-                                              @RequestBody List<RatesJsonContainer> newRates) {
+                                              @RequestBody List<CurrencyRatesDTO> newRates) {
 
         Map<String, Double> newRatesMap = Objects.requireNonNull(newRates).stream()
                 .collect(Collectors.toMap(
-                        RatesJsonContainer::getSymbol,
-                        (RatesJsonContainer item) -> Double.parseDouble(item.getPrice())));
+                        CurrencyRatesDTO::getSymbol,
+                        (CurrencyRatesDTO item) -> Double.parseDouble(item.getPrice())));
         logger.trace("Got new avg rates from api container. For example, BTC/RUB is: {}", newRatesMap.get("BTCRUB"));
 
         averageCurrencyRatesDAO.setCurrencyRates(newRatesMap);

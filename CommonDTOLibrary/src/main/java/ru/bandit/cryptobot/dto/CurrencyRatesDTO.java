@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
+/**
+ * Class used to transfer currency rates data as JSON objects via http. Represents one currency pair rate.
+ */
 @Getter
 @Setter
 @AllArgsConstructor
