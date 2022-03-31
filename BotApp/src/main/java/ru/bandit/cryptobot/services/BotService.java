@@ -6,11 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.*;
-import ru.bandit.cryptobot.repositories.*;
+import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
+import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
+import ru.bandit.cryptobot.repositories.UserTriggersRepository;
+import ru.bandit.cryptobot.repositories.UsersRepository;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,7 +44,7 @@ public class BotService {
     UsersRepository usersRepository;
 
     @Autowired
-    CurrencyRepository currencyRepository;
+    CurrencyService currencyService;
 
     @Autowired
     CurrencyPairRepository currencyPairRepository;
@@ -207,8 +211,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
-        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
+        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
         if (currency1 == null || currency2 == null) {
             logger.trace("Currency not found in db.");
             return NOT_FOUND_CURRENCY;
@@ -267,8 +271,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
-        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
+        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
         if (currency1 == null || currency2 == null) {
             logger.trace("Currency not found in db.");
             return NOT_FOUND_CURRENCY;
@@ -316,8 +320,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(params.remove(0));
-        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(params.remove(0));
+        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
+        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
         if (currency1 == null || currency2 == null) {
             logger.trace("Currency not found in db.");
             return NOT_FOUND_CURRENCY;
@@ -358,8 +362,8 @@ public class BotService {
             return "no data";
         }
 
-        CurrencyEntity currency1 = currencyRepository.findByCurrencyNameUser(currency1Input);
-        CurrencyEntity currency2 = currencyRepository.findByCurrencyNameUser(currency2Input);
+        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(currency1Input);
+        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(currency2Input);
         CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
 
         if (currencyPair == null) return "no data";
@@ -370,7 +374,7 @@ public class BotService {
 
     public String getAllCurrenciesList() {
 
-        List<CurrencyEntity> allCurrenciesList = currencyRepository.findAll();
+        Set<CurrencyEntity> allCurrenciesList = currencyService.getAllCurrencies();
 
         return allCurrenciesList.stream()
                 .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
