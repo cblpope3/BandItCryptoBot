@@ -9,8 +9,8 @@ public class TriggersTestData extends CommonTestData {
     private final static Double trigger1Value = 100.1;
     private final static Double trigger2Value = 200.2;
 
-    private final static TriggerDTO trigger1 = new TriggerDTO(trigger1Id, currencyPair1, trigger1Value, TriggerDTO.TriggerType.UP);
-    private final static TriggerDTO trigger2 = new TriggerDTO(trigger2Id, currencyPair2, trigger2Value, TriggerDTO.TriggerType.DOWN);
+    private final static TriggerDTO trigger1 = new TriggerDTO(trigger1Id, currencyPairBTCEUR, trigger1Value, TriggerDTO.TriggerType.UP);
+    private final static TriggerDTO trigger2 = new TriggerDTO(trigger2Id, currencyPairETHRUB, trigger2Value, TriggerDTO.TriggerType.DOWN);
 
     public static TriggerDTO getTrigger() {
         return trigger1;

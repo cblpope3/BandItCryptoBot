@@ -16,8 +16,8 @@ class CurrentCurrencyRatesDAOTest {
         currentCurrencyRatesDAO.setCurrencyRates(CurrenciesTestData.getTestCurrencyRates());
 
         assertEquals(CurrenciesTestData.getTestCurrencyRates(), currentCurrencyRatesDAO.getCurrencyRates());
-        assertEquals(CurrenciesTestData.getCurrency1Value(),
-                currentCurrencyRatesDAO.getRateBySymbol(CurrenciesTestData.getCurrencyPair1()));
+        assertEquals(CurrenciesTestData.getCurrencyPairBTCEURValue(),
+                currentCurrencyRatesDAO.getRateBySymbol(CurrenciesTestData.getCurrencyPairBTCEURSymbol()));
 
         //FIXME This test can fail
         Timestamp lastUpdateTime = new Timestamp(System.currentTimeMillis());

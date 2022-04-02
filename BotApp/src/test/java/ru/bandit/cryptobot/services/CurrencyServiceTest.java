@@ -6,12 +6,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
+import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 import ru.bandit.cryptobot.repositories.CurrencyRepository;
 import ru.bandit.cryptobot.test_data.CurrenciesTestData;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
@@ -20,29 +24,32 @@ class CurrencyServiceTest {
     @MockBean
     CurrencyRepository currencyRepository;
 
+    @MockBean
+    CurrencyPairRepository currencyPairRepository;
+
     CurrencyService currencyService;
 
     @BeforeEach
     void setUp() {
-        currencyService = new CurrencyService(currencyRepository);
+        currencyService = new CurrencyService(currencyRepository, currencyPairRepository);
     }
 
     @Test
     void getCurrencyBySymbol() {
 
         //mocking all used classes
-        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrency1Symbol()))
-                .thenReturn(CurrenciesTestData.getCurrency1());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyBTC());
 
         //simulating service method call
-        CurrencyEntity givenCurrency = currencyService.getCurrencyBySymbol(CurrenciesTestData.getCurrency1Symbol());
+        CurrencyEntity givenCurrency = currencyService.getCurrencyBySymbol(CurrenciesTestData.getCurrencyBTCSymbol());
 
         //checking that response is correct
-        assertEquals(CurrenciesTestData.getCurrency1(), givenCurrency);
+        assertEquals(CurrenciesTestData.getCurrencyBTC(), givenCurrency);
 
         //verifying other methods interaction
         verify(currencyRepository, times(1))
-                .findByCurrencyNameUser(CurrenciesTestData.getCurrency1Symbol());
+                .findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol());
     }
 
     @Test
@@ -60,5 +67,90 @@ class CurrencyServiceTest {
         //verifying other methods interaction
         verify(currencyRepository, times(1))
                 .findAll();
+    }
+
+    //Testing fine currencies call
+    @Test
+    void getCurrencyPairSeparate() {
+        //mocking all used classes
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyBTC());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyETHSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyETH());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyEURSymbol()))
+                .thenReturn(null);
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyRUBSymbol()))
+                .thenReturn(null);
+
+        when(currencyPairRepository.findByCurrency1(CurrenciesTestData.getCurrencyETH()))
+                .thenReturn(List.of(CurrenciesTestData.getCurrencyPairETHRUB(), CurrenciesTestData.getCurrencyPairETHEUR()));
+        when(currencyPairRepository.findByCurrency2(CurrenciesTestData.getCurrencyETH()))
+                .thenReturn(List.of(CurrenciesTestData.getCurrencyPairBTCETH()));
+        when(currencyPairRepository.findByCurrency1(CurrenciesTestData.getCurrencyBTC()))
+                .thenReturn(List.of(CurrenciesTestData.getCurrencyPairBTCEUR(), CurrenciesTestData.getCurrencyPairBTCRUB(),
+                        CurrenciesTestData.getCurrencyPairBTCETH()));
+        when(currencyPairRepository.findByCurrency2(CurrenciesTestData.getCurrencyBTC()))
+                .thenReturn(null);
+
+        //simulating service method call
+        CurrencyPairEntity givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyETHSymbol());
+        CurrencyPairEntity givenCurrencyPair2 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyETHSymbol(), CurrenciesTestData.getCurrencyBTCSymbol());
+
+        //checking that response is correct
+        assertEquals(CurrenciesTestData.getCurrencyPairBTCETH(), givenCurrencyPair1);
+        assertEquals(CurrenciesTestData.getCurrencyPairBTCETH(), givenCurrencyPair2);
+
+        //verifying other methods interaction
+        verify(currencyRepository, times(4)).findByCurrencyNameUser(any());
+        verify(currencyPairRepository, times(2)).findByCurrency1(any());
+        verify(currencyPairRepository, times(2)).findByCurrency2(any());
+    }
+
+    //Testing if currency not found
+    @Test
+    void getCurrencyPairSeparateNoCurrency() {
+        //mocking all used classes
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyBTC());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyETHSymbol()))
+                .thenReturn(null);
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyEURSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyEUR());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyRUBSymbol()))
+                .thenReturn(null);
+
+        //simulating service method call
+        CurrencyPairEntity givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyETHSymbol());
+        CurrencyPairEntity givenCurrencyPair2 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyRUBSymbol(), CurrenciesTestData.getCurrencyBTCSymbol());
+
+        //checking that response is correct
+        assertNull(givenCurrencyPair1);
+        assertNull(givenCurrencyPair2);
+
+        //verifying other methods interaction
+        verify(currencyRepository, times(4)).findByCurrencyNameUser(any());
+    }
+
+    //Testing if currency pair not found
+    @Test
+    void getCurrencyPairSeparateNoCurrencyPair() {
+        //mocking all used classes
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyBTC());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyETHSymbol()))
+                .thenReturn(null);
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyEURSymbol()))
+                .thenReturn(CurrenciesTestData.getCurrencyEUR());
+        when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyRUBSymbol()))
+                .thenReturn(null);
+
+        //simulating service method call
+        CurrencyPairEntity givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyEURSymbol());
+
+        //checking that response is correct
+        assertNull(givenCurrencyPair1);
+
+        //verifying other methods interaction
+        verify(currencyRepository, times(2)).findByCurrencyNameUser(any());
     }
 }

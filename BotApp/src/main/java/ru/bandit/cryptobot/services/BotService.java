@@ -6,13 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.*;
-import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 import ru.bandit.cryptobot.repositories.UsersRepository;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -45,9 +43,6 @@ public class BotService {
 
     @Autowired
     CurrencyService currencyService;
-
-    @Autowired
-    CurrencyPairRepository currencyPairRepository;
 
     @Autowired
     TriggersService triggersService;
@@ -211,16 +206,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
-        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
-        if (currency1 == null || currency2 == null) {
-            logger.trace("Currency not found in db.");
-            return NOT_FOUND_CURRENCY;
-        }
-
-        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.remove(0), params.remove(0));
         if (currencyPair == null) {
-            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
             return NOT_FOUND_CURRENCY;
         }
 
@@ -271,16 +258,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
-        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
-        if (currency1 == null || currency2 == null) {
-            logger.trace("Currency not found in db.");
-            return NOT_FOUND_CURRENCY;
-        }
-
-        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.remove(0), params.remove(0));
         if (currencyPair == null) {
-            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
             return NOT_FOUND_CURRENCY;
         }
 
@@ -320,16 +299,8 @@ public class BotService {
             return NOT_FOUND_USER;
         }
 
-        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(params.remove(0));
-        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(params.remove(0));
-        if (currency1 == null || currency2 == null) {
-            logger.trace("Currency not found in db.");
-            return NOT_FOUND_CURRENCY;
-        }
-
-        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.remove(0), params.remove(0));
         if (currencyPair == null) {
-            logger.warn("Not found currency pair: {}/{}", currency1.getCurrencyNameUser(), currency2.getCurrencyNameUser());
             return NOT_FOUND_CURRENCY;
         }
 
@@ -362,9 +333,7 @@ public class BotService {
             return "no data";
         }
 
-        CurrencyEntity currency1 = currencyService.getCurrencyBySymbol(currency1Input);
-        CurrencyEntity currency2 = currencyService.getCurrencyBySymbol(currency2Input);
-        CurrencyPairEntity currencyPair = getCorrectPairFromCurrencies(currency1, currency2);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currency1Input, currency2Input);
 
         if (currencyPair == null) return "no data";
 
@@ -379,20 +348,5 @@ public class BotService {
         return allCurrenciesList.stream()
                 .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
                 .collect(Collectors.joining("\n"));
-    }
-
-    private CurrencyPairEntity getCorrectPairFromCurrencies(CurrencyEntity currency1, CurrencyEntity currency2) {
-        //get all pairs with currency1
-        List<CurrencyPairEntity> pairsWithCur1 = new ArrayList<>();
-        pairsWithCur1.addAll(currencyPairRepository.findByCurrency1(currency1));
-        pairsWithCur1.addAll(currencyPairRepository.findByCurrency2(currency1));
-
-        //check found pairs if they contain currency2
-        for (CurrencyPairEntity currencyPair : pairsWithCur1) {
-            if (currencyPair.getCurrency1().getCurrencyNameUser().equals(currency2.getCurrencyNameUser()) ||
-                    currencyPair.getCurrency2().getCurrencyNameUser().equals(currency2.getCurrencyNameUser()))
-                return currencyPair;
-        }
-        return null;
     }
 }
