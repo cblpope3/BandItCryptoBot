@@ -8,6 +8,7 @@ import ru.bandit.cryptobot.bot.menu.*;
 import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.BotService;
+import ru.bandit.cryptobot.services.UsersService;
 
 import java.util.List;
 
@@ -44,6 +45,9 @@ public class BotRequestProcessor {
 
     @Autowired
     BotService botService;
+
+    @Autowired
+    UsersService usersService;
 
     public BotResponse generateResponse(List<String> query, Long chatId, String username) {
 
@@ -200,59 +204,39 @@ public class BotRequestProcessor {
                 }
             case PAUSE:
                 logger.trace("Got pause command from {}", chatId);
-                commandStatus = botService.pauseUser(chatId);
-                if (commandStatus == BotService.OK) {
+                boolean pauseStatus = usersService.pauseSubscriptions(chatId);
+                if (pauseStatus) {
                     logger.trace("successfully paused");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Все подписки остановлены. Вы можете посмотреть свои подписки и возобновить их в любой момент.");
-                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                } else {
                     logger.trace("no subscriptions");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас нет подписок.");
-                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-                    logger.trace(userNotFoundLog);
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            userNotFound);
-                } else {
-                    logger.error("Error while trying to pause");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            errorMessage);
                 }
             case RESUME:
                 logger.trace("Got resume command from {}", chatId);
-                commandStatus = botService.resumeUser(chatId);
-                if (commandStatus == BotService.OK) {
+                boolean resumeStatus = usersService.resumeSubscriptions(chatId);
+                if (resumeStatus) {
                     logger.trace("successfully resumed");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Все подписки восстановлены!");
-                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-                    logger.trace(userNotFoundLog);
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            userNotFound);
-                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
+                } else {
                     logger.trace("no subscriptions");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "У вас нет подписок.");
-                } else {
-                    logger.error("Error while trying to resume");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            errorMessage);
                 }
             case START:
                 logger.trace("Got start command from {}", chatId);
-                commandStatus = botService.addNewUser(chatId, username);
-                if (commandStatus == BotService.OK) {
+                boolean startStatus = usersService.startUser(chatId, username);
+                if (startStatus) {
                     logger.debug("successfully added new user");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             String.format("Приветствуем в нашем боте курсов криптовалют, %s. Ознакомьтесь с возможными командами нашего бота", username));
-                } else if (commandStatus == BotService.ALREADY_IN_CHAT) {
+                } else {
                     logger.trace("user already exist");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             String.format("Ещё раз привет, %s! Для помощи напишите /help.", username));
-                } else {
-                    logger.error("Error when got /start command.");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            errorMessage);
                 }
             case SHOW_ALL:
                 logger.trace("Got show subscriptions command from {}.", chatId);

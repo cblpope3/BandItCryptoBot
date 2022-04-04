@@ -4,8 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
-import ru.bandit.cryptobot.entities.UserEntity;
-import ru.bandit.cryptobot.repositories.UsersRepository;
+import ru.bandit.cryptobot.services.UsersService;
 
 import java.util.List;
 
@@ -13,7 +12,7 @@ import java.util.List;
 public class BotMenuMain implements MenuItem {
 
     @Autowired
-    UsersRepository usersRepository;
+    UsersService usersService;
 
     @Override
     public String getText(Long userId, List<String> param) {
@@ -22,8 +21,6 @@ public class BotMenuMain implements MenuItem {
 
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
-
-        UserEntity user = usersRepository.findByChatId(userId);
 
         InlineKeyboardButton button1 = new InlineKeyboardButton("Доступные валюты");
         InlineKeyboardButton button2 = new InlineKeyboardButton("Операции с валютами");
@@ -36,7 +33,7 @@ public class BotMenuMain implements MenuItem {
         button4.setCallbackData(MenuItemsEnum.STOP_CONFIRM.toString());
         button5.setCallbackData(MenuItemsEnum.HELP.toString());
 
-        if (user.isPaused()){
+        if (usersService.isUserPaused(userId)) {
             button3.setText("Возобновить подписки");
             button3.setCallbackData(MenuItemsEnum.RESUME.toString());
         } else {

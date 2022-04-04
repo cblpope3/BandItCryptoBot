@@ -8,9 +8,7 @@ import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.*;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
-import ru.bandit.cryptobot.repositories.UsersRepository;
 
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,7 +37,7 @@ public class BotService {
     UserTriggersRepository userTriggersRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    UsersService usersService;
 
     @Autowired
     CurrencyService currencyService;
@@ -49,32 +47,6 @@ public class BotService {
 
     @Autowired
     CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
-
-    public short addNewUser(long chatId, String username) {
-        UserEntity newChat = usersRepository.findByChatId(chatId);
-
-        if (newChat == null) {
-            newChat = new UserEntity();
-            newChat.setChatId(chatId);
-            newChat.setChatName(username);
-            newChat.setPaused(false);
-            newChat.setStartCount(1L);
-
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-            newChat.setRegistrationDate(timestamp);
-            usersRepository.save(newChat);
-            logger.debug("Successfully subscribed user {}.", chatId);
-            return OK;
-        } else {
-            //updating number of /start command counter
-            if (newChat.getStartCount() == null) newChat.setStartCount(1L);
-            else newChat.setStartCount(newChat.getStartCount() + 1);
-            usersRepository.save(newChat);
-
-            logger.trace("User {} already in chat.", chatId);
-            return ALREADY_IN_CHAT;
-        }
-    }
 
     public short unsubscribe(Long chatId, Long triggerId) {
         logger.trace("Trying to remove trigger #{}", triggerId);
@@ -99,7 +71,7 @@ public class BotService {
     }
 
     public short unsubscribeAll(Long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
+        UserEntity user = usersService.getUser(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;
@@ -123,50 +95,8 @@ public class BotService {
         }
     }
 
-    public short pauseUser(long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
-            return NOT_FOUND_USER;
-        }
-
-        List<UserTriggerEntity> usersSubscriptions = userTriggersRepository.findByUser(user);
-
-        if (usersSubscriptions == null || usersSubscriptions.isEmpty()) {
-            logger.trace("No subscriptions found for user {}.", chatId);
-            return NO_SUBSCRIPTIONS;
-        }
-
-        user.setPaused(true);
-        usersRepository.save(user);
-        logger.debug("User {} paused successfully.", chatId);
-        return OK;
-
-    }
-
-    public short resumeUser(long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
-            return NOT_FOUND_USER;
-        }
-
-        List<UserTriggerEntity> usersSubscriptions = userTriggersRepository.findByUser(user);
-
-        if (usersSubscriptions == null || usersSubscriptions.isEmpty()) {
-            logger.trace("No subscriptions found for user {}.", chatId);
-            return NO_SUBSCRIPTIONS;
-        }
-
-        user.setPaused(false);
-        usersRepository.save(user);
-        logger.debug("User {} resumed successfully.", chatId);
-        return OK;
-
-    }
-
     public String getAllSubscriptions(long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
+        UserEntity user = usersService.getUser(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return "";
@@ -200,7 +130,7 @@ public class BotService {
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersRepository.findByChatId(chatId);
+        UserEntity user = usersService.getUser(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;
@@ -252,7 +182,7 @@ public class BotService {
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersRepository.findByChatId(chatId);
+        UserEntity user = usersService.getUser(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;
@@ -293,7 +223,7 @@ public class BotService {
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersRepository.findByChatId(chatId);
+        UserEntity user = usersService.getUser(chatId);
         if (user == null) {
             logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
             return NOT_FOUND_USER;

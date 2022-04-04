@@ -6,7 +6,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
-import ru.bandit.cryptobot.repositories.UsersRepository;
+import ru.bandit.cryptobot.services.UsersService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
     UserTriggersRepository userTriggersRepository;
 
     @Autowired
-    UsersRepository usersRepository;
+    UsersService usersService;
 
     @Override
     public String getText(Long userId, List<String> param) {
@@ -28,7 +28,7 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
 
-        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersRepository.findByChatId(userId));
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersService.getUser(userId));
 
         List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
 
