@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.*;
-import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
 import java.util.List;
@@ -29,9 +28,6 @@ public class BotService {
     private static final String USER_NOT_FOUND_MESSAGE = "User {} not found";
 
     Logger logger = LoggerFactory.getLogger(BotService.class);
-
-    @Autowired
-    TriggerTypeRepository triggerTypeRepository;
 
     @Autowired
     UserTriggersRepository userTriggersRepository;
@@ -143,8 +139,8 @@ public class BotService {
 
         TriggerTypeEntity triggerType;
         String triggerTypeName = params.remove(0);
-        if (triggerTypeName.equals("UP")) triggerType = triggerTypeRepository.findByTriggerName("target-up");
-        else if (triggerTypeName.equals("DOWN")) triggerType = triggerTypeRepository.findByTriggerName("target-down");
+        if (triggerTypeName.equals("UP")) triggerType = triggersService.getTriggerUp();
+        else if (triggerTypeName.equals("DOWN")) triggerType = triggersService.getTriggerDown();
         else {
             logger.warn("trigger type not recognized");
             return NOT_VALID_PARAMETER;
@@ -193,7 +189,7 @@ public class BotService {
             return NOT_FOUND_CURRENCY;
         }
 
-        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("average");
+        TriggerTypeEntity triggerType = triggersService.getCustomTriggerType("average");
         if (triggerType == null) {
             logger.error("Not found average trigger in database.");
             return NOT_FOUND_TRIGGER_TYPE;
@@ -234,7 +230,7 @@ public class BotService {
             return NOT_FOUND_CURRENCY;
         }
 
-        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName("simple");
+        TriggerTypeEntity triggerType = triggersService.getCustomTriggerType("simple");
         if (triggerType == null) {
             logger.error("Not found simple trigger in database");
             return NOT_FOUND_TRIGGER_TYPE;

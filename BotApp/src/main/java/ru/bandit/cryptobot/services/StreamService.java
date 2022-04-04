@@ -6,7 +6,6 @@ import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
 import java.util.ArrayList;
@@ -27,11 +26,11 @@ public class StreamService {
     UserTriggersRepository userTriggersRepository;
 
     @Autowired
-    TriggerTypeRepository triggerTypeRepository;
+    TriggersService triggersService;
 
     public Map<Long, List<String>> getStreams() {
-        TriggerTypeEntity simpleTrigger = triggerTypeRepository.findByTriggerName("simple");
-        TriggerTypeEntity averageTrigger = triggerTypeRepository.findByTriggerName("average");
+        TriggerTypeEntity simpleTrigger = triggersService.getCustomTriggerType("simple");
+        TriggerTypeEntity averageTrigger = triggersService.getCustomTriggerType("average");
 
         List<UserTriggerEntity> mailingList = userTriggersRepository.findByTriggerType(simpleTrigger);
         mailingList.addAll(userTriggersRepository.findByTriggerType(averageTrigger));
