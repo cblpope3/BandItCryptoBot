@@ -3,6 +3,7 @@ package ru.bandit.cryptobot.bot.menu;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.dto.UserDTO;
 
 import java.util.List;
 
@@ -10,12 +11,12 @@ import java.util.List;
 public class BotMenuOperations implements MenuItem {
 
     @Override
-    public String getText(Long userId, List<String> param) {
+    public String getText(UserDTO user, List<String> param) {
         return "Что хотите сделать с валютами?";
     }
 
     @Override
-    public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
+    public InlineKeyboardMarkup getMarkup(UserDTO user, List<String> param) {
 
         InlineKeyboardButton button1 = new InlineKeyboardButton("Подписаться");
         InlineKeyboardButton button2 = new InlineKeyboardButton("Отписаться");

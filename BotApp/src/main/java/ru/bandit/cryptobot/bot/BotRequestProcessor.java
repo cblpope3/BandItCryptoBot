@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.*;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.BotService;
@@ -49,7 +50,7 @@ public class BotRequestProcessor {
     @Autowired
     UsersService usersService;
 
-    public BotResponse generateResponse(List<String> query, Long chatId, String username) {
+    public BotResponse generateResponse(List<String> query, UserDTO user) {
 
         MenuItemsEnum requestedMenuItem;
         String command = query.remove(0);
@@ -82,8 +83,8 @@ public class BotRequestProcessor {
                 return new BotResponse(menuBack.getMarkup(null, null),
                         rates);
             case STOP:
-                logger.debug("Got stop command from {}", chatId);
-                commandStatus = botService.unsubscribeAll(chatId);
+                logger.debug("Got stop command from #{}", user.getUserId());
+                commandStatus = botService.unsubscribeAll(user);
                 if (commandStatus == BotService.OK) {
                     logger.trace("Unsubscribed successfully.");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -102,7 +103,7 @@ public class BotRequestProcessor {
                             errorMessage);
                 }
             case SIMPLE:
-                commandStatus = botService.createSimple(chatId, query);
+                commandStatus = botService.createSimple(user, query);
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -129,7 +130,7 @@ public class BotRequestProcessor {
                             errorMessage);
                 }
             case AVERAGE:
-                commandStatus = botService.createAverage(chatId, query);
+                commandStatus = botService.createAverage(user, query);
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -156,7 +157,7 @@ public class BotRequestProcessor {
                             errorMessage);
                 }
             case TARGET:
-                commandStatus = botService.createTarget(chatId, query);
+                commandStatus = botService.createTarget(user, query);
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -183,8 +184,8 @@ public class BotRequestProcessor {
                             errorMessage);
                 }
             case UNSUBSCRIBE:
-                logger.trace("Got unsubscribe from command from {}", chatId);
-                commandStatus = botService.unsubscribe(chatId, Long.parseLong(query.remove(0)));
+                logger.trace("Got unsubscribe from command from user #{}", user.getUserId());
+                commandStatus = botService.unsubscribe(user, Long.parseLong(query.remove(0)));
                 if (commandStatus == BotService.OK) {
                     logger.trace("successfully unsubscribed");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -203,44 +204,45 @@ public class BotRequestProcessor {
                             errorMessage);
                 }
             case PAUSE:
-                logger.trace("Got pause command from {}", chatId);
-                boolean pauseStatus = usersService.pauseSubscriptions(chatId);
-                if (pauseStatus) {
-                    logger.trace("successfully paused");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            "Все подписки остановлены. Вы можете посмотреть свои подписки и возобновить их в любой момент.");
-                } else {
-                    logger.trace("no subscriptions");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            "У вас нет подписок.");
-                }
+                logger.trace("Got pause command from user #{}", user.getUserId());
+                usersService.pauseSubscriptions(user);
+                logger.trace("successfully paused");
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        "Все подписки остановлены. Вы можете посмотреть свои подписки и возобновить их в любой момент.");
+//todo this code must be used in exception
+//                } else {
+//                    logger.trace("no subscriptions");
+//                    return new BotResponse(menuBack.getMarkup(null, null),
+//                            "У вас нет подписок.");
+//                }
             case RESUME:
-                logger.trace("Got resume command from {}", chatId);
-                boolean resumeStatus = usersService.resumeSubscriptions(chatId);
-                if (resumeStatus) {
-                    logger.trace("successfully resumed");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            "Все подписки восстановлены!");
-                } else {
-                    logger.trace("no subscriptions");
-                    return new BotResponse(menuBack.getMarkup(null, null),
-                            "У вас нет подписок.");
-                }
+                logger.trace("Got resume command from user #{}", user.getUserId());
+                usersService.resumeSubscriptions(user);
+                logger.trace("successfully resumed");
+                return new BotResponse(menuBack.getMarkup(null, null),
+                        "Все подписки восстановлены!");
+//todo this code must be used in exception
+//                } else {
+//                    logger.trace("no subscriptions");
+//                    return new BotResponse(menuBack.getMarkup(null, null),
+//                            "У вас нет подписок.");
+//                }
             case START:
-                logger.trace("Got start command from {}", chatId);
-                boolean startStatus = usersService.startUser(chatId, username);
+                logger.trace("Got start command from user #{}", user.getUserId());
+                boolean startStatus = usersService.startUser(user);
                 if (startStatus) {
                     logger.debug("successfully added new user");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            String.format("Приветствуем в нашем боте курсов криптовалют, %s. Ознакомьтесь с возможными командами нашего бота", username));
+                            String.format("Приветствуем в нашем боте курсов криптовалют, %s. Ознакомьтесь с возможными командами нашего бота",
+                                    user.getFirstName()));
                 } else {
                     logger.trace("user already exist");
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            String.format("Ещё раз привет, %s! Для помощи напишите /help.", username));
+                            String.format("Ещё раз привет, %s! Для помощи напишите /help.", user.getFirstName()));
                 }
             case SHOW_ALL:
-                logger.trace("Got show subscriptions command from {}.", chatId);
-                String subscriptionsList = botService.getAllSubscriptions(chatId);
+                logger.trace("Got show subscriptions command from user #{}.", user.getUserId());
+                String subscriptionsList = botService.getAllSubscriptions(user);
                 if (subscriptionsList == null || subscriptionsList.isEmpty()) {
                     logger.trace("Subscriptions list is empty");
                     return new BotResponse(menuBack.getMarkup(null, null),
@@ -284,7 +286,7 @@ public class BotRequestProcessor {
                 if (metrics == null) metrics = new MetricsEntity();
                 metrics.setHelpCount(metrics.getHelpCount() + 1);
                 metricsRepository.save(metrics);
-                logger.trace("Got help command from {}", chatId);
+                logger.trace("Got help command from user #{}", user.getUserId());
                 menuItem = menuHelp;
                 break;
             default:
@@ -293,6 +295,6 @@ public class BotRequestProcessor {
                         "Произошла ошибка!");
         }
 
-        return new BotResponse(menuItem.getMarkup(chatId, query), menuItem.getText(chatId, query));
+        return new BotResponse(menuItem.getMarkup(user, query), menuItem.getText(user, query));
     }
 }

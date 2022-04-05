@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.*;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
@@ -44,15 +45,16 @@ public class BotService {
     @Autowired
     CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
-    public short unsubscribe(Long chatId, Long triggerId) {
+    public short unsubscribe(UserDTO user, Long triggerId) {
         logger.trace("Trying to remove trigger #{}", triggerId);
 
         UserTriggerEntity userTrigger = userTriggersRepository.findById(triggerId);
         if (userTrigger == null) {
             logger.trace("Trigger #{} doesn't exist", triggerId);
             return NOT_FOUND_SUBSCRIPTION;
-        } else if (!userTrigger.getUser().getChatId().equals(chatId)) {
-            logger.warn("User {} trying to delete foreign subscription.", chatId);
+        } else if (!userTrigger.getUser().getUserId().equals(user.getUserId())) {
+            //todo check how this works
+            logger.warn("User #{} trying to delete foreign subscription.", user.getUserId());
             return NOT_FOUND_SUBSCRIPTION;
         } else {
             if (userTrigger.getTriggerType().getTriggerName().equals("target-up") ||
@@ -66,17 +68,17 @@ public class BotService {
 
     }
 
-    public short unsubscribeAll(Long chatId) {
-        UserEntity user = usersService.getUser(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+    public short unsubscribeAll(UserDTO user) {
+        UserEntity foundUser = usersService.getUser(user);
+        if (foundUser == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, user.getUserId());
             return NOT_FOUND_USER;
         }
 
-        List<UserTriggerEntity> foundSubscriptions = userTriggersRepository.findByUser(user);
+        List<UserTriggerEntity> foundSubscriptions = userTriggersRepository.findByUser(foundUser);
 
         if (foundSubscriptions == null || foundSubscriptions.isEmpty()) {
-            logger.debug("Subscriptions for user {} not found.", chatId);
+            logger.debug("Subscriptions for user #{} not found.", user.getUserId());
             return NO_SUBSCRIPTIONS;
         } else {
             for (UserTriggerEntity triggerEntity : foundSubscriptions) {
@@ -86,23 +88,23 @@ public class BotService {
                 }
             }
             userTriggersRepository.deleteAll(foundSubscriptions);
-            logger.debug("User {} unsubscribed from all subscriptions successfully.", chatId);
+            logger.debug("User #{} unsubscribed from all subscriptions successfully.", user.getUserId());
             return OK;
         }
     }
 
-    public String getAllSubscriptions(long chatId) {
-        UserEntity user = usersService.getUser(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+    public String getAllSubscriptions(UserDTO user) {
+        UserEntity foundUser = usersService.getUser(user);
+        if (foundUser == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, user.getUserId());
             return "";
         } else {
-            List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(user);
+            List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
             if (subscriptionsList == null) {
-                logger.debug("Not found any triggers for user {}.", chatId);
+                logger.debug("Not found any triggers for user #{}.", user.getUserId());
                 return "";
             } else {
-                logger.trace("Returned subscriptions of user {}", chatId);
+                logger.trace("Returned subscriptions of user #{}", user.getUserId());
                 return subscriptionsList.stream()
                         //FIXME subscription name is not fine for simple triggers
                         .map(a -> String.format("№%d - %s/%s - %s - %d",
@@ -116,7 +118,7 @@ public class BotService {
         }
     }
 
-    public short createTarget(long chatId, List<String> params) {
+    public short createTarget(UserDTO user, List<String> params) {
 
         if (params.size() < 4) {
             logger.warn("not enough parameters");
@@ -126,9 +128,9 @@ public class BotService {
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersService.getUser(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+        UserEntity foundUser = usersService.getUser(user);
+        if (foundUser == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, user.getUserId());
             return NOT_FOUND_USER;
         }
 
@@ -154,12 +156,12 @@ public class BotService {
         Integer targetVal = Integer.parseInt(params.remove(0));
 
         UserTriggerEntity userTrigger = new UserTriggerEntity();
-        userTrigger.setUser(user);
+        userTrigger.setUser(foundUser);
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
         userTrigger.setTargetValue(targetVal);
 
-        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(foundUser);
         existingTriggerList.forEach(a -> a.setId(null));
         if (existingTriggerList.contains(userTrigger)) {
             logger.debug("User already subscribed to this trigger");
@@ -171,16 +173,16 @@ public class BotService {
         return OK;
     }
 
-    public short createAverage(long chatId, List<String> params) {
+    public short createAverage(UserDTO user, List<String> params) {
 
         if (params.size() < 2) {
             logger.warn("not enough parameters");
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersService.getUser(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+        UserEntity foundUser = usersService.getUser(user);
+        if (foundUser == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, user.getUserId());
             return NOT_FOUND_USER;
         }
 
@@ -196,11 +198,11 @@ public class BotService {
         }
 
         UserTriggerEntity userTrigger = new UserTriggerEntity();
-        userTrigger.setUser(user);
+        userTrigger.setUser(foundUser);
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
 
-        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(foundUser);
         existingTriggerList.forEach(a -> a.setId(null));
         if (existingTriggerList.contains(userTrigger)) {
             logger.debug("User already subscribed to this trigger");
@@ -212,16 +214,16 @@ public class BotService {
         return OK;
     }
 
-    public short createSimple(long chatId, List<String> params) {
+    public short createSimple(UserDTO user, List<String> params) {
 
         if (params.size() < 2) {
             logger.warn("not enough parameters");
             return NOT_VALID_PARAMETER;
         }
 
-        UserEntity user = usersService.getUser(chatId);
-        if (user == null) {
-            logger.warn(USER_NOT_FOUND_MESSAGE, chatId);
+        UserEntity foundUser = usersService.getUser(user);
+        if (foundUser == null) {
+            logger.warn(USER_NOT_FOUND_MESSAGE, user.getUserId());
             return NOT_FOUND_USER;
         }
 
@@ -237,11 +239,11 @@ public class BotService {
         }
 
         UserTriggerEntity userTrigger = new UserTriggerEntity();
-        userTrigger.setUser(user);
+        userTrigger.setUser(foundUser);
         userTrigger.setCurrencyPair(currencyPair);
         userTrigger.setTriggerType(triggerType);
 
-        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(user);
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository.findByUser(foundUser);
         existingTriggerList.forEach(a -> a.setId(null));
         if (existingTriggerList.contains(userTrigger)) {
             logger.debug("User already subscribed to this trigger");

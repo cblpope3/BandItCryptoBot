@@ -3,6 +3,7 @@ package ru.bandit.cryptobot.bot.menu;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.dto.UserDTO;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
 public class BotMenuHelp implements MenuItem {
 
     @Override
-    public String getText(Long userId, List<String> param) {
+    public String getText(UserDTO user, List<String> param) {
         return "- Все команды должны начинаться со знака \"/\". Например /start, /help, /ONCE/BTC/USD\n" +
                 "- /start - начать работу с ботом\n" +
                 "- /help - показать список возможных команд\n" +
@@ -28,7 +29,7 @@ public class BotMenuHelp implements MenuItem {
     }
 
     @Override
-    public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
+    public InlineKeyboardMarkup getMarkup(UserDTO user, List<String> param) {
         InlineKeyboardButton buttonBack = new InlineKeyboardButton("Назад");
         buttonBack.setCallbackData(MenuItemsEnum.MAIN.toString());
 

@@ -1,9 +1,13 @@
 package ru.bandit.cryptobot.entities;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user_triggers")
@@ -11,7 +15,6 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class UserTriggerEntity {
 
     @Id
@@ -21,7 +24,7 @@ public class UserTriggerEntity {
     Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "telegram_user_id", nullable = false)
     UserEntity user;
 
     @ManyToOne(optional = false)
@@ -40,4 +43,17 @@ public class UserTriggerEntity {
 
     @Column(name = "is_archived")
     boolean isArchived;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserTriggerEntity that = (UserTriggerEntity) o;
+        return isArchived == that.isArchived && id.equals(that.id) && user.equals(that.user) && currencyPair.equals(that.currencyPair) && triggerType.equals(that.triggerType) && Objects.equals(targetValue, that.targetValue) && Objects.equals(lastMessage, that.lastMessage);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, user, currencyPair, triggerType, targetValue, lastMessage, isArchived);
+    }
 }

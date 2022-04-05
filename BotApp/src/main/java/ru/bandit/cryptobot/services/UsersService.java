@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.UserEntity;
 import ru.bandit.cryptobot.repositories.UsersRepository;
 
@@ -28,146 +29,141 @@ public class UsersService {
      * Process start command for given user. If user not yet registered, then add new user to database.
      * If user with given chatId already exist - just increment start counter.
      *
-     * @param chatId   users chat id.
-     * @param username users first name as specified in profile.
+     * @param user user data as {@link UserDTO}.
      * @return true if new user was saved. false if user is already in database.
      */
-    public boolean startUser(Long chatId, String username) {
+    public boolean startUser(UserDTO user) {
 
-        //TODO use userDto class to exchange it between methods instead of chatId.
+        UserEntity startingUser = usersRepository.findByUserId(user.getUserId());
 
-        //input params null check
-        if (chatId == null || username == null) {
-            logger.error("Null in input parameters: chatId - {}, username - {}.", chatId, username);
-            return false;
-        }
-
-
-        UserEntity newChat = usersRepository.findByChatId(chatId);
-
-        if (newChat != null) {
+        if (startingUser != null) {
 
             //updating number of /start command counter
-            if (newChat.getStartCount() == null) newChat.setStartCount(1L);
-            else newChat.setStartCount(newChat.getStartCount() + 1);
-            usersRepository.save(newChat);
+            if (startingUser.getStartCount() == null) startingUser.setStartCount(1L);
+            else startingUser.setStartCount(startingUser.getStartCount() + 1);
 
-            logger.trace("User {} already in chat.", chatId);
+            //updating chat id and last message id
+            startingUser.setChatId(user.getChatId());
+            startingUser.setLastMessageId(user.getLastMessageId());
+
+            usersRepository.save(startingUser);
+
+            logger.trace("User {} already in database.", user.getUserId());
             return false;
 
         } else {
-            this.saveNewUser(chatId, username);
+            this.saveNewUser(user);
             return true;
         }
     }
-
-    //todo decide if better switch subscriptions status
 
     /**
      * Method to set all users subscriptions paused.
      *
-     * @param chatId telegram chat id.
-     * @return true if subscriptions paused successfully. False if user not found.
+     * @param user user as {@link UserDTO}.
+     * @deprecated use {@link #inverseSubscriptionsPause(UserDTO)} instead
      */
     @Deprecated(forRemoval = false)
-    public boolean pauseSubscriptions(Long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
-        if (user == null) {
-            //todo if user not found, register him
-            logger.warn("Can't pause user subscription because user {} not found.", chatId);
-            return false;
+    public void pauseSubscriptions(UserDTO user) {
+        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
+        if (foundUser == null) {
+            logger.warn("Unregistered user #{} trying to pause subscription.", user.getUserId());
+            saveNewUser(user, true);
         } else {
-            user.setPaused(true);
-            usersRepository.save(user);
-            logger.trace("Subscriptions for user {} successfully paused.", chatId);
-            return true;
+            foundUser.setPaused(true);
+            usersRepository.save(foundUser);
+            if (logger.isTraceEnabled())
+                logger.trace("Subscriptions for user #{} successfully paused.", user.getUserId());
         }
     }
-
-    //todo decide if better switch subscriptions status
 
     /**
      * Method to set all users subscriptions resumed.
      *
-     * @param chatId telegram chat id.
-     * @return true if subscriptions paused successfully. False if user not found.
+     * @param user user as {@link UserDTO}.
+     * @deprecated use {@link #inverseSubscriptionsPause(UserDTO)} instead
      */
     @Deprecated(forRemoval = false)
-    public boolean resumeSubscriptions(Long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
-        if (user == null) {
-            //todo if user not found, register him
-            logger.warn("Can't resume user subscription because user {} not found.", chatId);
-            return false;
+    public void resumeSubscriptions(UserDTO user) {
+        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
+        if (foundUser == null) {
+            logger.warn("Unregistered user #{} trying to resume subscription.", user.getUserId());
+            saveNewUser(user, true);
         } else {
-            user.setPaused(false);
-            usersRepository.save(user);
-            logger.trace("Subscriptions for user {} successfully paused.", chatId);
-            return true;
+            foundUser.setPaused(false);
+            usersRepository.save(foundUser);
+            if (logger.isTraceEnabled())
+                logger.trace("Subscriptions for user #{} successfully resumed.", user.getUserId());
         }
     }
 
     /**
      * Switch users subscriptions pause mode to opposite state.
      *
-     * @param chatId telegram chat id.
-     * @return true if user was found. false otherwise.
+     * @param user user as {@link UserDTO}.
      */
-    public boolean inverseSubscriptionsPause(Long chatId) {
-        UserEntity user = usersRepository.findByChatId(chatId);
-        if (user == null) {
-            //todo if user not found, register him
-            logger.warn("Can't invert user subscription because user {} not found.", chatId);
-            return false;
+    public void inverseSubscriptionsPause(UserDTO user) {
+        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
+        if (foundUser == null) {
+            logger.warn("Unregistered user #{} trying to switch subscription.", user.getUserId());
+            saveNewUser(user);
         } else {
             //inverting subscriptions
-            user.setPaused(!user.isPaused());
-            usersRepository.save(user);
-            logger.trace("Subscriptions for user {} successfully switched to {}.", chatId, user.isPaused());
-            return true;
+            foundUser.setPaused(!foundUser.isPaused());
+            usersRepository.save(foundUser);
+            if (logger.isTraceEnabled())
+                logger.trace("Subscriptions for user #{} successfully switched to {}.", user.getUserId(), foundUser.isPaused());
         }
     }
 
     /**
      * Check subscription status of user.
      *
-     * @param chatId telegram chat id.
+     * @param user user as {@link UserDTO}.
      * @return true if user subscriptions paused.
      */
-    public boolean isUserPaused(Long chatId) {
-        return usersRepository.findByChatId(chatId).isPaused();
+    public boolean isUserPaused(UserDTO user) {
+        return usersRepository.findByUserId(user.getUserId()).isPaused();
     }
+
+    /**
+     * Save new user in database with resumed subscriptions by default.
+     *
+     * @param user new user to save as {@link UserDTO}.
+     */
+    private void saveNewUser(UserDTO user) {
+        saveNewUser(user, false);
+    }
+
 
     /**
      * Save new user in database.
      *
-     * @param chatId   telegram chat id.
-     * @param username first name of user.
+     * @param user     new user to save as {@link UserDTO}.
+     * @param isPaused is new user's subscriptions paused.
      */
-    private void saveNewUser(Long chatId, String username) {
+    private void saveNewUser(UserDTO user, boolean isPaused) {
 
-        UserEntity newUser = new UserEntity();
-        newUser.setChatId(chatId);
-        newUser.setChatName(username);
-        newUser.setPaused(false);
+        UserEntity newUser = user.generateNewUser();
+
+        newUser.setPaused(isPaused);
         newUser.setStartCount(1L);
 
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        newUser.setRegistrationDate(timestamp);
+        newUser.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
+        logger.debug("Creating new user {}.", newUser.getUserId());
         usersRepository.save(newUser);
-        logger.debug("Created new user {}.", chatId);
     }
 
     /**
      * Get user by chat id.
      *
-     * @param chatId telegram chatId.
+     * @param user user as {@link UserDTO}.
      * @return found user entity as {@link UserEntity}. If user is not found returns null.
      */
-    public UserEntity getUser(Long chatId) {
-        UserEntity foundUser = usersRepository.findByChatId(chatId);
+    public UserEntity getUser(UserDTO user) {
+        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
         if (foundUser == null) {
-            logger.warn("User {} not found", chatId);
+            logger.warn("User {} not found", user.getUserId());
         }
         return foundUser;
     }

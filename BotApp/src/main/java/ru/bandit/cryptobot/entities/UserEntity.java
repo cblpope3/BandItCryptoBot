@@ -10,8 +10,20 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 /**
- * Represent user entity. Have the following parameters: {@link #chatId}, {@link #chatName},
- * {@link #updateInterval}, {@link #isPaused}, {@link #registrationDate} and {@link #startCount}.
+ * Represent user entity. Have the following parameters:
+ *
+ * @see #userId
+ * @see #isBot
+ * @see #chatId
+ * @see #firstName
+ * @see #lastName
+ * @see #username
+ * @see #language
+ * @see #lastMessageId
+ * @see #updateInterval
+ * @see #isPaused
+ * @see #registrationDate
+ * @see #startCount
  */
 @Entity
 @Table(name = "users")
@@ -23,17 +35,47 @@ import java.util.Objects;
 public class UserEntity {
 
     /**
-     * Telegram chat id.
+     * True, if this user is a bot.
+     */
+    @Column(name = "is_bot", nullable = false)
+    boolean isBot;
+    /**
+     * Unique identifier for this user or bot.
      */
     @Id
-    @Column(name = "telegram_userchat_id", nullable = false)
+    @Column(name = "telegram_user_id", nullable = false)
+    private Long userId;
+    /**
+     * Telegram chat id.
+     */
+    @Column(name = "telegram_chat_id", nullable = false)
     private Long chatId;
-
     /**
      * User first name.
      */
-    @Column(name = "user_name", nullable = false)
-    private String chatName;
+    @Column(name = "first_name", nullable = false)
+    private String firstName;
+    /**
+     * User last name. Optional.
+     */
+    @Column(name = "last_name")
+    private String lastName;
+    /**
+     * User nickname. Optional.
+     */
+    @Column(name = "username")
+    private String username;
+    /**
+     * User language zone.
+     */
+    @Column(name = "language")
+    private String language;
+
+    /**
+     * Last user message id.
+     */
+    @Column(name = "last_message_id")
+    private Integer lastMessageId;
 
     /**
      * Interval of user subscriptions update. Reserved for future use.
@@ -65,11 +107,11 @@ public class UserEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserEntity user = (UserEntity) o;
-        return isPaused == user.isPaused && chatId.equals(user.chatId) && chatName.equals(user.chatName) && Objects.equals(updateInterval, user.updateInterval) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(startCount, user.startCount);
+        return isBot == user.isBot && isPaused == user.isPaused && userId.equals(user.userId) && chatId.equals(user.chatId) && firstName.equals(user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(username, user.username) && Objects.equals(language, user.language) && Objects.equals(lastMessageId, user.lastMessageId) && Objects.equals(updateInterval, user.updateInterval) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(startCount, user.startCount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(chatId, chatName, updateInterval, isPaused, registrationDate, startCount);
+        return Objects.hash(userId, isBot, chatId, firstName, lastName, username, language, lastMessageId, updateInterval, isPaused, registrationDate, startCount);
     }
 }

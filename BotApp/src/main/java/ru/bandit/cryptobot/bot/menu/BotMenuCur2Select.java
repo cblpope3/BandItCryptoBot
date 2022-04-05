@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
@@ -24,12 +25,12 @@ public class BotMenuCur2Select implements MenuItem {
     CurrencyRepository currencyRepository;
 
     @Override
-    public String getText(Long userId, List<String> param) {
+    public String getText(UserDTO user, List<String> param) {
         return "Выберите вторую валюту:";
     }
 
     @Override
-    public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
+    public InlineKeyboardMarkup getMarkup(UserDTO user, List<String> param) {
 
         //BETTER REFACTOR THIS METHOD. TOO COMPLEX
 

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 import ru.bandit.cryptobot.services.UsersService;
@@ -21,14 +22,14 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
     UsersService usersService;
 
     @Override
-    public String getText(Long userId, List<String> param) {
+    public String getText(UserDTO user, List<String> param) {
         return "Выберите подписку для удаления:";
     }
 
     @Override
-    public InlineKeyboardMarkup getMarkup(Long userId, List<String> param) {
+    public InlineKeyboardMarkup getMarkup(UserDTO user, List<String> param) {
 
-        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersService.getUser(userId));
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersService.getUser(user));
 
         List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
 
