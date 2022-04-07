@@ -29,7 +29,7 @@ public class BotMenuUnsubscribeSelect implements MenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup(UserDTO user, List<String> param) {
 
-        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersService.getUser(user));
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(usersService.getUserEntity(user));
 
         List<List<InlineKeyboardButton>> buttonsGrid = new ArrayList<>();
 

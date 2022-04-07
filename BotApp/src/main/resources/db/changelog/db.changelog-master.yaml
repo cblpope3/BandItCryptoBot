@@ -428,7 +428,7 @@ databaseChangeLog:
                   value: 3
               - column:
                   name: trigger_type_name
-                  value: "target-up"
+                  value: "target_up"
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
@@ -440,7 +440,7 @@ databaseChangeLog:
                   value: 4
               - column:
                   name: trigger_type_name
-                  value: "target-down"
+                  value: "target_down"
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"

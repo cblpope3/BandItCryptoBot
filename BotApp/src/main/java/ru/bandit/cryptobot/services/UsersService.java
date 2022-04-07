@@ -130,9 +130,10 @@ public class UsersService {
      * Save new user in database with resumed subscriptions by default.
      *
      * @param user new user to save as {@link UserDTO}.
+     * @return saved {@link UserEntity}.
      */
-    private void saveNewUser(UserDTO user) {
-        saveNewUser(user, false);
+    private UserEntity saveNewUser(UserDTO user) {
+        return saveNewUser(user, false);
     }
 
 
@@ -141,8 +142,9 @@ public class UsersService {
      *
      * @param user     new user to save as {@link UserDTO}.
      * @param isPaused is new user's subscriptions paused.
+     * @return saved {@link UserEntity}.
      */
-    private void saveNewUser(UserDTO user, boolean isPaused) {
+    private UserEntity saveNewUser(UserDTO user, boolean isPaused) {
 
         UserEntity newUser = user.generateNewUser();
 
@@ -150,20 +152,23 @@ public class UsersService {
         newUser.setStartCount(1L);
 
         newUser.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-        logger.debug("Creating new user {}.", newUser.getUserId());
-        usersRepository.save(newUser);
+        logger.debug("Creating new user {}. New user subscription pause is {}.",
+                newUser.getUserId(), isPaused);
+
+        return usersRepository.save(newUser);
     }
 
     /**
-     * Get user by chat id.
+     * Get {@link UserEntity} by {@link UserDTO}.
      *
      * @param user user as {@link UserDTO}.
-     * @return found user entity as {@link UserEntity}. If user is not found returns null.
+     * @return found {@link UserEntity}. If requested user is not found in database, new user is saved.
      */
-    public UserEntity getUser(UserDTO user) {
+    public UserEntity getUserEntity(UserDTO user) {
         UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
         if (foundUser == null) {
-            logger.warn("User {} not found", user.getUserId());
+            foundUser = this.saveNewUser(user);
+            logger.trace("User #{} not found.", user.getUserId());
         }
         return foundUser;
     }

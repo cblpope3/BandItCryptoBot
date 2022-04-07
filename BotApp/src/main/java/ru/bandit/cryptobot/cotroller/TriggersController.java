@@ -30,7 +30,7 @@ public class TriggersController {
                                                 @ApiParam(value = "Котировка валюты, триггер которой сработал.")
                                                 @RequestParam String value) {
 
-        if (triggersService.processTargetTrigger(triggerId, value)) {
+        if (triggersService.processWorkedTargetTrigger(triggerId, value)) {
             return new ResponseEntity<>(HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -47,7 +47,7 @@ public class TriggersController {
     @GetMapping("/getAllTarget")
     public ResponseEntity<List<TriggerDTO>> refreshTriggers() {
 
-        List<TriggerDTO> response = triggersService.getTargetTriggersList();
+        List<TriggerDTO> response = triggersService.getTargetTriggerDTOList();
 
         if (response == null || response.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 

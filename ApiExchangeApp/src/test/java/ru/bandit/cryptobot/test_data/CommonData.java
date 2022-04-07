@@ -25,17 +25,17 @@ public abstract class CommonData {
     public static Double testRateValue1_1 = 100.1;
     public final static CurrencyRatesDTO currencyRate1 = new CurrencyRatesDTO(testRateSymbol1, testRateValue1_1.toString());
     public final static TriggerDTO testTrigger1 = new TriggerDTO(trigger1Id, currencyRate1.getSymbol(),
-            trigger1Value, TriggerDTO.TriggerType.UP);
+            trigger1Value, TriggerDTO.TriggerType.TARGET_UP);
     public final static TriggerDTO testTriggerWorked1 = new TriggerDTO(triggerWorked1Id, currencyRate1.getSymbol(),
-            triggerWorked1Value, TriggerDTO.TriggerType.UP);
+            triggerWorked1Value, TriggerDTO.TriggerType.TARGET_UP);
     public final static CurrencyRatesDTO currencyRateNotAllowed1 = new CurrencyRatesDTO(testRateSymbolNotAllowed1, testRateValue1_1.toString());
     public final static CurrencyRatesDTO currencyRateNotAllowed2 = new CurrencyRatesDTO(testRateSymbolNotAllowed2, testRateValue1_1.toString());
     public static Double testRateValue2_1 = 200.2;
     public final static CurrencyRatesDTO currencyRate2 = new CurrencyRatesDTO(testRateSymbol2, testRateValue2_1.toString());
     public final static TriggerDTO testTrigger2 = new TriggerDTO(trigger2Id, currencyRate2.getSymbol(),
-            trigger2Value, TriggerDTO.TriggerType.DOWN);
+            trigger2Value, TriggerDTO.TriggerType.TARGET_DOWN);
     public final static TriggerDTO testTriggerWorked2 = new TriggerDTO(triggerWorked2Id, currencyRate2.getSymbol(),
-            triggerWorked2Value, TriggerDTO.TriggerType.DOWN);
+            triggerWorked2Value, TriggerDTO.TriggerType.TARGET_DOWN);
     public final static List<TriggerDTO> testTriggersList = List.of(testTrigger1, testTriggerWorked1, testTrigger2, testTriggerWorked2);
     public final static Map<Long, Double> workedTriggersMap = Map.of(triggerWorked1Id, testRateValue1_1, triggerWorked2Id, testRateValue2_1);
     public static Double testRateValue1_2 = 300.3;

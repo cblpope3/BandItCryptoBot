@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
@@ -54,7 +55,7 @@ public class Bot extends TelegramLongPollingBot {
 
             //validating incoming request
             String incomingRequest = update.getMessage().getText().toUpperCase();
-            if (!incomingRequest.matches("(/)[A-Z0-9_/]+")) {
+            if (!incomingRequest.matches("(/)[A-Z0-9_/,-]+")) {
 
                 logger.debug("Ignoring request because it is not a command: {}", incomingRequest);
 
@@ -79,7 +80,7 @@ public class Bot extends TelegramLongPollingBot {
                     update.getMessage().getMessageId());
 
             //get markup and message text
-            BotResponse responseTemplate = requestProcessor.generateResponse(processQuery(incomingRequest), userDTO);
+            BotResponse responseTemplate = requestProcessor.generateResponse(new QueryDTO(incomingRequest), userDTO);
 
             replyMessage.setChatId(update.getMessage().getChatId().toString());
             replyMessage.setReplyMarkup(responseTemplate.getKeyboard());
@@ -109,7 +110,7 @@ public class Bot extends TelegramLongPollingBot {
                     update.getCallbackQuery().getMessage().getMessageId());
 
             //get markup and message text
-            BotResponse responseTemplate = requestProcessor.generateResponse(processQuery(incomingRequest), userDTO);
+            BotResponse responseTemplate = requestProcessor.generateResponse(new QueryDTO(incomingRequest), userDTO);
 
             //preparing response
             replyMessage.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());

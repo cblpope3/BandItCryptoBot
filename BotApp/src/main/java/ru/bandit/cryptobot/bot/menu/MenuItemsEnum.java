@@ -22,5 +22,7 @@ public enum MenuItemsEnum {
         RESUME,
         STOP_CONFIRM,
             STOP,
-        HELP
+        HELP,
+    TARGET_UP,
+    TARGET_DOWN;
 }

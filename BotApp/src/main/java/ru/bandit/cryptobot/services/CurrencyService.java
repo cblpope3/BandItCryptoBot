@@ -99,4 +99,24 @@ public class CurrencyService {
         return null;
     }
 
+    public CurrencyPairEntity getCurrencyPair(List<String> currencies) {
+        //todo this is temprorary
+        if (currencies.size() != 2) throw new RuntimeException("Error!");
+        return this.getCurrencyPair(currencies.get(0), currencies.get(1));
+    }
+
+    /**
+     * Get user-friendly available currencies.
+     *
+     * @return all available currencies as {@link String}.
+     */
+    public String getAllCurrenciesList() {
+
+        Set<CurrencyEntity> allCurrenciesList = this.getAllCurrencies();
+
+        return allCurrenciesList.stream()
+                .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
+                .collect(Collectors.joining("\n"));
+    }
+
 }

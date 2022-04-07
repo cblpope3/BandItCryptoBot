@@ -3,12 +3,16 @@ package ru.bandit.cryptobot.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.Bot;
 import ru.bandit.cryptobot.clients.TriggersClient;
+import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
+import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
+import ru.bandit.cryptobot.dto.UserDTO;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
+import ru.bandit.cryptobot.entities.UserEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
@@ -23,8 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class TriggersService {
 
-    private static final String TRIGGER_UP_NAME = "target-up";
-    private static final String TRIGGER_DOWN_NAME = "target-down";
+    private static final String TRIGGER_UP_NAME = "target_up";
+    private static final String TRIGGER_DOWN_NAME = "target_down";
     private final Logger logger = LoggerFactory.getLogger(TriggersService.class);
     @Autowired
     UserTriggersRepository userTriggersRepository;
@@ -41,9 +45,11 @@ public class TriggersService {
     @Autowired
     UsersService usersService;
 
-    //todo decide if this needed here. better move to clients class.
-    @Value("${api-app.hostname}")
-    private String apiAppCurrencyUrl;
+    @Autowired
+    CurrencyService currencyService;
+
+    @Autowired
+    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
     /**
      * This method allows getting target-up trigger type.
@@ -70,7 +76,7 @@ public class TriggersService {
      * @return requested trigger type as {@link TriggerTypeEntity}, or null if not found.
      */
     public TriggerTypeEntity getCustomTriggerType(String triggerTypeName) {
-        return triggerTypeRepository.findByTriggerName(triggerTypeName);
+        return triggerTypeRepository.findByTriggerName(triggerTypeName.toLowerCase());
     }
 
     /**
@@ -81,80 +87,259 @@ public class TriggersService {
      */
     public void createNewTriggerType(String triggerName, String triggerDescription) {
         TriggerTypeEntity newTriggerType = new TriggerTypeEntity();
-        newTriggerType.setTriggerName(triggerName);
+        newTriggerType.setTriggerName(triggerName.toLowerCase());
         newTriggerType.setTriggerDescription(triggerDescription);
 
         triggerTypeRepository.save(newTriggerType);
     }
 
-    public List<TriggerDTO> getTargetTriggersList() {
-        TriggerTypeEntity targetUpType = getTriggerUp();
-        TriggerTypeEntity targetDownType = getTriggerDown();
+
+    //=================================================
+    //=================================================
+
+
+    /**
+     * Get currency rates once.
+     *
+     * @param params requested rates currency pair.
+     * @return user-friendly {@link String} with currency rates.
+     */
+    public String getOnce(QueryDTO params) {
+
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+
+        if (currencyPair == null) {
+            logger.debug("Requested currency pair not found.");
+            //todo implement correct exception
+            throw new RuntimeException("No currency pair");
+        }
+
+        return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
+                currencyPair.getCurrency2().getCurrencyNameUser()).toString();
+    }
+
+    /**
+     * Create new subscription for given user.
+     *
+     * @param user   {@link UserDTO} of user going to subscribe.
+     * @param params request parameters as {@link QueryDTO}.
+     */
+    public void subscribe(UserDTO user, QueryDTO params) {
+        UserEntity foundUser = usersService.getUserEntity(user);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+        if (currencyPair == null) {
+            if (logger.isDebugEnabled()) logger.debug("User #{} requested subscription to wong currency pair: {}.",
+                    user.getUserId(),
+                    params.getCurrencies());
+            //todo implement correct exception
+            throw new RuntimeException("Wrong currency pair!");
+        }
+
+        TriggerTypeEntity triggerType = this.getCustomTriggerType(params.getTriggerType());
+
+        UserTriggerEntity newTrigger = new UserTriggerEntity();
+        newTrigger.setUser(foundUser);
+        newTrigger.setCurrencyPair(currencyPair);
+        newTrigger.setTriggerType(triggerType);
+        if (params.getTriggerParameter() != null) {
+            newTrigger.setTargetValue(Integer.parseInt(params.getTriggerParameter()));
+        }
+
+        //check if user already have this subscription
+        if (this.doesTriggerExist(newTrigger)) {
+            logger.debug("User already subscribed to this trigger");
+            //todo implement correct exception
+            throw new RuntimeException("User already subscribed to this.");
+        }
+
+        userTriggersRepository.save(newTrigger);
+
+        //send new trigger to api-app
+        this.sendTargetTriggerToApp(newTrigger);
+    }
+
+
+    /**
+     * Delete trigger with given id.
+     *
+     * @param user      {@link UserDTO} of user that requested subscription delete.
+     * @param triggerId id of trigger to be deleted.
+     */
+    public void unsubscribe(UserDTO user, Long triggerId) {
+        logger.trace("Trying to remove trigger #{}", triggerId);
+
+        UserTriggerEntity userTrigger = userTriggersRepository.findById(triggerId);
+        if (userTrigger == null) {
+            //trying to delete trigger that not exist
+            logger.trace("Trigger #{} doesn't exist.", triggerId);
+            //todo implement correct exception
+            throw new RuntimeException("No trigger.");
+        } else if (!userTrigger.getUser().getUserId().equals(user.getUserId())) {
+            //user trying to delete foreign trigger
+            //todo check how this works
+            logger.warn("User #{} trying to delete foreign subscription #{}.", user.getUserId(), triggerId);
+            //todo implement correct exception
+            throw new RuntimeException("Not permitted operation.");
+        } else {
+            //everything is fine, deleting trigger
+            if (userTrigger.getTriggerType().equals(this.getTriggerUp()) ||
+                    userTrigger.getTriggerType().equals(this.getTriggerDown())) {
+                triggersClient.deleteTrigger(triggerId);
+            }
+            userTriggersRepository.delete(userTrigger);
+            logger.trace("Trigger #{} deleted successfully.", triggerId);
+        }
+    }
+
+    /**
+     * Remove all subscriptions for given user.
+     *
+     * @param user {@link UserDTO} of user that want to delete all subscriptions.
+     */
+    public void unsubscribeAll(UserDTO user) {
+
+        UserEntity foundUser = usersService.getUserEntity(user);
+
+        List<UserTriggerEntity> foundSubscriptions = userTriggersRepository.findByUser(foundUser);
+
+        if (foundSubscriptions == null || foundSubscriptions.isEmpty()) {
+            logger.debug("Subscriptions for user #{} not found.", user.getUserId());
+            //todo implement correct exception
+            throw new RuntimeException("Subscriptions not found.");
+        } else {
+            for (UserTriggerEntity triggerEntity : foundSubscriptions) {
+                if (triggerEntity.getTriggerType().equals(this.getTriggerUp()) ||
+                        triggerEntity.getTriggerType().equals(this.getTriggerDown())) {
+                    triggersClient.deleteTrigger(triggerEntity.getId());
+                }
+            }
+            userTriggersRepository.deleteAll(foundSubscriptions);
+            logger.debug("User #{} unsubscribed from all subscriptions successfully.", user.getUserId());
+        }
+    }
+
+    /**
+     * Get user-friendly subscriptions list for given user.
+     *
+     * @param user {@link UserDTO} of user that want to get subscriptions list.
+     * @return user-friendly subscriptions list as {@link String}.
+     */
+    public String getAllSubscriptionsAsString(UserDTO user) {
+        UserEntity foundUser = usersService.getUserEntity(user);
+
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
+        if (subscriptionsList == null) {
+            logger.debug("Not found any triggers for user #{}.", user.getUserId());
+            return "";
+        } else {
+            logger.trace("Returned subscriptions of user #{}", user.getUserId());
+            return subscriptionsList.stream()
+                    //FIXME subscription name is not fine for simple triggers
+                    .map(a -> String.format("№%d - %s/%s - %s - %d",
+                            a.getId(),
+                            a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                            a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                            a.getTriggerType().getTriggerName(),
+                            a.getTargetValue()))
+                    .collect(Collectors.joining("\n"));
+        }
+
+    }
+
+    /**
+     * Get all existing target triggers.
+     *
+     * @return {@link List} of all existing target triggers as {@link TriggerDTO}.
+     */
+    public List<TriggerDTO> getTargetTriggerDTOList() {
 
         List<UserTriggerEntity> result = new ArrayList<>();
-        result.addAll(userTriggersRepository.findByTriggerType(targetUpType));
-        result.addAll(userTriggersRepository.findByTriggerType(targetDownType));
+        result.addAll(userTriggersRepository.findByTriggerType(getTriggerUp()));
+        result.addAll(userTriggersRepository.findByTriggerType(getTriggerDown()));
 
-        return result.stream().map(
-                        trigger -> {
-                            TriggerDTO triggerDTO = new TriggerDTO();
-                            triggerDTO.setId(trigger.getId());
-                            //fixme this must be double in database
-                            triggerDTO.setTargetValue(trigger.getTargetValue().doubleValue());
-                            if (trigger.getTriggerType().getTriggerName().equalsIgnoreCase(TRIGGER_UP_NAME)) {
-                                triggerDTO.setTriggerType(TriggerDTO.TriggerType.UP);
-                            } else {
-                                triggerDTO.setTriggerType(TriggerDTO.TriggerType.DOWN);
-                            }
-                            triggerDTO.setCurrencyPair(trigger.getCurrencyPair().getCurrency1().getCurrencyNameSource() +
-                                    trigger.getCurrencyPair().getCurrency2().getCurrencyNameSource());
-                            return triggerDTO;
-                        }
-                )
+        return result.stream()
+                .map(this::mapTriggerEntityToTriggerDTO)
                 .collect(Collectors.toList());
     }
 
-    public boolean processTargetTrigger(Long triggerId, String value) {
+    /**
+     * Send alarm of worked target trigger to user.
+     *
+     * @param triggerId id of worked trigger.
+     * @param value     value of currency rates by the time trigger worked.
+     * @return true if trigger processed successfully. False if trigger not found or found trigger is not target-type.
+     */
+    public boolean processWorkedTargetTrigger(Long triggerId, String value) {
         UserTriggerEntity workedTrigger = userTriggersRepository.findById(triggerId);
         if (workedTrigger == null) {
             logger.warn("Not found worked trigger #{} in database!", triggerId);
             return false;
         } else {
-            if (!workedTrigger.getTriggerType().getTriggerName().equals(TRIGGER_UP_NAME) &&
-                    !workedTrigger.getTriggerType().getTriggerName().equals(TRIGGER_DOWN_NAME)) {
-                logger.warn("Worked target trigger is not target trigger!");
+            if (!workedTrigger.getTriggerType().equals(this.getTriggerUp()) &&
+                    !workedTrigger.getTriggerType().equals(this.getTriggerDown())) {
+                logger.warn("Worked trigger #{} is not target trigger!", triggerId);
                 return false;
             } else {
-                logger.trace("Worked target trigger processed successfully!");
                 bot.sendWorkedTargetTriggerToUser(workedTrigger, value);
                 userTriggersRepository.delete(workedTrigger);
+                if (logger.isTraceEnabled())
+                    logger.trace("Worked target trigger #{} with value={} processed successfully.", triggerId, value);
                 return true;
             }
         }
     }
 
-    public void deleteTargetTrigger(Long triggerId) {
-        triggersClient.deleteTrigger(triggerId);
+    /**
+     * Method creates {@link TriggerDTO} object that equals given {@link UserTriggerEntity} object.
+     *
+     * @param userTriggerEntity original {@link UserTriggerEntity} object to be mapped.
+     * @return mapped {@link TriggerDTO} object if triggerType is fine. Null if triggerType is not found in database.
+     */
+    private TriggerDTO mapTriggerEntityToTriggerDTO(UserTriggerEntity userTriggerEntity) {
+        TriggerDTO triggerDTO;
 
-        logger.debug("sending command to api-app: delete trigger #{}.", triggerId);
-    }
-
-    public void createTargetTrigger(UserTriggerEntity newTrigger) {
-
-        TriggerDTO triggerDTO = new TriggerDTO();
-        triggerDTO.setId(newTrigger.getId());
-        //fixme this value in database must be double
-        triggerDTO.setTargetValue(newTrigger.getTargetValue().doubleValue());
-        triggerDTO.setCurrencyPair(newTrigger.getCurrencyPair().getCurrency1().getCurrencyNameSource().toUpperCase() +
-                newTrigger.getCurrencyPair().getCurrency2().getCurrencyNameSource().toUpperCase());
-        if (newTrigger.getTriggerType().getTriggerName().equalsIgnoreCase(TRIGGER_UP_NAME)) {
-            triggerDTO.setTriggerType(TriggerDTO.TriggerType.UP);
-        } else {
-            triggerDTO.setTriggerType(TriggerDTO.TriggerType.DOWN);
+        try {
+            triggerDTO = new TriggerDTO(
+                    userTriggerEntity.getId(),
+                    userTriggerEntity.getCurrencyPair().getCurrency1().getCurrencyNameSource().toUpperCase() +
+                            userTriggerEntity.getCurrencyPair().getCurrency2().getCurrencyNameSource().toUpperCase(),
+                    //fixme this value in database must be double
+                    userTriggerEntity.getTargetValue().doubleValue(),
+                    TriggerDTO.TriggerType.valueOf(
+                            userTriggerEntity.getTriggerType().getTriggerName().toUpperCase())
+            );
+        } catch (IllegalArgumentException e) {
+            logger.error("Unknown trigger type: {}", e.toString());
+            triggerDTO = null;
         }
 
-        triggersClient.addNewTrigger(triggerDTO);
+        return triggerDTO;
+    }
 
+    /**
+     * Check if user already have subscription.
+     *
+     * @param trigger {@link UserTriggerEntity} that we want to check.
+     * @return true if user already have this subscription.
+     */
+    private boolean doesTriggerExist(UserTriggerEntity trigger) {
+        //getting list of triggers with matching userId, triggerTypeId, currencyPairId and targetValue
+        List<UserTriggerEntity> existingTriggerList = userTriggersRepository
+                .findByUserAndTriggerTypeAndCurrencyPairAndTargetValue(trigger.getUser(), trigger.getTriggerType(),
+                        trigger.getCurrencyPair(), trigger.getTargetValue());
+
+        //if this list is null or empty, trigger not exist
+        return existingTriggerList != null && !existingTriggerList.isEmpty();
+    }
+
+
+    /**
+     * Method sends target trigger to Trigger-App.
+     *
+     * @param newTrigger new {@link UserTriggerEntity} to send to Trigger-App.
+     */
+    private void sendTargetTriggerToApp(UserTriggerEntity newTrigger) {
         logger.debug("sending command to api-app: create trigger.");
+        triggersClient.addNewTrigger(this.mapTriggerEntityToTriggerDTO(newTrigger));
     }
 }
