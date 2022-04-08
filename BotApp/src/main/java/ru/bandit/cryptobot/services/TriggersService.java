@@ -30,6 +30,8 @@ public class TriggersService {
 
     private static final String TRIGGER_UP_NAME = "target_up";
     private static final String TRIGGER_DOWN_NAME = "target_down";
+    private static final String SIMPLE_TRIGGER_NAME = "simple";
+    private static final String AVERAGE_TRIGGER_NAME = "average";
     private final Logger logger = LoggerFactory.getLogger(TriggersService.class);
     @Autowired
     UserTriggersRepository userTriggersRepository;
@@ -57,7 +59,7 @@ public class TriggersService {
      *
      * @return target-up trigger type as {@link TriggerTypeEntity}.
      */
-    public TriggerTypeEntity getTriggerUp() {
+    public TriggerTypeEntity getUpTriggerType() {
         return triggerTypeRepository.findByTriggerName(TRIGGER_UP_NAME);
     }
 
@@ -66,8 +68,26 @@ public class TriggersService {
      *
      * @return target-down trigger type as {@link TriggerTypeEntity}.
      */
-    public TriggerTypeEntity getTriggerDown() {
+    public TriggerTypeEntity getDownTriggerType() {
         return triggerTypeRepository.findByTriggerName(TRIGGER_DOWN_NAME);
+    }
+
+    /**
+     * This method allows getting simple stream trigger type.
+     *
+     * @return simple trigger type as {@link TriggerTypeEntity}.
+     */
+    public TriggerTypeEntity getSimpleTriggerType() {
+        return triggerTypeRepository.findByTriggerName(SIMPLE_TRIGGER_NAME);
+    }
+
+    /**
+     * This method allows getting average stream trigger type.
+     *
+     * @return average trigger type as {@link TriggerTypeEntity}.
+     */
+    public TriggerTypeEntity getAverageTriggerType() {
+        return triggerTypeRepository.findByTriggerName(AVERAGE_TRIGGER_NAME);
     }
 
     /**
@@ -157,8 +177,8 @@ public class TriggersService {
         userTriggersRepository.save(newTrigger);
 
         //if new trigger is alarm, send it to api-app
-        if (newTrigger.getTriggerType().equals(this.getTriggerUp()) ||
-                newTrigger.getTriggerType().equals(this.getTriggerDown())) {
+        if (newTrigger.getTriggerType().equals(this.getUpTriggerType()) ||
+                newTrigger.getTriggerType().equals(this.getDownTriggerType())) {
             this.sendTargetTriggerToApp(newTrigger);
         }
     }
@@ -187,8 +207,8 @@ public class TriggersService {
                     TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else {
             //everything is fine, deleting trigger
-            if (userTrigger.getTriggerType().equals(this.getTriggerUp()) ||
-                    userTrigger.getTriggerType().equals(this.getTriggerDown())) {
+            if (userTrigger.getTriggerType().equals(this.getUpTriggerType()) ||
+                    userTrigger.getTriggerType().equals(this.getDownTriggerType())) {
                 triggersClient.deleteTrigger(triggerId);
             }
             userTriggersRepository.delete(userTrigger);
@@ -213,8 +233,8 @@ public class TriggersService {
             throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
             for (UserTriggerEntity triggerEntity : foundSubscriptions) {
-                if (triggerEntity.getTriggerType().equals(this.getTriggerUp()) ||
-                        triggerEntity.getTriggerType().equals(this.getTriggerDown())) {
+                if (triggerEntity.getTriggerType().equals(this.getUpTriggerType()) ||
+                        triggerEntity.getTriggerType().equals(this.getDownTriggerType())) {
                     triggersClient.deleteTrigger(triggerEntity.getId());
                 }
             }
@@ -260,12 +280,24 @@ public class TriggersService {
     public List<TriggerDTO> getTargetTriggerDTOList() {
 
         List<UserTriggerEntity> result = new ArrayList<>();
-        result.addAll(userTriggersRepository.findByTriggerType(getTriggerUp()));
-        result.addAll(userTriggersRepository.findByTriggerType(getTriggerDown()));
+        result.addAll(userTriggersRepository.findByTriggerType(getUpTriggerType()));
+        result.addAll(userTriggersRepository.findByTriggerType(getDownTriggerType()));
 
         return result.stream()
                 .map(this::mapTriggerEntityToTriggerDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Get all stream-type triggers from users that aren't in pause mode.
+     *
+     * @return {@link List} of stream-type {@link UserTriggerEntity}.
+     */
+    public List<UserTriggerEntity> getAllActiveStreamTriggers() {
+        List<UserTriggerEntity> result = new ArrayList<>();
+        result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getSimpleTriggerType(), false));
+        result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getAverageTriggerType(), false));
+        return result;
     }
 
     /**
@@ -281,8 +313,8 @@ public class TriggersService {
             logger.warn("Not found worked trigger #{} in database!", triggerId);
             return false;
         } else {
-            if (!workedTrigger.getTriggerType().equals(this.getTriggerUp()) &&
-                    !workedTrigger.getTriggerType().equals(this.getTriggerDown())) {
+            if (!workedTrigger.getTriggerType().equals(this.getUpTriggerType()) &&
+                    !workedTrigger.getTriggerType().equals(this.getDownTriggerType())) {
                 logger.warn("Worked trigger #{} is not target trigger!", triggerId);
                 return false;
             } else {

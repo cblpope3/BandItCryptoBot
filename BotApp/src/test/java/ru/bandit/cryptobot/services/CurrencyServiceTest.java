@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
+import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
@@ -27,11 +29,20 @@ class CurrencyServiceTest {
     @MockBean
     CurrencyPairRepository currencyPairRepository;
 
+    @MockBean
+    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
+
+    @MockBean
+    AverageCurrencyRatesDAO averageCurrencyRatesDAO;
+
     CurrencyService currencyService;
 
     @BeforeEach
     void setUp() {
-        currencyService = new CurrencyService(currencyRepository, currencyPairRepository);
+        currencyService = new CurrencyService(currencyRepository,
+                currencyPairRepository,
+                currentCurrencyRatesDAO,
+                averageCurrencyRatesDAO);
     }
 
     @Test

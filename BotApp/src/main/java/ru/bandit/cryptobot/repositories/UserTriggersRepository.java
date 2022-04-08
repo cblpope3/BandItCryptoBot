@@ -21,4 +21,6 @@ public interface UserTriggersRepository extends CrudRepository<UserTriggerEntity
                                                                                   Integer targetValue);
 
     List<UserTriggerEntity> findByTriggerType(TriggerTypeEntity triggerType);
+
+    List<UserTriggerEntity> findByTriggerTypeAndUser_IsPaused(TriggerTypeEntity triggerType, boolean isPaused);
 }

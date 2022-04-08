@@ -2,78 +2,91 @@ package ru.bandit.cryptobot.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
-import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
-import ru.bandit.cryptobot.entities.TriggerTypeEntity;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+/**
+ * This service implements methods that handle mailing new currency rates to users.
+ *
+ * @see #getStreams()
+ */
 @Service
 public class StreamService {
 
-    @Autowired
-    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
-
-    @Autowired
-    AverageCurrencyRatesDAO averageCurrencyRatesDAO;
-
-    @Autowired
-    UserTriggersRepository userTriggersRepository;
-
-    @Autowired
     TriggersService triggersService;
 
+    CurrencyService currencyService;
+
+    @Autowired
+    public StreamService(TriggersService triggersService, CurrencyService currencyService) {
+        this.triggersService = triggersService;
+        this.currencyService = currencyService;
+    }
+
+    /**
+     * Method making user-friendly information about user subscriptions.
+     *
+     * @return {@link Map}, where key is user id, value is {@link List} of user-friendly {@link String} with
+     * information about currency rates that can be published directly to user.
+     */
     public Map<Long, List<String>> getStreams() {
-        TriggerTypeEntity simpleTrigger = triggersService.getCustomTriggerType("simple");
-        TriggerTypeEntity averageTrigger = triggersService.getCustomTriggerType("average");
 
-        List<UserTriggerEntity> mailingList = userTriggersRepository.findByTriggerType(simpleTrigger);
-        mailingList.addAll(userTriggersRepository.findByTriggerType(averageTrigger));
+        //getting all active triggers list from database
+        List<UserTriggerEntity> mailingList = triggersService.getAllActiveStreamTriggers();
 
-        Map<Long, List<String>> result = new HashMap<>();
-        for (UserTriggerEntity stream : mailingList) {
+        return mailingList.stream()
+                .collect(Collectors.groupingBy(
+                        a -> a.getUser().getUserId(),
+                        Collector.of(
+                                ArrayList::new,
+                                (result, userTrigger) -> result.add(this.getUserFriendlyCurrencyRate(userTrigger)),
+                                (result1, result2) -> {
+                                    result1.addAll(result2);
+                                    return result1;
+                                }
+                        )
+                ));
+    }
 
-            //if user is paused - ignore
-            if (stream.getUser().isPaused()) continue;
-
-            String currency1 = stream.getCurrencyPair().getCurrency1().getCurrencyNameUser();
-            String currency2 = stream.getCurrencyPair().getCurrency2().getCurrencyNameUser();
-
-            Long chatId = stream.getUser().getChatId();
-
-            List<String> currentUserSubscriptions = result.get(chatId);
-            if (currentUserSubscriptions == null) currentUserSubscriptions = new ArrayList<>();
-
-            Double foundRate;
-            if (stream.getTriggerType().equals(simpleTrigger)) {
-                foundRate = currentCurrencyRatesDAO.getRateBySymbol(currency1 + currency2);
-            } else {
-                foundRate = averageCurrencyRatesDAO.getRateBySymbol(currency1 + currency2);
-            }
-
-            String foundRateString;
-            if (foundRate == null) foundRateString = "Нет данных";
-            else foundRateString = foundRate.toString();
-
-            if (stream.getTriggerType().equals(simpleTrigger)) {
-                currentUserSubscriptions.add(String.format("%s/%s - %s",
-                        currency1,
-                        currency2,
-                        foundRateString));
-            } else {
-                currentUserSubscriptions.add(String.format("%s/%s среднее за минуту - %s",
-                        currency1,
-                        currency2,
-                        foundRateString));
-            }
-
-            result.put(chatId, currentUserSubscriptions);
+    /**
+     * Make user-friendly currency rate from {@link UserTriggerEntity}.
+     *
+     * @param userTrigger stream trigger to be mapped.
+     * @return user-friendly currency rate with currencies symbols.
+     */
+    private String getUserFriendlyCurrencyRate(UserTriggerEntity userTrigger) {
+        //todo specify currencies refreshing time
+        if (userTrigger.getTriggerType().equals(triggersService.getSimpleTriggerType())) {
+            return String.format("%s - %s. Обновлено: ---",
+                    this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                    currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()));
+        } else if (userTrigger.getTriggerType().equals(triggersService.getAverageTriggerType())) {
+            return String.format("%s среднее за минуту - %s. Обновлено: ---",
+                    this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                    currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()));
+        } else {
+            throw new IllegalArgumentException("Unknown user trigger type.");
         }
-        return result;
+    }
+
+
+    /**
+     * Get user-friendly currency pair name.
+     *
+     * @param currencyPair requested currency pair.
+     * @return user-friendly currency pair.
+     * @see CurrencyPairEntity
+     * @see String
+     */
+    private String getUserFriendlyCurrencyPair(CurrencyPairEntity currencyPair) {
+        return String.format("%s/%s",
+                currencyPair.getCurrency1().getCurrencyNameUser(),
+                currencyPair.getCurrency2().getCurrencyNameUser());
     }
 }

@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
+import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
@@ -25,10 +27,19 @@ public class CurrencyService {
 
     CurrencyPairRepository currencyPairRepository;
 
+    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
+
+    AverageCurrencyRatesDAO averageCurrencyRatesDAO;
+
     @Autowired
-    public CurrencyService(CurrencyRepository currencyRepository, CurrencyPairRepository currencyPairRepository) {
+    public CurrencyService(CurrencyRepository currencyRepository,
+                           CurrencyPairRepository currencyPairRepository,
+                           CurrentCurrencyRatesDAO currentCurrencyRatesDAO,
+                           AverageCurrencyRatesDAO averageCurrencyRatesDAO) {
         this.currencyRepository = currencyRepository;
         this.currencyPairRepository = currencyPairRepository;
+        this.currentCurrencyRatesDAO = currentCurrencyRatesDAO;
+        this.averageCurrencyRatesDAO = averageCurrencyRatesDAO;
     }
 
     /**
@@ -117,6 +128,30 @@ public class CurrencyService {
         return allCurrenciesList.stream()
                 .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
                 .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Get current currency rate.
+     *
+     * @param currencyPair requested currency pair.
+     * @return currency rate value.
+     * @see CurrencyPairEntity
+     */
+    public Double getCurrentCurrencyRate(CurrencyPairEntity currencyPair) {
+        return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameSource() +
+                currencyPair.getCurrency2().getCurrencyNameSource());
+    }
+
+    /**
+     * Get average currency rate.
+     *
+     * @param currencyPair requested currency pair.
+     * @return currency rate value.
+     * @see CurrencyPairEntity
+     */
+    public Double getAverageCurrencyRate(CurrencyPairEntity currencyPair) {
+        return averageCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameSource() +
+                currencyPair.getCurrency2().getCurrencyNameSource());
     }
 
 }
