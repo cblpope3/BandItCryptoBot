@@ -85,6 +85,9 @@ public class CurrencyService {
         } else if (currency2 == null) {
             logger.warn("Currency symbol '{}' not found in database", currency2symbol);
             return null;
+        } else if (currency1.equals(currency2)) {
+            logger.warn("Requested currency pair of two same currencies '{}'", currency1symbol);
+            return null;
         }
 
         //get all pairs with currency1
