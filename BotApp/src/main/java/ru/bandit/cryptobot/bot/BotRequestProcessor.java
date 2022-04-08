@@ -7,10 +7,9 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.*;
 import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
-import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.exceptions.TriggerException;
-import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.CurrencyService;
+import ru.bandit.cryptobot.services.MetricsService;
 import ru.bandit.cryptobot.services.TriggersService;
 import ru.bandit.cryptobot.services.UsersService;
 
@@ -43,13 +42,13 @@ public class BotRequestProcessor {
     BotMenuBack menuBack;
 
     @Autowired
-    MetricsRepository metricsRepository;
-
-    @Autowired
     TriggersService triggersService;
 
     @Autowired
     CurrencyService currencyService;
+
+    @Autowired
+    MetricsService metricsService;
 
     @Autowired
     UsersService usersService;
@@ -220,10 +219,7 @@ public class BotRequestProcessor {
                 menuItem = menuStop;
                 break;
             case HELP:
-                MetricsEntity metrics = metricsRepository.findById(1L);
-                if (metrics == null) metrics = new MetricsEntity();
-                metrics.setHelpCount(metrics.getHelpCount() + 1);
-                metricsRepository.save(metrics);
+                metricsService.incrementHelpCommandCounter();
                 logger.trace("Got help command from user #{}", user.getUserId());
                 menuItem = menuHelp;
                 return new BotResponse(menuItem.getMarkup(user, null), menuItem.getText(user, null));

@@ -13,9 +13,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
-import ru.bandit.cryptobot.entities.MetricsEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.MetricsRepository;
+import ru.bandit.cryptobot.services.MetricsService;
 import ru.bandit.cryptobot.services.StreamService;
 
 import java.util.Arrays;
@@ -38,7 +37,7 @@ public class Bot extends TelegramLongPollingBot {
     StreamService streamService;
 
     @Autowired
-    MetricsRepository metricsRepository;
+    MetricsService metricsService;
 
     Bot(@Value("${bot.token}") String token, @Value("${bot.username}") String username) {
         this.token = token;
@@ -71,10 +70,7 @@ public class Bot extends TelegramLongPollingBot {
             }
 
             //counting metrics
-            MetricsEntity metrics = metricsRepository.findById(1L);
-            if (metrics == null) metrics = new MetricsEntity();
-            metrics.setTextCommandCount(metrics.getTextCommandCount() + 1);
-            metricsRepository.save(metrics);
+            metricsService.incrementTextCommandCounter();
 
             UserDTO userDTO = new UserDTO(update.getMessage().getFrom(), update.getMessage().getChatId(),
                     update.getMessage().getMessageId());
@@ -98,10 +94,7 @@ public class Bot extends TelegramLongPollingBot {
             EditMessageText replyMessage = new EditMessageText();
 
             //calculating metrics
-            MetricsEntity metrics = metricsRepository.findById(1L);
-            if (metrics == null) metrics = new MetricsEntity();
-            metrics.setInteractiveCommandCount(metrics.getInteractiveCommandCount() + 1);
-            metricsRepository.save(metrics);
+            metricsService.incrementInteractiveCommandCounter();
 
             //preparing incoming request
             String incomingRequest = update.getCallbackQuery().getData().toUpperCase();
