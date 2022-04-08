@@ -14,6 +14,7 @@ import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.exceptions.TriggerException;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
 
@@ -103,15 +104,16 @@ public class TriggersService {
      *
      * @param params requested rates currency pair.
      * @return user-friendly {@link String} with currency rates.
+     * @throws TriggerException if requested currency pair not found.
      */
-    public String getOnce(QueryDTO params) {
+    public String getOnce(QueryDTO params) throws TriggerException {
 
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
 
         if (currencyPair == null) {
-            logger.debug("Requested currency pair not found.");
-            //todo implement correct exception
-            throw new RuntimeException("No currency pair");
+            if (logger.isWarnEnabled())
+                logger.warn("Requested currency pair #{} not found.", params.getCurrencies().toString());
+            throw new TriggerException("No such currency pair.", TriggerException.ExceptionCause.NO_CURRENCY_PAIR);
         }
 
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
@@ -123,16 +125,16 @@ public class TriggersService {
      *
      * @param user   {@link UserDTO} of user going to subscribe.
      * @param params request parameters as {@link QueryDTO}.
+     * @throws TriggerException if requested currency pair not found or user already have this subscription.
      */
-    public void subscribe(UserDTO user, QueryDTO params) {
+    public void subscribe(UserDTO user, QueryDTO params) throws TriggerException {
         UserEntity foundUser = usersService.getUserEntity(user);
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
         if (currencyPair == null) {
             if (logger.isDebugEnabled()) logger.debug("User #{} requested subscription to wong currency pair: {}.",
                     user.getUserId(),
                     params.getCurrencies());
-            //todo implement correct exception
-            throw new RuntimeException("Wrong currency pair!");
+            throw new TriggerException("No such currency pair.", TriggerException.ExceptionCause.NO_CURRENCY_PAIR);
         }
 
         TriggerTypeEntity triggerType = this.getCustomTriggerType(params.getTriggerType());
@@ -148,14 +150,17 @@ public class TriggersService {
         //check if user already have this subscription
         if (this.doesTriggerExist(newTrigger)) {
             logger.debug("User already subscribed to this trigger");
-            //todo implement correct exception
-            throw new RuntimeException("User already subscribed to this.");
+            throw new TriggerException("User already subscribed to this.",
+                    TriggerException.ExceptionCause.ALREADY_SUBSCRIBED);
         }
 
         userTriggersRepository.save(newTrigger);
 
-        //send new trigger to api-app
-        this.sendTargetTriggerToApp(newTrigger);
+        //if new trigger is alarm, send it to api-app
+        if (newTrigger.getTriggerType().equals(this.getTriggerUp()) ||
+                newTrigger.getTriggerType().equals(this.getTriggerDown())) {
+            this.sendTargetTriggerToApp(newTrigger);
+        }
     }
 
 
@@ -164,22 +169,22 @@ public class TriggersService {
      *
      * @param user      {@link UserDTO} of user that requested subscription delete.
      * @param triggerId id of trigger to be deleted.
+     * @throws TriggerException if user don't have requested trigger.
      */
-    public void unsubscribe(UserDTO user, Long triggerId) {
+    public void unsubscribe(UserDTO user, Long triggerId) throws TriggerException {
         logger.trace("Trying to remove trigger #{}", triggerId);
 
         UserTriggerEntity userTrigger = userTriggersRepository.findById(triggerId);
         if (userTrigger == null) {
             //trying to delete trigger that not exist
             logger.trace("Trigger #{} doesn't exist.", triggerId);
-            //todo implement correct exception
-            throw new RuntimeException("No trigger.");
+            throw new TriggerException("User don't have this subscription.", TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else if (!userTrigger.getUser().getUserId().equals(user.getUserId())) {
             //user trying to delete foreign trigger
             //todo check how this works
             logger.warn("User #{} trying to delete foreign subscription #{}.", user.getUserId(), triggerId);
-            //todo implement correct exception
-            throw new RuntimeException("Not permitted operation.");
+            throw new TriggerException("User don't have permission to access this trigger.",
+                    TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else {
             //everything is fine, deleting trigger
             if (userTrigger.getTriggerType().equals(this.getTriggerUp()) ||
@@ -195,8 +200,9 @@ public class TriggersService {
      * Remove all subscriptions for given user.
      *
      * @param user {@link UserDTO} of user that want to delete all subscriptions.
+     * @throws TriggerException if user don't have any subscriptions.
      */
-    public void unsubscribeAll(UserDTO user) {
+    public void unsubscribeAll(UserDTO user) throws TriggerException {
 
         UserEntity foundUser = usersService.getUserEntity(user);
 
@@ -204,8 +210,7 @@ public class TriggersService {
 
         if (foundSubscriptions == null || foundSubscriptions.isEmpty()) {
             logger.debug("Subscriptions for user #{} not found.", user.getUserId());
-            //todo implement correct exception
-            throw new RuntimeException("Subscriptions not found.");
+            throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
             for (UserTriggerEntity triggerEntity : foundSubscriptions) {
                 if (triggerEntity.getTriggerType().equals(this.getTriggerUp()) ||
@@ -223,14 +228,15 @@ public class TriggersService {
      *
      * @param user {@link UserDTO} of user that want to get subscriptions list.
      * @return user-friendly subscriptions list as {@link String}.
+     * @throws TriggerException if user don't have any subscriptions.
      */
-    public String getAllSubscriptionsAsString(UserDTO user) {
+    public String getAllSubscriptionsAsString(UserDTO user) throws TriggerException {
         UserEntity foundUser = usersService.getUserEntity(user);
 
         List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
         if (subscriptionsList == null) {
             logger.debug("Not found any triggers for user #{}.", user.getUserId());
-            return "";
+            throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
             logger.trace("Returned subscriptions of user #{}", user.getUserId());
             return subscriptionsList.stream()

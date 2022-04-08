@@ -8,6 +8,7 @@ import ru.bandit.cryptobot.bot.menu.*;
 import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.MetricsEntity;
+import ru.bandit.cryptobot.exceptions.TriggerException;
 import ru.bandit.cryptobot.repositories.MetricsRepository;
 import ru.bandit.cryptobot.services.CurrencyService;
 import ru.bandit.cryptobot.services.TriggersService;
@@ -65,152 +66,76 @@ public class BotRequestProcessor {
             return new BotResponse(null, "Неизвестная команда. Напишите /help, чтобы увидеть список команд.");
         }
 
-        short commandStatus;
         MenuItem menuItem;
 
         //choosing menu item
-        String errorMessage = "Произошла ошибка. Для помощи напишите /help.";
-        String userNotFound = "Сначала наберите /start.";
-        String userNotFoundLog = "User not found.";
         switch (requestedMenuItem) {
 //===============================================
 // Endpoints first
 //===============================================
             //THIS PIECE OF SHIT MUST BE REFACTORED
             case ALL_CUR:
+                if (logger.isTraceEnabled())
+                    logger.trace("Got show all currencies command from user #{}", user.getUserId());
                 return new BotResponse(menuBack.getMarkup(null, null),
                         currencyService.getAllCurrenciesList());
-            //todo once trigger is not implemented and tested
             case ONCE:
-                String rates = String.format("%s/%s: %s", query.getParameter1(), query.getParameter2(),
-                        triggersService.getOnce(query));
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        rates);
+                if (logger.isTraceEnabled())
+                    logger.trace("Got 'once' command from user #{}", user.getUserId());
+                try {
+                    String rates = String.format("%s/%s: %s", query.getParameter1(), query.getParameter2(),
+                            triggersService.getOnce(query));
+                    if (logger.isTraceEnabled())
+                        logger.trace("Sending 'once' command result to user.");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            rates);
+                } catch (TriggerException e) {
+                    logger.warn(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                }
+
             case STOP:
-                logger.debug("Got stop command from #{}", user.getUserId());
-                triggersService.unsubscribeAll(user);
-                //todo catch exceptions
-                logger.trace("Unsubscribed successfully.");
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        "Все подписки удалены. Вы можете посмотреть новые в меню \"Операции с валютами\".");
-//                } else if (commandStatus == BotService.NO_SUBSCRIPTIONS) {
-//                    logger.trace("No subscriptions found.");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "У вас не было подписок.");
-//                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-//                    logger.trace(userNotFoundLog);
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            userNotFound);
-//                } else {
-//                    logger.error("Error while unsubscribing.");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            errorMessage);
-//                }
+                if (logger.isTraceEnabled())
+                    logger.trace("Got stop command from user #{}", user.getUserId());
+                try {
+                    triggersService.unsubscribeAll(user);
+                    logger.trace("Unsubscribed successfully.");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Все подписки удалены. Вы можете посмотреть новые в меню \"Операции с валютами\".");
+                } catch (TriggerException e) {
+                    logger.debug(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                }
+
             case AVERAGE:
             case TARGET_UP:
             case TARGET_DOWN:
             case SIMPLE:
-                triggersService.subscribe(user, query);
-                //todo catch exceptions
-                logger.trace("successfully created new simple trigger");
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        "Подписка успешно создана!");
-//                } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
-//                    logger.trace("not found currency");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Выбранный набор валют недоступен.");
-//                } else if (commandStatus == BotService.NOT_VALID_PARAMETER) {
-//                    logger.trace("not valid request parameters");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Неверные параметры запроса.");
-//                } else if (commandStatus == BotService.ALREADY_SUBSCRIBED) {
-//                    logger.trace("already have this subscription");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "У вас уже есть такая подписка.");
-//                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-//                    logger.trace(userNotFoundLog);
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            userNotFound);
-//                } else {
-//                    logger.error("Error while creating simple trigger");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            errorMessage);
-//                }
-//            case AVERAGE:
-//                triggersService.subscribe(user, query);
-//                //todo catch exceptions
-//                logger.trace("successfully created new average trigger");
-//                return new BotResponse(menuBack.getMarkup(null, null),
-//                        "Подписка успешно создана!");
-//                } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
-//                    logger.trace("not found currency");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Выбранный набор валют недоступен.");
-//                } else if (commandStatus == BotService.NOT_VALID_PARAMETER) {
-//                    logger.trace("not valid request parameters");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Неверные параметры запроса.");
-//                } else if (commandStatus == BotService.ALREADY_SUBSCRIBED) {
-//                    logger.trace("already have this subscription");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "У вас уже есть такая подписка.");
-//                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-//                    logger.trace(userNotFoundLog);
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            userNotFound);
-//                } else {
-//                    logger.error("Error while creating simple trigger");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            errorMessage);
-//                }
-            case TARGET:
-                triggersService.subscribe(user, query);
-                //todo catch exceptions
+                try {
+                    triggersService.subscribe(user, query);
+                    logger.trace("successfully created new simple trigger");
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Подписка успешно создана!");
+                } catch (TriggerException e) {
+                    logger.warn(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                }
 
-                logger.trace("successfully created new target trigger");
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        "Подписка успешно создана!");
-//                } else if (commandStatus == BotService.NOT_FOUND_CURRENCY) {
-//                    logger.trace("not found currency");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Выбранный набор валют недоступен.");
-//                } else if (commandStatus == BotService.NOT_VALID_PARAMETER) {
-//                    logger.trace("not valid request parameters");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Неверные параметры запроса.");
-//                } else if (commandStatus == BotService.ALREADY_SUBSCRIBED) {
-//                    logger.trace("already have this subscription");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "У вас уже есть такая подписка.");
-//                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-//                    logger.trace(userNotFoundLog);
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            userNotFound);
-//                } else {
-//                    logger.error("Error while creating simple trigger");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            errorMessage);
-//                }
             case UNSUBSCRIBE:
-                logger.trace("Got unsubscribe from command from user #{}", user.getUserId());
-                triggersService.unsubscribe(user, Long.parseLong(query.getParameter1()));
-                //todo catch exceptions
-                logger.trace("successfully unsubscribed");
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        "Вы отписаны от рассылки.");
-//                } else if (commandStatus == BotService.NOT_FOUND_USER) {
-//                    logger.warn("not found user");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "Сначала наберите команду /start");
-//                } else if (commandStatus == BotService.NOT_FOUND_SUBSCRIPTION) {
-//                    logger.trace("subscription not found");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            "У вас нет такой подписки.");
-//                } else {
-//                    logger.error("Error while unsubscribing");
-//                    return new BotResponse(menuBack.getMarkup(null, null),
-//                            errorMessage);
-//                }
+                if (logger.isTraceEnabled())
+                    logger.trace("Got unsubscribe from command from user #{}", user.getUserId());
+
+                try {
+                    triggersService.unsubscribe(user, Long.parseLong(query.getParameter1()));
+                    if (logger.isDebugEnabled())
+                        logger.debug("User #{} successfully unsubscribed.", user.getUserId());
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            "Вы отписаны от рассылки.");
+                } catch (TriggerException e) {
+                    logger.debug(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                }
+
             case PAUSE:
                 logger.trace("Got pause command from user #{}", user.getUserId());
                 usersService.pauseSubscriptions(user);
@@ -249,14 +174,19 @@ public class BotRequestProcessor {
                             String.format("Ещё раз привет, %s! Для помощи напишите /help.", user.getFirstName()));
                 }
             case SHOW_ALL:
-                logger.trace("Got show subscriptions command from user #{}.", user.getUserId());
-                String subscriptionsList = triggersService.getAllSubscriptionsAsString(user);
-                if (subscriptionsList == null || subscriptionsList.isEmpty()) {
-                    logger.trace("Subscriptions list is empty");
+                if (logger.isTraceEnabled())
+                    logger.trace("Got show subscriptions command from user #{}.", user.getUserId());
+                try {
+                    String subscriptionsList = triggersService.getAllSubscriptionsAsString(user);
+                    if (logger.isTraceEnabled())
+                        logger.trace("Sending subscriptions list to user #{}.", user.getUserId());
                     return new BotResponse(menuBack.getMarkup(null, null),
-                            "У вас нет подписок");
-                } else return new BotResponse(menuBack.getMarkup(null, null),
-                        subscriptionsList);
+                            subscriptionsList);
+                } catch (TriggerException e) {
+                    logger.debug(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                }
+
 
 //===============================================
 
