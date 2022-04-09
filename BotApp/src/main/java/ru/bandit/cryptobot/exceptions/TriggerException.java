@@ -6,9 +6,10 @@ import lombok.Getter;
  * Exception that can be thrown if issues happen while performing some action with user triggers.
  *
  * @see ExceptionCause
+ * @see CommonBotAppException
  */
 @Getter
-public class TriggerException extends Exception {
+public class TriggerException extends CommonBotAppException {
 
     private final ExceptionCause exceptionCause;
 
@@ -17,14 +18,19 @@ public class TriggerException extends Exception {
         this.exceptionCause = exceptionCause;
     }
 
+    @Override
+    public String getUserFriendlyMessage() {
+        return this.exceptionCause.getMessage();
+    }
+
     /**
      * Enum that explains {@link TriggerException} cause.
      */
     public enum ExceptionCause {
         /**
-         * No such currency pair in database.
+         * No such trigger type.
          */
-        NO_CURRENCY_PAIR("Нет подходящей пары валют."),
+        NO_TRIGGER_TYPE("Не найден данный тип триггера."),
         /**
          * User already have this subscription.
          */
@@ -36,7 +42,11 @@ public class TriggerException extends Exception {
         /**
          * User don't have any subscriptions.
          */
-        NO_SUBSCRIPTIONS("У вас нет подписок.");
+        NO_SUBSCRIPTIONS("У вас нет подписок."),
+        /**
+         * Trigger type is not correct.
+         */
+        TRIGGER_TYPE_NOT_MATCH("Неправильный тип триггера.");
 
         private final String message;
 

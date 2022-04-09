@@ -9,6 +9,7 @@ import ru.bandit.cryptobot.dao.AverageCurrencyRatesDAO;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 import ru.bandit.cryptobot.repositories.CurrencyRepository;
 import ru.bandit.cryptobot.test_data.CurrenciesTestData;
@@ -46,7 +47,7 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void getCurrencyBySymbol() {
+    void getCurrencyBySymbol() throws CommonBotAppException {
 
         //mocking all used classes
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
@@ -64,7 +65,7 @@ class CurrencyServiceTest {
     }
 
     @Test
-    void getAllCurrencies() {
+    void getAllCurrencies() throws CommonBotAppException {
         //mocking all used classes
         when(currencyRepository.findAll())
                 .thenReturn(CurrenciesTestData.getCurrenciesList());
@@ -82,7 +83,7 @@ class CurrencyServiceTest {
 
     //Testing fine currencies call
     @Test
-    void getCurrencyPairSeparate() {
+    void getCurrencyPairSeparate() throws CommonBotAppException {
         //mocking all used classes
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
                 .thenReturn(CurrenciesTestData.getCurrencyBTC());
@@ -119,7 +120,7 @@ class CurrencyServiceTest {
 
     //Testing if currency not found
     @Test
-    void getCurrencyPairSeparateNoCurrency() {
+    void getCurrencyPairSeparateNoCurrency() throws CommonBotAppException {
         //mocking all used classes
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
                 .thenReturn(CurrenciesTestData.getCurrencyBTC());
@@ -144,7 +145,7 @@ class CurrencyServiceTest {
 
     //Testing if currency pair not found
     @Test
-    void getCurrencyPairSeparateNoCurrencyPair() {
+    void getCurrencyPairSeparateNoCurrencyPair() throws CommonBotAppException {
         //mocking all used classes
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
                 .thenReturn(CurrenciesTestData.getCurrencyBTC());

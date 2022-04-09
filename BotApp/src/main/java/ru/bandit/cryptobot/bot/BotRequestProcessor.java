@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.*;
 import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
-import ru.bandit.cryptobot.exceptions.TriggerException;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.CurrencyService;
 import ru.bandit.cryptobot.services.MetricsService;
 import ru.bandit.cryptobot.services.TriggersService;
@@ -76,8 +76,15 @@ public class BotRequestProcessor {
             case ALL_CUR:
                 if (logger.isTraceEnabled())
                     logger.trace("Got show all currencies command from user #{}", user.getUserId());
-                return new BotResponse(menuBack.getMarkup(null, null),
-                        currencyService.getAllCurrenciesList());
+                try {
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            currencyService.getAllCurrenciesList());
+                } catch (CommonBotAppException e) {
+                    logger.warn(e.getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null),
+                            e.getUserFriendlyMessage());
+                }
+
             case ONCE:
                 if (logger.isTraceEnabled())
                     logger.trace("Got 'once' command from user #{}", user.getUserId());
@@ -88,9 +95,9 @@ public class BotRequestProcessor {
                         logger.trace("Sending 'once' command result to user.");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             rates);
-                } catch (TriggerException e) {
+                } catch (CommonBotAppException e) {
                     logger.warn(e.getMessage());
-                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getUserFriendlyMessage());
                 }
 
             case STOP:
@@ -101,9 +108,9 @@ public class BotRequestProcessor {
                     logger.trace("Unsubscribed successfully.");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Все подписки удалены. Вы можете посмотреть новые в меню \"Операции с валютами\".");
-                } catch (TriggerException e) {
+                } catch (CommonBotAppException e) {
                     logger.debug(e.getMessage());
-                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getUserFriendlyMessage());
                 }
 
             case AVERAGE:
@@ -115,9 +122,9 @@ public class BotRequestProcessor {
                     logger.trace("successfully created new simple trigger");
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Подписка успешно создана!");
-                } catch (TriggerException e) {
+                } catch (CommonBotAppException e) {
                     logger.warn(e.getMessage());
-                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getUserFriendlyMessage());
                 }
 
             case UNSUBSCRIBE:
@@ -130,9 +137,9 @@ public class BotRequestProcessor {
                         logger.debug("User #{} successfully unsubscribed.", user.getUserId());
                     return new BotResponse(menuBack.getMarkup(null, null),
                             "Вы отписаны от рассылки.");
-                } catch (TriggerException e) {
+                } catch (CommonBotAppException e) {
                     logger.debug(e.getMessage());
-                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getUserFriendlyMessage());
                 }
 
             case PAUSE:
@@ -181,9 +188,9 @@ public class BotRequestProcessor {
                         logger.trace("Sending subscriptions list to user #{}.", user.getUserId());
                     return new BotResponse(menuBack.getMarkup(null, null),
                             subscriptionsList);
-                } catch (TriggerException e) {
+                } catch (CommonBotAppException e) {
                     logger.debug(e.getMessage());
-                    return new BotResponse(menuBack.getMarkup(null, null), e.getExceptionCause().getMessage());
+                    return new BotResponse(menuBack.getMarkup(null, null), e.getUserFriendlyMessage());
                 }
 
 

@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
 import java.util.List;
@@ -30,13 +31,12 @@ public class TriggersController {
                                                 @ApiParam(value = "Котировка валюты, триггер которой сработал.")
                                                 @RequestParam String value) {
 
-        if (triggersService.processWorkedTargetTrigger(triggerId, value)) {
+        try {
+            triggersService.processWorkedTargetTrigger(triggerId, value);
             return new ResponseEntity<>(HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CommonBotAppException e) {
+            return new ResponseEntity<>(e.getUserFriendlyMessage(), HttpStatus.NOT_FOUND);
         }
-
-
     }
 
     @ApiOperation(value = "Отправить запрос на обновление триггеров", nickname = "refreshTriggers",

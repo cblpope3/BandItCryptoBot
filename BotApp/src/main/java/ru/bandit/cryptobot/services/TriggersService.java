@@ -14,6 +14,7 @@ import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.TriggerTypeEntity;
 import ru.bandit.cryptobot.entities.UserEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.TriggerException;
 import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
 import ru.bandit.cryptobot.repositories.UserTriggersRepository;
@@ -94,10 +95,16 @@ public class TriggersService {
      * This method allows getting custom trigger type.
      *
      * @param triggerTypeName name of trigger type as written in {@link TriggerTypeEntity}.
-     * @return requested trigger type as {@link TriggerTypeEntity}, or null if not found.
+     * @return requested trigger type as {@link TriggerTypeEntity}.
+     * @throws CommonBotAppException if requested trigger type not found in database.
      */
-    public TriggerTypeEntity getCustomTriggerType(String triggerTypeName) {
-        return triggerTypeRepository.findByTriggerName(triggerTypeName.toLowerCase());
+    public TriggerTypeEntity getCustomTriggerType(String triggerTypeName) throws CommonBotAppException {
+        TriggerTypeEntity triggerType = triggerTypeRepository.findByTriggerName(triggerTypeName.toLowerCase());
+        if (triggerType == null) {
+            logger.error("Trigger type #{} not found", triggerTypeName);
+            throw new TriggerException("Not found trigger type.", TriggerException.ExceptionCause.NO_TRIGGER_TYPE);
+        }
+        return triggerType;
     }
 
     /**
@@ -124,17 +131,11 @@ public class TriggersService {
      *
      * @param params requested rates currency pair.
      * @return user-friendly {@link String} with currency rates.
-     * @throws TriggerException if requested currency pair not found.
+     * @throws CommonBotAppException if requested currency pair not found.
      */
-    public String getOnce(QueryDTO params) throws TriggerException {
+    public String getOnce(QueryDTO params) throws CommonBotAppException {
 
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
-
-        if (currencyPair == null) {
-            if (logger.isWarnEnabled())
-                logger.warn("Requested currency pair #{} not found.", params.getCurrencies().toString());
-            throw new TriggerException("No such currency pair.", TriggerException.ExceptionCause.NO_CURRENCY_PAIR);
-        }
 
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
                 currencyPair.getCurrency2().getCurrencyNameUser()).toString();
@@ -145,17 +146,11 @@ public class TriggersService {
      *
      * @param user   {@link UserDTO} of user going to subscribe.
      * @param params request parameters as {@link QueryDTO}.
-     * @throws TriggerException if requested currency pair not found or user already have this subscription.
+     * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public void subscribe(UserDTO user, QueryDTO params) throws TriggerException {
+    public void subscribe(UserDTO user, QueryDTO params) throws CommonBotAppException {
         UserEntity foundUser = usersService.getUserEntity(user);
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
-        if (currencyPair == null) {
-            if (logger.isDebugEnabled()) logger.debug("User #{} requested subscription to wong currency pair: {}.",
-                    user.getUserId(),
-                    params.getCurrencies());
-            throw new TriggerException("No such currency pair.", TriggerException.ExceptionCause.NO_CURRENCY_PAIR);
-        }
 
         TriggerTypeEntity triggerType = this.getCustomTriggerType(params.getTriggerType());
 
@@ -189,9 +184,9 @@ public class TriggersService {
      *
      * @param user      {@link UserDTO} of user that requested subscription delete.
      * @param triggerId id of trigger to be deleted.
-     * @throws TriggerException if user don't have requested trigger.
+     * @throws CommonBotAppException if user don't have requested trigger.
      */
-    public void unsubscribe(UserDTO user, Long triggerId) throws TriggerException {
+    public void unsubscribe(UserDTO user, Long triggerId) throws CommonBotAppException {
         logger.trace("Trying to remove trigger #{}", triggerId);
 
         UserTriggerEntity userTrigger = userTriggersRepository.findById(triggerId);
@@ -220,9 +215,9 @@ public class TriggersService {
      * Remove all subscriptions for given user.
      *
      * @param user {@link UserDTO} of user that want to delete all subscriptions.
-     * @throws TriggerException if user don't have any subscriptions.
+     * @throws CommonBotAppException if user don't have any subscriptions.
      */
-    public void unsubscribeAll(UserDTO user) throws TriggerException {
+    public void unsubscribeAll(UserDTO user) throws CommonBotAppException {
 
         UserEntity foundUser = usersService.getUserEntity(user);
 
@@ -248,9 +243,9 @@ public class TriggersService {
      *
      * @param user {@link UserDTO} of user that want to get subscriptions list.
      * @return user-friendly subscriptions list as {@link String}.
-     * @throws TriggerException if user don't have any subscriptions.
+     * @throws CommonBotAppException if user don't have any subscriptions.
      */
-    public String getAllSubscriptionsAsString(UserDTO user) throws TriggerException {
+    public String getAllSubscriptionsAsString(UserDTO user) throws CommonBotAppException {
         UserEntity foundUser = usersService.getUserEntity(user);
 
         List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
@@ -278,7 +273,7 @@ public class TriggersService {
      * @return {@link List} of all existing target triggers as {@link TriggerDTO}.
      */
     public List<TriggerDTO> getTargetTriggerDTOList() {
-
+        //todo decide if this method must throw exception if result list is empty
         List<UserTriggerEntity> result = new ArrayList<>();
         result.addAll(userTriggersRepository.findByTriggerType(getUpTriggerType()));
         result.addAll(userTriggersRepository.findByTriggerType(getDownTriggerType()));
@@ -294,6 +289,7 @@ public class TriggersService {
      * @return {@link List} of stream-type {@link UserTriggerEntity}.
      */
     public List<UserTriggerEntity> getAllActiveStreamTriggers() {
+        //todo decide if this method must throw exception if result list is empty
         List<UserTriggerEntity> result = new ArrayList<>();
         result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getSimpleTriggerType(), false));
         result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getAverageTriggerType(), false));
@@ -305,24 +301,24 @@ public class TriggersService {
      *
      * @param triggerId id of worked trigger.
      * @param value     value of currency rates by the time trigger worked.
-     * @return true if trigger processed successfully. False if trigger not found or found trigger is not target-type.
+     * @throws CommonBotAppException if trigger is not found or trigger is not target type.
      */
-    public boolean processWorkedTargetTrigger(Long triggerId, String value) {
+    public void processWorkedTargetTrigger(Long triggerId, String value) throws CommonBotAppException {
         UserTriggerEntity workedTrigger = userTriggersRepository.findById(triggerId);
         if (workedTrigger == null) {
             logger.warn("Not found worked trigger #{} in database!", triggerId);
-            return false;
+            throw new TriggerException("Not found requested trigger in database.",
+                    TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else {
             if (!workedTrigger.getTriggerType().equals(this.getUpTriggerType()) &&
                     !workedTrigger.getTriggerType().equals(this.getDownTriggerType())) {
                 logger.warn("Worked trigger #{} is not target trigger!", triggerId);
-                return false;
+                throw new TriggerException("Requested trigger has other type.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
             } else {
                 bot.sendWorkedTargetTriggerToUser(workedTrigger, value);
                 userTriggersRepository.delete(workedTrigger);
                 if (logger.isTraceEnabled())
                     logger.trace("Worked target trigger #{} with value={} processed successfully.", triggerId, value);
-                return true;
             }
         }
     }
@@ -336,6 +332,7 @@ public class TriggersService {
     private TriggerDTO mapTriggerEntityToTriggerDTO(UserTriggerEntity userTriggerEntity) {
         TriggerDTO triggerDTO;
 
+        //todo why using try-catch blocks?
         try {
             triggerDTO = new TriggerDTO(
                     userTriggerEntity.getId(),
