@@ -53,8 +53,8 @@ public class TriggerDTO {
      * Enumerate that contains possible trigger type values: "UP" and "DOWN".
      */
     public enum TriggerType {
-        TARGET_UP("UP"),
-        TARGET_DOWN("DOWN");
+        TARGET_UP("TARGET_UP"),
+        TARGET_DOWN("TARGET_DOWN");
 
         private final String type;
 
