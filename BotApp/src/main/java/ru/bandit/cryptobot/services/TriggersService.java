@@ -126,6 +126,8 @@ public class TriggersService {
     //=================================================
 
 
+    //fixme make String user-friendly looking
+
     /**
      * Get currency rates once.
      *
@@ -137,6 +139,7 @@ public class TriggersService {
 
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
 
+        //fixme throws runtime exception if rates are not available.
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
                 currencyPair.getCurrency2().getCurrencyNameUser()).toString();
     }
@@ -158,8 +161,8 @@ public class TriggersService {
         newTrigger.setUser(foundUser);
         newTrigger.setCurrencyPair(currencyPair);
         newTrigger.setTriggerType(triggerType);
-        if (params.getTriggerParameter() != null) {
-            newTrigger.setTargetValue(Integer.parseInt(params.getTriggerParameter()));
+        if (params.getTriggerValue() != null) {
+            newTrigger.setTargetValue(Integer.parseInt(params.getTriggerValue()));
         }
 
         //check if user already have this subscription
@@ -169,13 +172,19 @@ public class TriggersService {
                     TriggerException.ExceptionCause.ALREADY_SUBSCRIBED);
         }
 
-        userTriggersRepository.save(newTrigger);
-
         //if new trigger is alarm, send it to api-app
         if (newTrigger.getTriggerType().equals(this.getUpTriggerType()) ||
                 newTrigger.getTriggerType().equals(this.getDownTriggerType())) {
+
+            //alarm trigger must have target value
+            if (newTrigger.getTargetValue() == null) {
+                logger.error("Target trigger don't have target value.");
+                throw new TriggerException("No target value.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
+            }
             this.sendTargetTriggerToApp(newTrigger);
         }
+
+        userTriggersRepository.save(newTrigger);
     }
 
 
@@ -249,7 +258,7 @@ public class TriggersService {
         UserEntity foundUser = usersService.getUserEntity(user);
 
         List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
-        if (subscriptionsList == null) {
+        if (subscriptionsList == null || subscriptionsList.isEmpty()) {
             logger.debug("Not found any triggers for user #{}.", user.getUserId());
             throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
@@ -265,6 +274,19 @@ public class TriggersService {
                     .collect(Collectors.joining("\n"));
         }
 
+    }
+
+    //todo encapsulate this method into previous
+    public List<UserTriggerEntity> getAllUsersSubscriptions(UserDTO user) throws CommonBotAppException {
+        UserEntity foundUser = usersService.getUserEntity(user);
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
+        if (subscriptionsList == null) {
+            logger.debug("Not found any triggers for user #{}.", user.getUserId());
+            throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
+        } else {
+            logger.trace("Returning found subscriptions for user #{}.", user.getUserId());
+            return subscriptionsList;
+        }
     }
 
     /**
@@ -331,6 +353,11 @@ public class TriggersService {
      */
     private TriggerDTO mapTriggerEntityToTriggerDTO(UserTriggerEntity userTriggerEntity) {
         TriggerDTO triggerDTO;
+
+        //fixme this null check is temporary
+        if (userTriggerEntity.getTargetValue() == null) {
+            return null;
+        }
 
         //todo why using try-catch blocks?
         try {
