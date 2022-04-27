@@ -2,7 +2,14 @@ package ru.bandit.cryptobot.services;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
+import ru.bandit.cryptobot.bot.menu.MenuError;
+import ru.bandit.cryptobot.dao.BotCommandsDAO;
+import ru.bandit.cryptobot.dto.BotResponseDTO;
+import ru.bandit.cryptobot.dto.QueryDTO;
+import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.QueryException;
 
@@ -16,14 +23,62 @@ public class QueryService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final BotCommandsDAO botCommandsDAO;
+
+    @Autowired
+    public QueryService(BotCommandsDAO botCommandsDAO) {
+        this.botCommandsDAO = botCommandsDAO;
+    }
+
+    /**
+     * Method takes user request and generates response.
+     *
+     * @param user    information about user that performed this request.
+     * @param request users request content.
+     * @return response as {@link BotResponseDTO} object.
+     */
+    public BotResponseDTO makeResponseToUser(UserDTO user, String request) {
+
+        BotResponseDTO response = new BotResponseDTO();
+        AbstractMenuItem foundMenuItem;
+
+        try {
+            List<String> separatedQuery = this.splitQuery(request);
+            //assuming that first part of query must be command name
+            String commandName = separatedQuery.remove(0);
+
+            //trying to find command in command map
+            foundMenuItem = botCommandsDAO.findMenuItem(commandName);
+
+            //creating queryDTO object
+            //todo decide if queryDTO is not needed
+            QueryDTO queryDTO = new QueryDTO(commandName);
+            queryDTO.setParameters(separatedQuery);
+
+            //todo decide if QueryDTO object is useless
+            //setting user and query information to chosen menu item
+            foundMenuItem.setQueryDTO(queryDTO);
+            foundMenuItem.setUserDTO(user);
+
+        } catch (CommonBotAppException e) {
+            logger.debug(e.getMessage());
+            foundMenuItem = new MenuError(e);
+        }
+
+        response.setMessage(foundMenuItem.getText());
+        response.setKeyboard(foundMenuItem.getMarkup());
+
+        return response;
+    }
+
     /**
      * Split incoming {@link String} query to {@link List} of commands and make basic validations.
      *
      * @param query incoming query
      * @return split query.
-     * @throws CommonBotAppException in case of problems during query validation process.
+     * @throws CommonBotAppException if query is empty after splitting.
      */
-    public List<String> separateQuery(String query) throws CommonBotAppException {
+    private List<String> splitQuery(String query) throws CommonBotAppException {
 
         //check if query contains unexpected symbols
         this.checkQueryIllegalSymbols(query);

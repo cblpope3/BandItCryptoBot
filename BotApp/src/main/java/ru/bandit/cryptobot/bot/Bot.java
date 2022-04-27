@@ -11,10 +11,11 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
+import ru.bandit.cryptobot.dto.BotResponseDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.services.MetricsService;
+import ru.bandit.cryptobot.services.QueryService;
 import ru.bandit.cryptobot.services.StreamService;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class Bot extends TelegramLongPollingBot {
     MetricsService metricsService;
 
     @Autowired
-    BotRequestHandler botRequestHandler;
+    QueryService queryService;
 
     Bot(@Value("${bot.token}") String token, @Value("${bot.username}") String username) {
         this.token = token;
@@ -58,11 +59,11 @@ public class Bot extends TelegramLongPollingBot {
                     update.getMessage().getMessageId());
 
             //get markup and message text
-            AbstractMenuItem response = botRequestHandler.getMenuLayout(incomingRequest, userDTO);
+            BotResponseDTO response = queryService.makeResponseToUser(userDTO, incomingRequest);
 
             replyMessage.setChatId(update.getMessage().getChatId().toString());
-            replyMessage.setReplyMarkup(response.getMarkup());
-            replyMessage.setText(response.getText());
+            replyMessage.setReplyMarkup(response.getKeyboard());
+            replyMessage.setText(response.getMessage());
 
             try {
                 execute(replyMessage);
@@ -85,12 +86,12 @@ public class Bot extends TelegramLongPollingBot {
                     update.getCallbackQuery().getMessage().getMessageId());
 
             //get markup and message text
-            AbstractMenuItem response = botRequestHandler.getMenuLayout(incomingRequest, userDTO);
+            BotResponseDTO response = queryService.makeResponseToUser(userDTO, incomingRequest);
 
             //preparing response
             replyMessage.setChatId(update.getCallbackQuery().getMessage().getChatId().toString());
-            replyMessage.setReplyMarkup(response.getMarkup());
-            replyMessage.setText(response.getText());
+            replyMessage.setReplyMarkup(response.getKeyboard());
+            replyMessage.setText(response.getMessage());
             replyMessage.setMessageId(update.getCallbackQuery().getMessage().getMessageId());
 
             try {
