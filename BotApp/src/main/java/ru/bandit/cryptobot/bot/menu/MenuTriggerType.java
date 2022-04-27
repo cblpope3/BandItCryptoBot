@@ -15,7 +15,7 @@ import java.util.List;
 public class MenuTriggerType extends AbstractMenuItem {
 
     protected MenuTriggerType(MenuOperations parent) {
-        super(parent);
+        super(parent, 2);
     }
 
     /**

@@ -18,7 +18,7 @@ public class MenuAverage extends AbstractMenuItem {
 
     @Autowired
     protected MenuAverage(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 2);
         this.triggersService = triggersService;
     }
 

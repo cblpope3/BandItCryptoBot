@@ -17,7 +17,7 @@ public class MenuOnce extends AbstractMenuItem {
 
     @Autowired
     protected MenuOnce(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 2);
         this.triggersService = triggersService;
     }
 

@@ -17,7 +17,7 @@ public class MenuUnsubscribe extends AbstractMenuItem {
 
     @Autowired
     protected MenuUnsubscribe(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 1);
         this.triggersService = triggersService;
     }
 
@@ -42,6 +42,5 @@ public class MenuUnsubscribe extends AbstractMenuItem {
             logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();
         }
-
     }
 }

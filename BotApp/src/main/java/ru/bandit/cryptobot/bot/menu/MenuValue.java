@@ -15,7 +15,7 @@ import java.util.List;
 public class MenuValue extends AbstractMenuItem {
 
     protected MenuValue(MenuOperations parent) {
-        super(parent);
+        super(parent, 4);
     }
 
     /**

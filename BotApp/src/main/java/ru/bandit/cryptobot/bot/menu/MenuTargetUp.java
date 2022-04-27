@@ -17,7 +17,7 @@ public class MenuTargetUp extends AbstractMenuItem {
 
     @Autowired
     protected MenuTargetUp(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 3);
         this.triggersService = triggersService;
     }
 

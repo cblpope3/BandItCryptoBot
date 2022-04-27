@@ -15,7 +15,7 @@ import java.util.List;
 public class MenuTarget extends AbstractMenuItem {
 
     protected MenuTarget(MenuOperations parent) {
-        super(parent);
+        super(parent, 2);
     }
 
     /**

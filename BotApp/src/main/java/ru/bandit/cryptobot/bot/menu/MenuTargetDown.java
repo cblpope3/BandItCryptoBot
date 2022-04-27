@@ -17,7 +17,7 @@ public class MenuTargetDown extends AbstractMenuItem {
 
     @Autowired
     protected MenuTargetDown(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 3);
         this.triggersService = triggersService;
     }
 

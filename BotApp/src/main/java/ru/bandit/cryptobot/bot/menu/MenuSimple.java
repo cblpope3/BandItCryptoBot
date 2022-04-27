@@ -17,7 +17,7 @@ public class MenuSimple extends AbstractMenuItem {
 
     @Autowired
     protected MenuSimple(Menu01Main parent, TriggersService triggersService) {
-        super(parent);
+        super(parent, 2);
         this.triggersService = triggersService;
     }
 

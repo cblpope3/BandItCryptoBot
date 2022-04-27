@@ -26,7 +26,7 @@ public class MenuCur2Select extends AbstractMenuItem {
 
     @Autowired
     protected MenuCur2Select(MenuCur1Select parent, CurrencyService currencyService) {
-        super(parent);
+        super(parent, 1);
         this.currencyService = currencyService;
     }
 
