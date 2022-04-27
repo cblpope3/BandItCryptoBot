@@ -1,7 +1,6 @@
 package ru.bandit.cryptobot.bot.menu;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -32,14 +31,12 @@ public abstract class AbstractMenuItem {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Getter
-    private final int requiredParams;
-    @Setter
-    protected UserDTO userDTO;
-    @Setter
-    protected QueryDTO queryDTO;
+    protected final String commandName;
+    protected final AbstractMenuItem parent;
     @Getter
-    protected String commandName;
-    protected AbstractMenuItem parent;
+    private final int requiredParams;
+    protected UserDTO userDTO;
+    protected QueryDTO queryDTO;
 
     /**
      * Default constructor for this abstract class. Need parent menu item and command parameters number.
@@ -145,7 +142,7 @@ public abstract class AbstractMenuItem {
      * @param user  data about user.
      * @param query users request to be processed
      * @return message and keyboard layout for user.
-     * @throws CommonBotAppException
+     * @throws CommonBotAppException if query parameters number don't match menu item requirements.
      */
     public BotResponseDTO makeResponse(UserDTO user, QueryDTO query) throws CommonBotAppException {
 
@@ -158,7 +155,6 @@ public abstract class AbstractMenuItem {
 
         BotResponseDTO response = new BotResponseDTO();
 
-        //todo unite getText and getMarkup methods into one
         response.setMessage(this.getText());
         response.setKeyboard(this.getMarkup());
         return response;

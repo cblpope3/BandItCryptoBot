@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
-import ru.bandit.cryptobot.bot.menu.MenuError;
 import ru.bandit.cryptobot.dao.BotCommandsDAO;
 import ru.bandit.cryptobot.dto.BotResponseDTO;
 import ru.bandit.cryptobot.dto.QueryDTO;
@@ -18,6 +17,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * This service class processing user requests and making response.
+ */
 @Service
 public class QueryService {
 
@@ -39,7 +41,7 @@ public class QueryService {
      */
     public BotResponseDTO makeResponseToUser(UserDTO user, String request) {
 
-        BotResponseDTO response = new BotResponseDTO();
+        BotResponseDTO response;
         AbstractMenuItem foundMenuItem;
 
         try {
@@ -47,7 +49,6 @@ public class QueryService {
             //assuming that first part of query must be command name
             String commandName = separatedQuery.remove(0);
 
-            //trying to find command in command map
             foundMenuItem = botCommandsDAO.findMenuItem(commandName);
 
             //creating queryDTO object
@@ -55,18 +56,13 @@ public class QueryService {
             QueryDTO queryDTO = new QueryDTO(commandName);
             queryDTO.setParameters(separatedQuery);
 
-            //todo decide if QueryDTO object is useless
-            //setting user and query information to chosen menu item
-            foundMenuItem.setQueryDTO(queryDTO);
-            foundMenuItem.setUserDTO(user);
+            response = foundMenuItem.makeResponse(user, queryDTO);
 
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
-            foundMenuItem = new MenuError(e);
-        }
+            response = new BotResponseDTO(null, e.getUserFriendlyMessage());
 
-        response.setMessage(foundMenuItem.getText());
-        response.setKeyboard(foundMenuItem.getMarkup());
+        }
 
         return response;
     }
