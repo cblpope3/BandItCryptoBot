@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
  * @see MenuCur1Select
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuCur2Select extends AbstractMenuItem {
 
     private final CurrencyService currencyService;
@@ -43,6 +44,12 @@ public class MenuCur2Select extends AbstractMenuItem {
      */
     @Override
     public String getText() {
+        try {
+            currencyService.getCurrencyBySymbol(queryParams.get(0));
+        } catch (CommonBotAppException e) {
+            logger.warn(e.getMessage());
+            return e.getUserFriendlyMessage();
+        }
         return "Выберите вторую валюту:";
     }
 
@@ -52,21 +59,15 @@ public class MenuCur2Select extends AbstractMenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup() {
 
-        if (queryDTO.getParameters().isEmpty()) {
-            logger.debug("No parameters in 'select 2 currency' user request.");
-            //todo make message to user.
-            return new InlineKeyboardMarkup(List.of(this.getBackButton()));
-        }
-
-        String firstCurrencyName = queryDTO.getParameters().get(0);
+        String firstCurrencyName = queryParams.get(0);
         CurrencyEntity firstCurrency;
         try {
             firstCurrency = currencyService.getCurrencyBySymbol(firstCurrencyName);
         } catch (CommonBotAppException e) {
             logger.warn(e.getMessage());
-            //todo make message to user.
-            throw new RuntimeException(e.getMessage());
+            return new InlineKeyboardMarkup(List.of(this.getBackButton()));
         }
+
         Set<CurrencyEntity> secondCurrencies = currencyService.getAllComplimentaryCurrencies(firstCurrency);
 
         //generating buttons list

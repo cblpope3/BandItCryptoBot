@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuHelp extends AbstractMenuItem {
 
     @Autowired

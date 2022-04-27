@@ -2,6 +2,7 @@ package ru.bandit.cryptobot.bot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
@@ -38,7 +39,8 @@ public class MenuAverage extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            triggersService.subscribe(userDTO, queryDTO);
+            triggersService.subscribe(userDTO, new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
+                    "average");
             return "Подписка создана успешно.";
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.Bot;
 import ru.bandit.cryptobot.clients.TriggersClient;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
-import ru.bandit.cryptobot.dto.QueryDTO;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
@@ -131,13 +131,13 @@ public class TriggersService {
     /**
      * Get currency rates once.
      *
-     * @param params requested rates currency pair.
+     * @param currencies requested rates currency pair.
      * @return user-friendly {@link String} with currency rates.
      * @throws CommonBotAppException if requested currency pair not found.
      */
-    public String getOnce(QueryDTO params) throws CommonBotAppException {
+    public String getOnce(CurrencyPairDTO currencies) throws CommonBotAppException {
 
-        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencies.getCurrenciesList());
 
         //fixme throws runtime exception if rates are not available.
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
@@ -147,22 +147,26 @@ public class TriggersService {
     /**
      * Create new subscription for given user.
      *
-     * @param user   {@link UserDTO} of user going to subscribe.
-     * @param params request parameters as {@link QueryDTO}.
+     * @param user            {@link UserDTO} of user going to subscribe.
+     * @param currencyPairDTO currency pair that involved in subscription.
+     * @param triggerTypeName name of trigger type.
+     * @param triggerValue    value of trigger. Nullable. Used only for alarm triggers.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public void subscribe(UserDTO user, QueryDTO params) throws CommonBotAppException {
-        UserEntity foundUser = usersService.getUserEntity(user);
-        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
+            throws CommonBotAppException {
 
-        TriggerTypeEntity triggerType = this.getCustomTriggerType(params.getTriggerType());
+        UserEntity foundUser = usersService.getUserEntity(user);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencyPairDTO.getCurrenciesList());
+
+        TriggerTypeEntity triggerType = this.getCustomTriggerType(triggerTypeName);
 
         UserTriggerEntity newTrigger = new UserTriggerEntity();
         newTrigger.setUser(foundUser);
         newTrigger.setCurrencyPair(currencyPair);
         newTrigger.setTriggerType(triggerType);
-        if (params.getTriggerValue() != null) {
-            newTrigger.setTargetValue(Integer.parseInt(params.getTriggerValue()));
+        if (triggerValue != null) {
+            newTrigger.setTargetValue(triggerValue.intValue());
         }
 
         //check if user already have this subscription
@@ -187,6 +191,11 @@ public class TriggersService {
         userTriggersRepository.save(newTrigger);
     }
 
+    //todo write javadoc
+    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
+            throws CommonBotAppException {
+        this.subscribe(user, currencyPairDTO, triggerTypeName, null);
+    }
 
     /**
      * Delete trigger with given id.

@@ -11,6 +11,7 @@ import java.util.List;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuStopConfirm extends AbstractMenuItem {
 
     protected MenuStopConfirm(Menu01Main parent) {

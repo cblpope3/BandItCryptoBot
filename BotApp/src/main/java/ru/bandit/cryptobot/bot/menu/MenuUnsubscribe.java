@@ -11,6 +11,7 @@ import ru.bandit.cryptobot.services.TriggersService;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuUnsubscribe extends AbstractMenuItem {
 
     private final TriggersService triggersService;
@@ -36,7 +37,7 @@ public class MenuUnsubscribe extends AbstractMenuItem {
     public String getText() {
 
         try {
-            triggersService.unsubscribe(userDTO, Long.parseLong(queryDTO.getParameters().get(0)));
+            triggersService.unsubscribe(userDTO, Long.parseLong(queryParams.get(0)));
             return "Подписка удалена.";
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());

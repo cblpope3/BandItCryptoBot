@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.bandit.cryptobot.dto.BotResponseDTO;
-import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.QueryException;
@@ -36,7 +35,7 @@ public abstract class AbstractMenuItem {
     @Getter
     private final int requiredParams;
     protected UserDTO userDTO;
-    protected QueryDTO queryDTO;
+    protected List<String> queryParams;
 
     /**
      * Default constructor for this abstract class. Need parent menu item and command parameters number.
@@ -144,14 +143,13 @@ public abstract class AbstractMenuItem {
      * @return message and keyboard layout for user.
      * @throws CommonBotAppException if query parameters number don't match menu item requirements.
      */
-    public BotResponseDTO makeResponse(UserDTO user, QueryDTO query) throws CommonBotAppException {
+    public BotResponseDTO makeResponse(UserDTO user, List<String> query) throws CommonBotAppException {
 
         //validate query and throw exception if not valid
-        this.validateInputParameters(query.getParameters());
+        this.validateInputParameters(query);
 
         this.userDTO = user;
-        //todo replace QueryDTO with List<String>
-        this.queryDTO = query;
+        this.queryParams = query;
 
         BotResponseDTO response = new BotResponseDTO();
 

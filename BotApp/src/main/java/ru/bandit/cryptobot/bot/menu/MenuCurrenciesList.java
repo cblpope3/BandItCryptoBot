@@ -11,6 +11,7 @@ import ru.bandit.cryptobot.services.CurrencyService;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuCurrenciesList extends AbstractMenuItem {
 
     private final CurrencyService currencyService;

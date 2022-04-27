@@ -2,6 +2,7 @@ package ru.bandit.cryptobot.bot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
@@ -11,6 +12,7 @@ import ru.bandit.cryptobot.services.TriggersService;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuTargetDown extends AbstractMenuItem {
 
     private final TriggersService triggersService;
@@ -35,7 +37,8 @@ public class MenuTargetDown extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            triggersService.subscribe(userDTO, queryDTO);
+            triggersService.subscribe(userDTO, new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
+                    "target_down", Double.parseDouble(queryParams.get(2)));
             return "Будильник создан.";
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());

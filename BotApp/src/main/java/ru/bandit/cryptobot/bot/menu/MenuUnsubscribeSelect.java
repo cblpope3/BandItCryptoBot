@@ -18,6 +18,7 @@ import java.util.List;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuUnsubscribeSelect extends AbstractMenuItem {
 
     private final TriggersService triggersService;

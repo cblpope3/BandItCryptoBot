@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
 import ru.bandit.cryptobot.dao.BotCommandsDAO;
 import ru.bandit.cryptobot.dto.BotResponseDTO;
-import ru.bandit.cryptobot.dto.QueryDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.QueryException;
@@ -51,12 +50,7 @@ public class QueryService {
 
             foundMenuItem = botCommandsDAO.findMenuItem(commandName);
 
-            //creating queryDTO object
-            //todo decide if queryDTO is not needed
-            QueryDTO queryDTO = new QueryDTO(commandName);
-            queryDTO.setParameters(separatedQuery);
-
-            response = foundMenuItem.makeResponse(user, queryDTO);
+            response = foundMenuItem.makeResponse(user, separatedQuery);
 
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());

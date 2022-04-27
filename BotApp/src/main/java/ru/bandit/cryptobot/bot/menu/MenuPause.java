@@ -10,6 +10,7 @@ import ru.bandit.cryptobot.services.UsersService;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuPause extends AbstractMenuItem {
 
     private final UsersService usersService;

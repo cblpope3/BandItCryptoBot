@@ -12,6 +12,7 @@ import java.util.List;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuTarget extends AbstractMenuItem {
 
     protected MenuTarget(MenuOperations parent) {
@@ -42,9 +43,9 @@ public class MenuTarget extends AbstractMenuItem {
 
         List<List<InlineKeyboardButton>> buttonsGrid = List.of(
                 this.makeHugeButton("Выше порога",
-                        "/value/" + String.join("/", queryDTO.getParameters()) + "/target_up/10"),
+                        "/value/" + String.join("/", queryParams) + "/target_up/10"),
                 this.makeHugeButton("Ниже порога",
-                        "/value/" + String.join("/", queryDTO.getParameters()) + "/target_down/10"),
+                        "/value/" + String.join("/", queryParams) + "/target_down/10"),
                 this.getBackButton());
 
         return new InlineKeyboardMarkup(buttonsGrid);

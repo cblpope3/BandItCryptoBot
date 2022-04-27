@@ -12,6 +12,7 @@ import java.util.List;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuValue extends AbstractMenuItem {
 
     protected MenuValue(MenuOperations parent) {
@@ -31,7 +32,7 @@ public class MenuValue extends AbstractMenuItem {
      */
     @Override
     public String getText() {
-        int value = Integer.parseInt(queryDTO.getParameters().get(3));
+        int value = Integer.parseInt(queryParams.get(3));
         return "Текущий порог срабатывания - " + value + "% от текущего курса. Что следует сделать?";
     }
 
@@ -42,16 +43,16 @@ public class MenuValue extends AbstractMenuItem {
     public InlineKeyboardMarkup getMarkup() {
 
         int value;
-        if (queryDTO.getValue() == null) value = 10;
-        else value = Integer.parseInt(queryDTO.getValue().toString());
+        if (queryParams.get(3) == null) value = 10;
+        else value = Integer.parseInt(queryParams.get(3));
 
         int nextValue = value + 1;
         int prevValue = value - 1;
         if (prevValue < 1) prevValue = 1;
 
-        String currency1 = queryDTO.getCurrency1();
-        String currency2 = queryDTO.getCurrency2();
-        String triggerType = queryDTO.getParameters().get(2);
+        String currency1 = queryParams.get(0);
+        String currency2 = queryParams.get(1);
+        String triggerType = queryParams.get(2);
 
         List<InlineKeyboardButton> keyboardRow1 = List.of(
                 this.makeButton("+", "/value/" + currency1 + "/" + currency2 + "/" + triggerType + "/" + nextValue),

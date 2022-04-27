@@ -12,6 +12,7 @@ import java.util.List;
  * @see AbstractMenuItem
  */
 @Component
+@SuppressWarnings("unused")
 public class MenuTriggerType extends AbstractMenuItem {
 
     protected MenuTriggerType(MenuOperations parent) {
@@ -42,13 +43,13 @@ public class MenuTriggerType extends AbstractMenuItem {
 
         List<List<InlineKeyboardButton>> buttonsGrid = List.of(
                 this.makeHugeButton("Текущий курс",
-                        "/once/" + String.join("/", queryDTO.getParameters())),
+                        "/once/" + String.join("/", queryParams)),
                 this.makeHugeButton("Рассылка",
-                        "/simple/" + String.join("/", queryDTO.getParameters())),
+                        "/simple/" + String.join("/", queryParams)),
                 this.makeHugeButton("Среднее за минуту",
-                        "/average/" + String.join("/", queryDTO.getParameters())),
+                        "/average/" + String.join("/", queryParams)),
                 this.makeHugeButton("Будильник",
-                        "/target/" + String.join("/", queryDTO.getParameters())),
+                        "/target/" + String.join("/", queryParams)),
                 this.getBackButton());
 
         return new InlineKeyboardMarkup(buttonsGrid);
