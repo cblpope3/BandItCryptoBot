@@ -60,6 +60,7 @@ public class MetricsService {
      * Method increment counter for donations. Not used in current version of application,
      * implemented for future use.
      */
+    @SuppressWarnings("unused")
     public void incrementDonateCounter() {
         MetricsEntity metrics = this.getMetrics();
         if (metrics == null) metrics = new MetricsEntity();
@@ -73,6 +74,7 @@ public class MetricsService {
      *
      * @see MetricsEntity
      */
+    @SuppressWarnings("unused")
     public Long getHelpCommandCount() {
         return this.getMetrics().getHelpCount();
     }
@@ -83,6 +85,7 @@ public class MetricsService {
      *
      * @see MetricsEntity
      */
+    @SuppressWarnings("unused")
     public Long getTextCommandCount() {
         return this.getMetrics().getTextCommandCount();
     }
@@ -93,6 +96,7 @@ public class MetricsService {
      *
      * @see MetricsEntity
      */
+    @SuppressWarnings("unused")
     public Long getInteractiveCommandCount() {
         return this.getMetrics().getInteractiveCommandCount();
     }
@@ -103,6 +107,7 @@ public class MetricsService {
      *
      * @see MetricsEntity
      */
+    @SuppressWarnings("unused")
     public Long getDonationsCount() {
         return this.getMetrics().getDonateCount();
     }

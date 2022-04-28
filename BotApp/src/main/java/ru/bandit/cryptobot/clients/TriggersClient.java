@@ -24,6 +24,7 @@ public class TriggersClient {
 
     private final RestTemplate restTemplate;
 
+    @SuppressWarnings("unused")
     @Value("${api-app.hostname}")
     private String triggerAppCurrencyUrl;
 

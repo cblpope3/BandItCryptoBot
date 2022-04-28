@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 
-//todo write javadoc
+/**
+ * This class contains bot response to users request. Response consist of two parts: Text and Keyboard.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

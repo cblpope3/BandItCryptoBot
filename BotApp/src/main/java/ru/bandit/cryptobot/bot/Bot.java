@@ -21,6 +21,9 @@ import ru.bandit.cryptobot.services.StreamService;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class for interaction with Telegram bot api.
+ */
 @Component
 public class Bot extends TelegramLongPollingBot {
 
@@ -42,6 +45,11 @@ public class Bot extends TelegramLongPollingBot {
         this.username = username;
     }
 
+    /**
+     * This method is automatically called when update is received.
+     *
+     * @param update update content.
+     */
     @Override
     public void onUpdateReceived(Update update) {
 
@@ -102,7 +110,12 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    //todo write javadoc
+    /**
+     * Method to send worked alarm trigger to user.
+     *
+     * @param userTrigger trigger that has been worked.
+     * @param value       value of worked alarm trigger.
+     */
     public void sendWorkedTargetTriggerToUser(UserTriggerEntity userTrigger, String value) {
         SendMessage replyMessage = new SendMessage();
         replyMessage.setChatId(userTrigger.getUser().getChatId().toString());
@@ -117,7 +130,10 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    //todo write javadoc
+    /**
+     * Method that sends subscriptions data to users.
+     */
+    @SuppressWarnings("unused")
     @Scheduled(fixedDelay = 5000)
     public void sendStreams() {
         Map<Long, List<String>> mailingList = streamService.getStreams();
