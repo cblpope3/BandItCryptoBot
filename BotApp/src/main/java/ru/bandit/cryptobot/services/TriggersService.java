@@ -4,8 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bandit.cryptobot.bot.Bot;
+import ru.bandit.cryptobot.clients.TelegramClient;
 import ru.bandit.cryptobot.clients.TriggersClient;
+import ru.bandit.cryptobot.clients.UserClient;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
@@ -41,10 +42,10 @@ public class TriggersService {
     TriggerTypeRepository triggerTypeRepository;
 
     @Autowired
-    Bot bot;
+    TriggersClient triggersClient;
 
     @Autowired
-    TriggersClient triggersClient;
+    UserClient userClient;
 
     @Autowired
     UsersService usersService;
@@ -121,13 +122,10 @@ public class TriggersService {
         triggerTypeRepository.save(newTriggerType);
     }
 
-
     //=================================================
     //=================================================
-
 
     //fixme make String user-friendly looking
-
     /**
      * Get currency rates once.
      *
@@ -346,7 +344,7 @@ public class TriggersService {
                 logger.warn("Worked trigger #{} is not target trigger!", triggerId);
                 throw new TriggerException("Requested trigger has other type.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
             } else {
-                bot.sendWorkedTargetTriggerToUser(workedTrigger, value);
+                userClient.sendWorkedTargetTriggerToUser(workedTrigger, value);
                 userTriggersRepository.delete(workedTrigger);
                 if (logger.isTraceEnabled())
                     logger.trace("Worked target trigger #{} with value={} processed successfully.", triggerId, value);
@@ -402,7 +400,6 @@ public class TriggersService {
         //if this list is null or empty, trigger not exist
         return existingTriggerList != null && !existingTriggerList.isEmpty();
     }
-
 
     /**
      * Method sends target trigger to Trigger-App.
