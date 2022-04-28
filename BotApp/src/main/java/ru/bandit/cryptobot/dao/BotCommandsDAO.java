@@ -3,9 +3,9 @@ package ru.bandit.cryptobot.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.QueryException;
+import ru.bandit.cryptobot.menu.AbstractMenuItem;
 
 import java.util.Map;
 import java.util.stream.Collectors;

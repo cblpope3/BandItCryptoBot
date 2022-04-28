@@ -1,25 +1,26 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
-import ru.bandit.cryptobot.services.UsersService;
+import ru.bandit.cryptobot.services.TriggersService;
 
 /**
- * Class implementing bot menu item that handle resume command.
+ * Class implementing bot menu item that sending requested current currency rate to user.
  *
  * @see AbstractMenuItem
  */
 @Component
 @SuppressWarnings("unused")
-public class MenuResume extends AbstractMenuItem {
+public class MenuOnce extends AbstractMenuItem {
 
-    private final UsersService usersService;
+    private final TriggersService triggersService;
 
     @Autowired
-    protected MenuResume(Menu01Main parent, UsersService usersService) {
-        super(parent);
-        this.usersService = usersService;
+    protected MenuOnce(Menu01Main parent, TriggersService triggersService) {
+        super(parent, 2);
+        this.triggersService = triggersService;
     }
 
     /**
@@ -27,7 +28,7 @@ public class MenuResume extends AbstractMenuItem {
      */
     @Override
     protected String registerCommand() {
-        return "resume";
+        return "once";
     }
 
     /**
@@ -36,11 +37,10 @@ public class MenuResume extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            usersService.resumeSubscriptions(userDTO);
+            return triggersService.getOnce(new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)));
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();
         }
-        return "Подписки восстановлены.";
     }
 }

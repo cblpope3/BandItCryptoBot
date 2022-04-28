@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

@@ -1,25 +1,25 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
-import ru.bandit.cryptobot.services.CurrencyService;
+import ru.bandit.cryptobot.services.UsersService;
 
 /**
- * Class implementing bot menu item that getting available currencies list.
+ * Class implementing bot menu item that handle resume command.
  *
  * @see AbstractMenuItem
  */
 @Component
 @SuppressWarnings("unused")
-public class MenuCurrenciesList extends AbstractMenuItem {
+public class MenuResume extends AbstractMenuItem {
 
-    private final CurrencyService currencyService;
+    private final UsersService usersService;
 
     @Autowired
-    protected MenuCurrenciesList(Menu01Main parent, CurrencyService currencyService) {
+    protected MenuResume(Menu01Main parent, UsersService usersService) {
         super(parent);
-        this.currencyService = currencyService;
+        this.usersService = usersService;
     }
 
     /**
@@ -27,7 +27,7 @@ public class MenuCurrenciesList extends AbstractMenuItem {
      */
     @Override
     protected String registerCommand() {
-        return "all_cur";
+        return "resume";
     }
 
     /**
@@ -35,11 +35,12 @@ public class MenuCurrenciesList extends AbstractMenuItem {
      */
     @Override
     public String getText() {
-
         try {
-            return currencyService.getAllCurrenciesList();
+            usersService.resumeSubscriptions(userDTO);
         } catch (CommonBotAppException e) {
+            logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();
         }
+        return "Подписки восстановлены.";
     }
 }

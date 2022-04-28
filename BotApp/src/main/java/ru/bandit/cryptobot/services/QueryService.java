@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bandit.cryptobot.bot.menu.AbstractMenuItem;
 import ru.bandit.cryptobot.dao.BotCommandsDAO;
 import ru.bandit.cryptobot.dto.BotResponseDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.exceptions.QueryException;
+import ru.bandit.cryptobot.menu.AbstractMenuItem;
 
 import java.util.Arrays;
 import java.util.List;

@@ -1,25 +1,25 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
-import ru.bandit.cryptobot.services.TriggersService;
+import ru.bandit.cryptobot.services.UsersService;
 
 /**
- * Class implementing bot menu item that handle 'unsubscribe' command.
+ * Class implementing bot menu item that handle pause command.
  *
  * @see AbstractMenuItem
  */
 @Component
 @SuppressWarnings("unused")
-public class MenuUnsubscribe extends AbstractMenuItem {
+public class MenuPause extends AbstractMenuItem {
 
-    private final TriggersService triggersService;
+    private final UsersService usersService;
 
     @Autowired
-    protected MenuUnsubscribe(Menu01Main parent, TriggersService triggersService) {
-        super(parent, 1);
-        this.triggersService = triggersService;
+    protected MenuPause(Menu01Main parent, UsersService usersService) {
+        super(parent);
+        this.usersService = usersService;
     }
 
     /**
@@ -27,7 +27,7 @@ public class MenuUnsubscribe extends AbstractMenuItem {
      */
     @Override
     protected String registerCommand() {
-        return "unsubscribe";
+        return "pause";
     }
 
     /**
@@ -35,13 +35,12 @@ public class MenuUnsubscribe extends AbstractMenuItem {
      */
     @Override
     public String getText() {
-
         try {
-            triggersService.unsubscribe(userDTO, Long.parseLong(queryParams.get(0)));
-            return "Подписка удалена.";
+            usersService.pauseSubscriptions(userDTO);
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();
         }
+        return "Подписки на паузе.";
     }
 }

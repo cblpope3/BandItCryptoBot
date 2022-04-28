@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -6,17 +6,17 @@ import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
 /**
- * Class implementing bot menu item that handle stop command.
+ * Class implementing bot menu item that getting existing user subscriptions list.
  *
  * @see AbstractMenuItem
  */
 @Component
-public class MenuStop extends AbstractMenuItem {
+public class MenuMySubscriptions extends AbstractMenuItem {
 
     private final TriggersService triggersService;
 
     @Autowired
-    protected MenuStop(Menu01Main parent, TriggersService triggersService) {
+    protected MenuMySubscriptions(MenuOperations parent, TriggersService triggersService) {
         super(parent);
         this.triggersService = triggersService;
     }
@@ -26,7 +26,7 @@ public class MenuStop extends AbstractMenuItem {
      */
     @Override
     protected String registerCommand() {
-        return "stop";
+        return "my_subscriptions";
     }
 
     /**
@@ -35,10 +35,9 @@ public class MenuStop extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            triggersService.unsubscribeAll(userDTO);
-            return "Все подписки успешно удалены";
+            return triggersService.getAllSubscriptionsAsString(userDTO);
         } catch (CommonBotAppException e) {
-            logger.debug("User {} don't have subscriptions", userDTO.getUserId());
+            logger.debug("User #{} don't have any subscriptions.", userDTO.getUserId());
             return e.getUserFriendlyMessage();
         }
     }

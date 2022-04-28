@@ -1,4 +1,4 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,28 +7,30 @@ import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
 /**
- * Class implementing bot menu item that sending requested current currency rate to user.
+ * Class implements bot menu item "average". Parent is {@link Menu01Main}.
  *
  * @see AbstractMenuItem
+ * @see Menu01Main
  */
 @Component
-@SuppressWarnings("unused")
-public class MenuOnce extends AbstractMenuItem {
+public class MenuAverage extends AbstractMenuItem {
 
     private final TriggersService triggersService;
 
     @Autowired
-    protected MenuOnce(Menu01Main parent, TriggersService triggersService) {
+    protected MenuAverage(Menu01Main parent, TriggersService triggersService) {
         super(parent, 2);
         this.triggersService = triggersService;
     }
 
     /**
+     * Command name of this menu item is <b>average</b>.
+     * <p>
      * {@inheritDoc}
      */
     @Override
     protected String registerCommand() {
-        return "once";
+        return "average";
     }
 
     /**
@@ -37,7 +39,9 @@ public class MenuOnce extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            return triggersService.getOnce(new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)));
+            triggersService.subscribe(userDTO, new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
+                    "average");
+            return "Подписка создана успешно.";
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();

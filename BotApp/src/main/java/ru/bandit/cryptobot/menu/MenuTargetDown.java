@@ -1,23 +1,25 @@
-package ru.bandit.cryptobot.bot.menu;
+package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.TriggersService;
 
 /**
- * Class implementing bot menu item that getting existing user subscriptions list.
+ * Class implementing bot menu item that handle 'create target_down trigger' command.
  *
  * @see AbstractMenuItem
  */
 @Component
-public class MenuMySubscriptions extends AbstractMenuItem {
+@SuppressWarnings("unused")
+public class MenuTargetDown extends AbstractMenuItem {
 
     private final TriggersService triggersService;
 
     @Autowired
-    protected MenuMySubscriptions(MenuOperations parent, TriggersService triggersService) {
-        super(parent);
+    protected MenuTargetDown(Menu01Main parent, TriggersService triggersService) {
+        super(parent, 3);
         this.triggersService = triggersService;
     }
 
@@ -26,7 +28,7 @@ public class MenuMySubscriptions extends AbstractMenuItem {
      */
     @Override
     protected String registerCommand() {
-        return "my_subscriptions";
+        return "target_down";
     }
 
     /**
@@ -35,9 +37,11 @@ public class MenuMySubscriptions extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            return triggersService.getAllSubscriptionsAsString(userDTO);
+            triggersService.subscribe(userDTO, new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
+                    "target_down", Double.parseDouble(queryParams.get(2)));
+            return "Будильник создан.";
         } catch (CommonBotAppException e) {
-            logger.debug("User #{} don't have any subscriptions.", userDTO.getUserId());
+            logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();
         }
     }
