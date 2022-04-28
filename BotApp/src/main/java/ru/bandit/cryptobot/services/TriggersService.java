@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.bot.Bot;
 import ru.bandit.cryptobot.clients.TriggersClient;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
-import ru.bandit.cryptobot.dto.QueryDTO;
+import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
@@ -126,17 +126,20 @@ public class TriggersService {
     //=================================================
 
 
+    //fixme make String user-friendly looking
+
     /**
      * Get currency rates once.
      *
-     * @param params requested rates currency pair.
+     * @param currencies requested rates currency pair.
      * @return user-friendly {@link String} with currency rates.
      * @throws CommonBotAppException if requested currency pair not found.
      */
-    public String getOnce(QueryDTO params) throws CommonBotAppException {
+    public String getOnce(CurrencyPairDTO currencies) throws CommonBotAppException {
 
-        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencies.getCurrenciesList());
 
+        //fixme throws runtime exception if rates are not available.
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
                 currencyPair.getCurrency2().getCurrencyNameUser()).toString();
     }
@@ -144,22 +147,26 @@ public class TriggersService {
     /**
      * Create new subscription for given user.
      *
-     * @param user   {@link UserDTO} of user going to subscribe.
-     * @param params request parameters as {@link QueryDTO}.
+     * @param user            {@link UserDTO} of user going to subscribe.
+     * @param currencyPairDTO currency pair that involved in subscription.
+     * @param triggerTypeName name of trigger type.
+     * @param triggerValue    value of trigger. Nullable. Used only for alarm triggers.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public void subscribe(UserDTO user, QueryDTO params) throws CommonBotAppException {
-        UserEntity foundUser = usersService.getUserEntity(user);
-        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(params.getCurrencies());
+    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
+            throws CommonBotAppException {
 
-        TriggerTypeEntity triggerType = this.getCustomTriggerType(params.getTriggerType());
+        UserEntity foundUser = usersService.getUserEntity(user);
+        CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencyPairDTO.getCurrenciesList());
+
+        TriggerTypeEntity triggerType = this.getCustomTriggerType(triggerTypeName);
 
         UserTriggerEntity newTrigger = new UserTriggerEntity();
         newTrigger.setUser(foundUser);
         newTrigger.setCurrencyPair(currencyPair);
         newTrigger.setTriggerType(triggerType);
-        if (params.getTriggerParameter() != null) {
-            newTrigger.setTargetValue(Integer.parseInt(params.getTriggerParameter()));
+        if (triggerValue != null) {
+            newTrigger.setTargetValue(triggerValue.intValue());
         }
 
         //check if user already have this subscription
@@ -169,15 +176,26 @@ public class TriggersService {
                     TriggerException.ExceptionCause.ALREADY_SUBSCRIBED);
         }
 
-        userTriggersRepository.save(newTrigger);
-
         //if new trigger is alarm, send it to api-app
         if (newTrigger.getTriggerType().equals(this.getUpTriggerType()) ||
                 newTrigger.getTriggerType().equals(this.getDownTriggerType())) {
+
+            //alarm trigger must have target value
+            if (newTrigger.getTargetValue() == null) {
+                logger.error("Target trigger don't have target value.");
+                throw new TriggerException("No target value.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
+            }
             this.sendTargetTriggerToApp(newTrigger);
         }
+
+        userTriggersRepository.save(newTrigger);
     }
 
+    //todo write javadoc
+    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
+            throws CommonBotAppException {
+        this.subscribe(user, currencyPairDTO, triggerTypeName, null);
+    }
 
     /**
      * Delete trigger with given id.
@@ -249,7 +267,7 @@ public class TriggersService {
         UserEntity foundUser = usersService.getUserEntity(user);
 
         List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
-        if (subscriptionsList == null) {
+        if (subscriptionsList == null || subscriptionsList.isEmpty()) {
             logger.debug("Not found any triggers for user #{}.", user.getUserId());
             throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
@@ -265,6 +283,19 @@ public class TriggersService {
                     .collect(Collectors.joining("\n"));
         }
 
+    }
+
+    //todo encapsulate this method into previous
+    public List<UserTriggerEntity> getAllUsersSubscriptions(UserDTO user) throws CommonBotAppException {
+        UserEntity foundUser = usersService.getUserEntity(user);
+        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
+        if (subscriptionsList == null) {
+            logger.debug("Not found any triggers for user #{}.", user.getUserId());
+            throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
+        } else {
+            logger.trace("Returning found subscriptions for user #{}.", user.getUserId());
+            return subscriptionsList;
+        }
     }
 
     /**
@@ -331,6 +362,11 @@ public class TriggersService {
      */
     private TriggerDTO mapTriggerEntityToTriggerDTO(UserTriggerEntity userTriggerEntity) {
         TriggerDTO triggerDTO;
+
+        //fixme this null check is temporary
+        if (userTriggerEntity.getTargetValue() == null) {
+            return null;
+        }
 
         //todo why using try-catch blocks?
         try {

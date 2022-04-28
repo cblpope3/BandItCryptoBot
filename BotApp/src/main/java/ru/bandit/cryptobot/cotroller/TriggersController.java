@@ -12,6 +12,10 @@ import ru.bandit.cryptobot.services.TriggersService;
 
 import java.util.List;
 
+/**
+ * Class that handle http requests to /trigger address.
+ */
+@SuppressWarnings("unused")
 @Api(tags = {"Triggers"}, value = "Triggers", description = "Triggers API")
 @RestController
 @RequestMapping("/trigger")
@@ -20,6 +24,13 @@ public class TriggersController {
     @Autowired
     TriggersService triggersService;
 
+    /**
+     * Post worked alarm triggers here.
+     *
+     * @param triggerId id of worked trigger as stored in database.
+     * @param value     last rate of corresponding currency pair.
+     * @return code 200 if everything is ok, code 404 if worked trigger is not found in database.
+     */
     @ApiOperation(value = "Отправить сработавшие триггеры", nickname = "workedTrigger",
             notes = "Сюда отправляется информация о сработавших триггерах для оповещения пользователей.", tags = {"Triggers",})
     @ApiResponses(value = {
@@ -39,6 +50,11 @@ public class TriggersController {
         }
     }
 
+    /**
+     * Request all available alarm triggers list.
+     *
+     * @return code 200 and all alarm triggers list or code 204 if no alarm triggers found in database.
+     */
     @ApiOperation(value = "Отправить запрос на обновление триггеров", nickname = "refreshTriggers",
             notes = "Сюда отправляется запрос на обновление триггеров от Api App.", tags = {"Triggers",})
     @ApiResponses(value = {

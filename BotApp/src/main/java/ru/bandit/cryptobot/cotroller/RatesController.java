@@ -19,6 +19,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * Class that handle http requests to /rates address.
+ */
+@SuppressWarnings("unused")
 @Api(tags = {"Rates"}, value = "Rates", description = "Cryptocurrency rates API")
 @RestController
 @RequestMapping("/rates")
@@ -33,6 +37,13 @@ public class RatesController {
     @Autowired
     AverageCurrencyRatesDAO averageCurrencyRatesDAO;
 
+    /**
+     * Post new currency rates here.
+     *
+     * @param newRates json that containing currency rates.
+     * @return code 202 if everything is ok. Code 400 if something goes wrong.
+     * @see CurrencyRatesDTO
+     */
     @ApiOperation(value = "Отправить последние полученные котировки", nickname = "newRates",
             notes = "Сюда отправляются последние актуальные данные о котировках криптовалют.", tags = {"Rates",})
     @ApiResponses(value = {
@@ -53,6 +64,13 @@ public class RatesController {
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
+    /**
+     * Post new 1-minute average currency rates here.
+     *
+     * @param newRates json that containing currency rates.
+     * @return code 202 if everything is ok. Code 400 if something goes wrong.
+     * @see CurrencyRatesDTO
+     */
     @ApiOperation(value = "Отправить средние значения котировок за 1 минуту", nickname = "avgRates",
             notes = "Сюда отправляются средние значения котировок криптовалют.", tags = {"Rates",})
     @ApiResponses(value = {

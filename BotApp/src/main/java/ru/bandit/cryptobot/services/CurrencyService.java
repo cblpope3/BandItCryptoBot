@@ -13,6 +13,7 @@ import ru.bandit.cryptobot.exceptions.CurrencyException;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 import ru.bandit.cryptobot.repositories.CurrencyRepository;
 
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -51,7 +52,7 @@ public class CurrencyService {
      * @return found currency as {@link CurrencyEntity}.
      * @throws CommonBotAppException if currency not found.
      */
-    public CurrencyEntity getCurrencyBySymbol(String symbol) throws CommonBotAppException {
+    public CurrencyEntity getCurrencyBySymbol(@NotNull String symbol) throws CommonBotAppException {
         CurrencyEntity foundCurrency = currencyRepository.findByCurrencyNameUser(symbol.toUpperCase());
         if (foundCurrency == null) {
             logger.warn("Requested currency {} not found!", symbol);
@@ -180,6 +181,37 @@ public class CurrencyService {
     public Double getAverageCurrencyRate(CurrencyPairEntity currencyPair) {
         return averageCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameSource() +
                 currencyPair.getCurrency2().getCurrencyNameSource());
+    }
+
+    /**
+     * Get all available currencies {@link Set} that can make correct currency pair with given currency.
+     *
+     * @param currency given currency.
+     * @return {@link Set} of complimentary currencies.
+     */
+    public Set<CurrencyEntity> getAllComplimentaryCurrencies(CurrencyEntity currency) {
+        return this.getAllCurrencyPairsWithGiven(currency).stream()
+                .map(currencyPair -> this.getOtherCurrencyFromPair(currencyPair, currency))
+                .collect(Collectors.toSet());
+    }
+
+    //todo write javadoc
+    private Set<CurrencyPairEntity> getAllCurrencyPairsWithGiven(CurrencyEntity currency) {
+        //todo throw exception if currency pair not found.
+        Set<CurrencyPairEntity> foundPairs = new HashSet<>();
+        foundPairs.addAll(currencyPairRepository.findByCurrency1(currency));
+        foundPairs.addAll(currencyPairRepository.findByCurrency2(currency));
+        return foundPairs;
+    }
+
+    //todo write javadoc
+    private CurrencyEntity getOtherCurrencyFromPair(CurrencyPairEntity currencyPair, CurrencyEntity currency) {
+        //todo check if no given currency in currency pair
+        //todo check if both currencies in currency pair are given currency
+        if (currencyPair.getCurrency1().equals(currency)) return currencyPair.getCurrency2();
+        else if (currencyPair.getCurrency2().equals(currency)) return currencyPair.getCurrency1();
+            //todo throw correct exception
+        else throw new RuntimeException("Problem whit getting other currency pair.");
     }
 
 }
