@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.dto.UserDTO;
 import ru.bandit.cryptobot.entities.UserEntity;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
+import ru.bandit.cryptobot.exceptions.UserException;
 import ru.bandit.cryptobot.repositories.UsersRepository;
 
 import java.sql.Timestamp;
@@ -30,9 +32,8 @@ public class UsersService {
      * If user with given chatId already exist - just increment start counter.
      *
      * @param user user data as {@link UserDTO}.
-     * @return true if new user was saved. false if user is already in database.
      */
-    public boolean startUser(UserDTO user) {
+    public void startUser(UserDTO user) {
 
         UserEntity startingUser = usersRepository.findByUserId(user.getUserId());
 
@@ -49,11 +50,8 @@ public class UsersService {
             usersRepository.save(startingUser);
 
             logger.trace("User {} already in database.", user.getUserId());
-            return false;
-
         } else {
             this.saveNewUser(user);
-            return true;
         }
     }
 
@@ -61,59 +59,41 @@ public class UsersService {
      * Method to set all users subscriptions paused.
      *
      * @param user user as {@link UserDTO}.
-     * @deprecated use {@link #inverseSubscriptionsPause(UserDTO)} instead
+     * @throws CommonBotAppException if subscriptions are already in pause.
      */
-    @Deprecated(forRemoval = false)
-    public void pauseSubscriptions(UserDTO user) {
-        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
-        if (foundUser == null) {
-            logger.warn("Unregistered user #{} trying to pause subscription.", user.getUserId());
-            saveNewUser(user, true);
-        } else {
-            foundUser.setPaused(true);
-            usersRepository.save(foundUser);
-            if (logger.isTraceEnabled())
-                logger.trace("Subscriptions for user #{} successfully paused.", user.getUserId());
+    public void pauseSubscriptions(UserDTO user) throws CommonBotAppException {
+        UserEntity foundUser = getUserEntity(user);
+
+        if (foundUser.isPaused()) {
+            if (logger.isTraceEnabled()) logger.trace("User #{} already paused.", user.getUserId());
+            throw new UserException("Subscriptions already paused.", UserException.ExceptionCause.ALREADY_PAUSED);
         }
+
+        foundUser.setPaused(true);
+        usersRepository.save(foundUser);
+        if (logger.isTraceEnabled())
+            logger.trace("Subscriptions for user #{} successfully paused.", user.getUserId());
+
     }
 
     /**
      * Method to set all users subscriptions resumed.
      *
      * @param user user as {@link UserDTO}.
-     * @deprecated use {@link #inverseSubscriptionsPause(UserDTO)} instead
+     * @throws CommonBotAppException if subscriptions already resumed.
      */
-    @Deprecated(forRemoval = false)
-    public void resumeSubscriptions(UserDTO user) {
-        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
-        if (foundUser == null) {
-            logger.warn("Unregistered user #{} trying to resume subscription.", user.getUserId());
-            saveNewUser(user, true);
-        } else {
-            foundUser.setPaused(false);
-            usersRepository.save(foundUser);
-            if (logger.isTraceEnabled())
-                logger.trace("Subscriptions for user #{} successfully resumed.", user.getUserId());
-        }
-    }
+    public void resumeSubscriptions(UserDTO user) throws CommonBotAppException {
+        UserEntity foundUser = getUserEntity(user);
 
-    /**
-     * Switch users subscriptions pause mode to opposite state.
-     *
-     * @param user user as {@link UserDTO}.
-     */
-    public void inverseSubscriptionsPause(UserDTO user) {
-        UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
-        if (foundUser == null) {
-            logger.warn("Unregistered user #{} trying to switch subscription.", user.getUserId());
-            saveNewUser(user);
-        } else {
-            //inverting subscriptions
-            foundUser.setPaused(!foundUser.isPaused());
-            usersRepository.save(foundUser);
-            if (logger.isTraceEnabled())
-                logger.trace("Subscriptions for user #{} successfully switched to {}.", user.getUserId(), foundUser.isPaused());
+        if (!foundUser.isPaused()) {
+            if (logger.isTraceEnabled()) logger.trace("User #{} already resumed.", user.getUserId());
+            throw new UserException("Subscriptions already resumed.", UserException.ExceptionCause.ALREADY_RESUMED);
         }
+
+        foundUser.setPaused(false);
+        usersRepository.save(foundUser);
+        if (logger.isTraceEnabled())
+            logger.trace("Subscriptions for user #{} successfully resumed.", user.getUserId());
     }
 
     /**
@@ -123,37 +103,23 @@ public class UsersService {
      * @return true if user subscriptions paused.
      */
     public boolean isUserPaused(UserDTO user) {
-        return usersRepository.findByUserId(user.getUserId()).isPaused();
+        return getUserEntity(user).isPaused();
     }
 
     /**
-     * Save new user in database with resumed subscriptions by default.
+     * Save new user in database.
      *
      * @param user new user to save as {@link UserDTO}.
      * @return saved {@link UserEntity}.
      */
     private UserEntity saveNewUser(UserDTO user) {
-        return saveNewUser(user, false);
-    }
-
-
-    /**
-     * Save new user in database.
-     *
-     * @param user     new user to save as {@link UserDTO}.
-     * @param isPaused is new user's subscriptions paused.
-     * @return saved {@link UserEntity}.
-     */
-    private UserEntity saveNewUser(UserDTO user, boolean isPaused) {
 
         UserEntity newUser = user.generateNewUser();
 
-        newUser.setPaused(isPaused);
         newUser.setStartCount(1L);
 
         newUser.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-        logger.debug("Creating new user {}. New user subscription pause is {}.",
-                newUser.getUserId(), isPaused);
+        logger.debug("Creating new user #{}.", newUser.getUserId());
 
         return usersRepository.save(newUser);
     }

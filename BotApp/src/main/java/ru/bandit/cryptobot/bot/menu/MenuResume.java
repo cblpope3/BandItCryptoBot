@@ -2,6 +2,7 @@ package ru.bandit.cryptobot.bot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.UsersService;
 
 /**
@@ -34,8 +35,12 @@ public class MenuResume extends AbstractMenuItem {
      */
     @Override
     public String getText() {
-        //todo method resumeSubscriptions() should throw exception and it must be handled here
-        usersService.resumeSubscriptions(userDTO);
+        try {
+            usersService.resumeSubscriptions(userDTO);
+        } catch (CommonBotAppException e) {
+            logger.debug(e.getMessage());
+            return e.getUserFriendlyMessage();
+        }
         return "Подписки восстановлены.";
     }
 }

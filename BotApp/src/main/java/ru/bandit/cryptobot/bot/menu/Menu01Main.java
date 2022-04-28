@@ -49,6 +49,9 @@ public class Menu01Main extends AbstractMenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup() {
 
+        //processing user start command
+        usersService.startUser(userDTO);
+
         //maybe better make unchangeable buttons final?
         List<List<InlineKeyboardButton>> buttonsGrid = List.of(
                 this.makeHugeButton("Доступные валюты", "all_cur"),
