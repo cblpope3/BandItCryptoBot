@@ -46,7 +46,11 @@ public class CurrencyException extends CommonBotAppException {
         /**
          * Wrong input parameter size.
          */
-        WRONG_PARAMETERS("Неправильное количество параметров в запросе.");
+        WRONG_PARAMETERS("Неправильное количество параметров в запросе."),
+        /**
+         * No currency pair with given currency.
+         */
+        NOT_FOUND_PAIR_WITH_CURRENCY("Не найдена пара для запрошенной валюты.");
 
         private final String message;
 

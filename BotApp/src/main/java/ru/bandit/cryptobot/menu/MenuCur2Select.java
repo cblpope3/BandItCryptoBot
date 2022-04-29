@@ -45,7 +45,8 @@ public class MenuCur2Select extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            currencyService.getCurrencyBySymbol(queryParams.get(0));
+            CurrencyEntity foundCurrency = currencyService.getCurrencyBySymbol(queryParams.get(0));
+            currencyService.getAllComplimentaryCurrencies(foundCurrency);
         } catch (CommonBotAppException e) {
             logger.warn(e.getMessage());
             return e.getUserFriendlyMessage();
@@ -61,14 +62,14 @@ public class MenuCur2Select extends AbstractMenuItem {
 
         String firstCurrencyName = queryParams.get(0);
         CurrencyEntity firstCurrency;
+        Set<CurrencyEntity> secondCurrencies;
         try {
             firstCurrency = currencyService.getCurrencyBySymbol(firstCurrencyName);
+            secondCurrencies = currencyService.getAllComplimentaryCurrencies(firstCurrency);
         } catch (CommonBotAppException e) {
             logger.warn(e.getMessage());
             return new InlineKeyboardMarkup(List.of(this.getBackButton()));
         }
-
-        Set<CurrencyEntity> secondCurrencies = currencyService.getAllComplimentaryCurrencies(firstCurrency);
 
         //generating buttons list
         List<InlineKeyboardButton> buttonList = secondCurrencies.stream()

@@ -26,13 +26,13 @@ public class CurrencyService {
 
     private final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
 
-    CurrencyRepository currencyRepository;
+    private final CurrencyRepository currencyRepository;
 
-    CurrencyPairRepository currencyPairRepository;
+    private final CurrencyPairRepository currencyPairRepository;
 
-    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
+    private final CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
-    AverageCurrencyRatesDAO averageCurrencyRatesDAO;
+    private final AverageCurrencyRatesDAO averageCurrencyRatesDAO;
 
     @Autowired
     public CurrencyService(CurrencyRepository currencyRepository,
@@ -133,7 +133,6 @@ public class CurrencyService {
      * @see #getCurrencyPair(String, String)
      */
     public CurrencyPairEntity getCurrencyPair(List<String> currencies) throws CommonBotAppException {
-        //todo this is temporary (don't remember why)
         if (currencies.size() != 2) {
             logger.error("Request has wrong size: {}.", currencies.size());
             throw new CurrencyException("Wrong request List size.", CurrencyException.ExceptionCause.WRONG_PARAMETERS);
@@ -206,30 +205,49 @@ public class CurrencyService {
      *
      * @param currency given currency.
      * @return {@link Set} of complimentary currencies.
+     * @throws CurrencyException if found no complimentary currencies.
      */
-    public Set<CurrencyEntity> getAllComplimentaryCurrencies(CurrencyEntity currency) {
+    public Set<CurrencyEntity> getAllComplimentaryCurrencies(CurrencyEntity currency) throws CurrencyException {
         return this.getAllCurrencyPairsWithGiven(currency).stream()
                 .map(currencyPair -> this.getOtherCurrencyFromPair(currencyPair, currency))
                 .collect(Collectors.toSet());
     }
 
-    //todo write javadoc
-    private Set<CurrencyPairEntity> getAllCurrencyPairsWithGiven(CurrencyEntity currency) {
-        //todo throw exception if currency pair not found.
+    /**
+     * Method searches for all currency pairs with given currency.
+     *
+     * @param currency requested currency that must be contained in currency pairs.
+     * @return {@link Set} of currency pairs that contain requested currency.
+     * @throws CurrencyException if found no currency pair with given currency.
+     */
+    private Set<CurrencyPairEntity> getAllCurrencyPairsWithGiven(CurrencyEntity currency) throws CurrencyException {
         Set<CurrencyPairEntity> foundPairs = new HashSet<>();
         foundPairs.addAll(currencyPairRepository.findByCurrency1(currency));
         foundPairs.addAll(currencyPairRepository.findByCurrency2(currency));
+        if (foundPairs.isEmpty()) {
+            throw new CurrencyException("Not found any pair with given currency.", CurrencyException.ExceptionCause.NOT_FOUND_PAIR_WITH_CURRENCY);
+        }
         return foundPairs;
     }
 
-    //todo write javadoc
+    /**
+     * Returns other currency from given currency pair.
+     *
+     * @param currencyPair currency pair that needed to processed.
+     * @param currency     known currency.
+     * @return other currency from currency pair.
+     */
     private CurrencyEntity getOtherCurrencyFromPair(CurrencyPairEntity currencyPair, CurrencyEntity currency) {
-        //todo check if no given currency in currency pair
-        //todo check if both currencies in currency pair are given currency
+        //assuming that currency pair consist of two different currencies.
         if (currencyPair.getCurrency1().equals(currency)) return currencyPair.getCurrency2();
         else if (currencyPair.getCurrency2().equals(currency)) return currencyPair.getCurrency1();
-            //todo throw correct exception
-        else throw new RuntimeException("Problem whit getting other currency pair.");
+        else {
+            //this statement must be unreachable. If we here, given currency not found in currency pair.
+            IllegalArgumentException exception = new IllegalArgumentException(
+                    "Problem with getting other currency from pair: given currency not found in currency pair.");
+            logger.error(exception.getMessage());
+            throw exception;
+        }
     }
 
 }
