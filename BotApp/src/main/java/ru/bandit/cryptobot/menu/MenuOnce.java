@@ -37,7 +37,8 @@ public class MenuOnce extends AbstractMenuItem {
     @Override
     public String getText() {
         try {
-            return triggersService.getOnce(new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)));
+            String currentRate = triggersService.getOnce(new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)));
+            return String.format("Текущий курс %s.", currentRate);
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
             return e.getUserFriendlyMessage();

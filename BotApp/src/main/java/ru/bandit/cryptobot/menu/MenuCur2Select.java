@@ -50,7 +50,7 @@ public class MenuCur2Select extends AbstractMenuItem {
             logger.warn(e.getMessage());
             return e.getUserFriendlyMessage();
         }
-        return "Выберите вторую валюту:";
+        return String.format("Первая валюта - %s. Выберите вторую валюту:", queryParams.get(0));
     }
 
     /**

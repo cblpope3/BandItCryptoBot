@@ -42,14 +42,13 @@ public class MenuOperations extends AbstractMenuItem {
     @Override
     public InlineKeyboardMarkup getMarkup() {
 
-        List<InlineKeyboardButton> keyboardRow1 = List.of(
-                this.makeButton("Подписаться", "cur_1_select"),
-                this.makeButton("Отписаться", "unsubscribe_select"),
-                this.makeButton("Список", "my_subscriptions")
+        List<List<InlineKeyboardButton>> keyboard = List.of(
+                this.makeHugeButton("Подписаться", "cur_1_select"),
+                this.makeHugeButton("Отписаться", "unsubscribe_select"),
+                this.makeHugeButton("Список", "my_subscriptions"),
+                this.getBackButton()
         );
 
-        List<List<InlineKeyboardButton>> buttonsGrid = List.of(keyboardRow1, this.getBackButton());
-
-        return new InlineKeyboardMarkup(buttonsGrid);
+        return new InlineKeyboardMarkup(keyboard);
     }
 }

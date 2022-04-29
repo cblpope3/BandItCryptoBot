@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bandit.cryptobot.clients.TelegramClient;
 import ru.bandit.cryptobot.clients.TriggersClient;
 import ru.bandit.cryptobot.clients.UserClient;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
@@ -126,8 +125,9 @@ public class TriggersService {
     //=================================================
 
     //fixme make String user-friendly looking
+
     /**
-     * Get currency rates once.
+     * Get currency rates once. Output format is: "BTC/EUR: 200.44"
      *
      * @param currencies requested rates currency pair.
      * @return user-friendly {@link String} with currency rates.
@@ -138,8 +138,13 @@ public class TriggersService {
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencies.getCurrenciesList());
 
         //fixme throws runtime exception if rates are not available.
-        return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
-                currencyPair.getCurrency2().getCurrencyNameUser()).toString();
+        Double foundRate = currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
+                currencyPair.getCurrency2().getCurrencyNameUser());
+
+        return String.format("%s/%s: %f",
+                currencyPair.getCurrency1().getCurrencyNameUser(),
+                currencyPair.getCurrency2().getCurrencyNameUser(),
+                foundRate);
     }
 
     /**
@@ -149,9 +154,10 @@ public class TriggersService {
      * @param currencyPairDTO currency pair that involved in subscription.
      * @param triggerTypeName name of trigger type.
      * @param triggerValue    value of trigger. Nullable. Used only for alarm triggers.
+     * @return saved trigger.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
+    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
             throws CommonBotAppException {
 
         UserEntity foundUser = usersService.getUserEntity(user);
@@ -186,13 +192,13 @@ public class TriggersService {
             this.sendTargetTriggerToApp(newTrigger);
         }
 
-        userTriggersRepository.save(newTrigger);
+        return userTriggersRepository.save(newTrigger);
     }
 
     //todo write javadoc
-    public void subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
+    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
             throws CommonBotAppException {
-        this.subscribe(user, currencyPairDTO, triggerTypeName, null);
+        return this.subscribe(user, currencyPairDTO, triggerTypeName, null);
     }
 
     /**
