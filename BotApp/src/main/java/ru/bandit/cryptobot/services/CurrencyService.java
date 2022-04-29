@@ -184,6 +184,24 @@ public class CurrencyService {
     }
 
     /**
+     * Get time when last currency rates update was received.
+     *
+     * @return last update time.
+     */
+    public String getLastRatesUpdateTime() {
+        return this.currentCurrencyRatesDAO.getLastUpdateTime();
+    }
+
+    /**
+     * Get time when last average currency rates update was received.
+     *
+     * @return last update time.
+     */
+    public String getLastAverageRatesUpdateTime() {
+        return this.averageCurrencyRatesDAO.getLastUpdateTime();
+    }
+
+    /**
      * Get all available currencies {@link Set} that can make correct currency pair with given currency.
      *
      * @param currency given currency.

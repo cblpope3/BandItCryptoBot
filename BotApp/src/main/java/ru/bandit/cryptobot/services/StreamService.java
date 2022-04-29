@@ -61,20 +61,20 @@ public class StreamService {
      * @return user-friendly currency rate with currencies symbols.
      */
     private String getUserFriendlyCurrencyRate(UserTriggerEntity userTrigger) {
-        //todo specify currencies refreshing time
         if (userTrigger.getTriggerType().equals(triggersService.getSimpleTriggerType())) {
-            return String.format("%s - %s. Обновлено: ---",
+            return String.format("%s - %f. (%s)",
                     this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
-                    currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()));
+                    currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()),
+                    currencyService.getLastRatesUpdateTime());
         } else if (userTrigger.getTriggerType().equals(triggersService.getAverageTriggerType())) {
-            return String.format("%s среднее за минуту - %s. Обновлено: ---",
+            return String.format("%s 1-m-avg - %f. (%s)",
                     this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
-                    currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()));
+                    currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()),
+                    currencyService.getLastAverageRatesUpdateTime());
         } else {
             throw new IllegalArgumentException("Unknown user trigger type.");
         }
     }
-
 
     /**
      * Get user-friendly currency pair name.

@@ -30,12 +30,14 @@ public abstract class CurrencyRatesDAO {
     public void setCurrencyRates(Map<String, Double> newRates) {
         this.currentRates.clear();
         this.currentRates.putAll(newRates);
+        //todo take update time from trigger-app, not time when updates was set
+        setLastUpdateTime();
     }
 
     /**
      * Get currency rate by specifying currency rate pair symbol.
      *
-     * @param symbol currency pair figi ({@link String}).
+     * @param symbol currency pair identifier ({@link String}).
      * @return currency pair rate ({@link Double}).
      */
     public Double getRateBySymbol(String symbol) {
