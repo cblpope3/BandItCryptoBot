@@ -52,20 +52,22 @@ public class TriggersClient {
         try {
 
             response = restTemplate.postForEntity(triggerAppCurrencyUrl + "trigger", triggerDTO, Object.class);
-            logger.trace("Trigger have been sent to Trigger App. Response status code is: {}", response.getStatusCode());
+            if (logger.isTraceEnabled())
+                logger.trace("Trigger have been sent to Trigger App. Response status code is: {}", response.getStatusCode());
 
         } catch (ResponseStatusException e) {
 
-            logger.error("Got exception while sending new trigger to Trigger-App: {}", e.getMessage());
+            logger.error("While sending new trigger to Trigger-App got error status code: {}", e.getMessage());
             return false;
+
         } catch (RestClientException e) {
-            logger.error("Got exception. Problem with Trigger-App connection: {}.", e.getMessage());
+            logger.error("Connection to Trigger-App failed: {}.", e.getMessage());
             return false;
         }
 
         if (response.getStatusCode() == HttpStatus.ACCEPTED) {
-            if (logger.isTraceEnabled())
-                logger.trace("New trigger have been sent successfully: {}", triggerDTO);
+            if (logger.isDebugEnabled())
+                logger.debug("New trigger has been successfully sent to Trigger-app: {}", triggerDTO);
             return true;
         } else {
             if (logger.isErrorEnabled())
@@ -90,7 +92,7 @@ public class TriggersClient {
                     Object.class);
 
         } catch (ResponseStatusException e) {
-            logger.warn("Exception during sending 'delete trigger #{}' request to api-app by address {}trigger/{}: {}",
+            logger.warn("Exception during sending 'delete trigger #{}' request to Trigger-app by address {}trigger/{}: {}",
                     triggerId,
                     triggerAppCurrencyUrl,
                     triggerId,
@@ -104,11 +106,12 @@ public class TriggersClient {
             logger.error("Error while sending delete request to Trigger-App: response is null.");
             return false;
         } else if (response.getStatusCode() == HttpStatus.OK) {
-            logger.trace("Request to delete trigger #{} processed successfully.", triggerId);
+            if (logger.isDebugEnabled())
+                logger.debug("Trigger #{} successfully deleted from Trigger-App.", triggerId);
             return true;
         } else {
             //unreachable statement
-            logger.error("Unknown status code: {}.", response.getStatusCode());
+            logger.error("Trigger-app response with unknown status code: {}.", response.getStatusCode());
             return false;
         }
     }

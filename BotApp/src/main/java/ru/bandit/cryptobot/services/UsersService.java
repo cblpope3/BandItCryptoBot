@@ -49,9 +49,10 @@ public class UsersService {
 
             usersRepository.save(startingUser);
 
-            logger.trace("User {} already in database.", user.getUserId());
+            if (logger.isDebugEnabled()) logger.debug("Start command for user #{} processed.", user.getUserId());
         } else {
             this.saveNewUser(user);
+            if (logger.isDebugEnabled()) logger.debug("New user #{} saved to database.", user.getUserId());
         }
     }
 
@@ -65,14 +66,14 @@ public class UsersService {
         UserEntity foundUser = getUserEntity(user);
 
         if (foundUser.isPaused()) {
-            if (logger.isTraceEnabled()) logger.trace("User #{} already paused.", user.getUserId());
+            if (logger.isDebugEnabled()) logger.debug("User #{} already paused.", user.getUserId());
             throw new UserException("Subscriptions already paused.", UserException.ExceptionCause.ALREADY_PAUSED);
         }
 
         foundUser.setPaused(true);
         usersRepository.save(foundUser);
-        if (logger.isTraceEnabled())
-            logger.trace("Subscriptions for user #{} successfully paused.", user.getUserId());
+        if (logger.isDebugEnabled())
+            logger.debug("Subscriptions for user #{} successfully paused.", user.getUserId());
 
     }
 
@@ -86,14 +87,14 @@ public class UsersService {
         UserEntity foundUser = getUserEntity(user);
 
         if (!foundUser.isPaused()) {
-            if (logger.isTraceEnabled()) logger.trace("User #{} already resumed.", user.getUserId());
+            if (logger.isDebugEnabled()) logger.debug("User #{} already resumed.", user.getUserId());
             throw new UserException("Subscriptions already resumed.", UserException.ExceptionCause.ALREADY_RESUMED);
         }
 
         foundUser.setPaused(false);
         usersRepository.save(foundUser);
-        if (logger.isTraceEnabled())
-            logger.trace("Subscriptions for user #{} successfully resumed.", user.getUserId());
+        if (logger.isDebugEnabled())
+            logger.debug("Subscriptions for user #{} successfully resumed.", user.getUserId());
     }
 
     /**
@@ -119,7 +120,7 @@ public class UsersService {
         newUser.setStartCount(1L);
 
         newUser.setRegistrationDate(new Timestamp(System.currentTimeMillis()));
-        logger.debug("Creating new user #{}.", newUser.getUserId());
+        if (logger.isDebugEnabled()) logger.debug("Creating new user #{}...", newUser.getUserId());
 
         return usersRepository.save(newUser);
     }
@@ -131,11 +132,13 @@ public class UsersService {
      * @return found {@link UserEntity}. If requested user is not found in database, new user is saved.
      */
     public UserEntity getUserEntity(UserDTO user) {
+        if (logger.isTraceEnabled()) logger.trace("Trying to find user #{} in database...", user.getUserId());
         UserEntity foundUser = usersRepository.findByUserId(user.getUserId());
         if (foundUser == null) {
             foundUser = this.saveNewUser(user);
-            logger.trace("User #{} not found.", user.getUserId());
+            if (logger.isTraceEnabled()) logger.trace("User #{} not found.", user.getUserId());
         }
+        if (logger.isTraceEnabled()) logger.trace("User #{} found in database.", user.getUserId());
         return foundUser;
     }
 }

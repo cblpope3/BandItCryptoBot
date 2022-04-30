@@ -55,7 +55,7 @@ public class CurrencyService {
     public CurrencyEntity getCurrencyBySymbol(@NotNull String symbol) throws CommonBotAppException {
         CurrencyEntity foundCurrency = currencyRepository.findByCurrencyNameUser(symbol.toUpperCase());
         if (foundCurrency == null) {
-            logger.warn("Requested currency {} not found!", symbol);
+            if (logger.isDebugEnabled()) logger.debug("Requested currency {} not found!", symbol);
             throw new CurrencyException("Currency not found.", CurrencyException.ExceptionCause.NO_CURRENCY);
         }
         return foundCurrency;
@@ -71,7 +71,7 @@ public class CurrencyService {
     public Set<CurrencyEntity> getAllCurrencies() throws CommonBotAppException {
         Set<CurrencyEntity> resultSet = new HashSet<>(currencyRepository.findAll());
         if (resultSet.isEmpty()) {
-            logger.warn("Not found any currency in database!");
+            logger.error("Not found any currency in database!");
             throw new CurrencyException("Not found any currency in database.", CurrencyException.ExceptionCause.NO_CURRENCIES_FOUND);
         }
         return resultSet;
@@ -96,7 +96,8 @@ public class CurrencyService {
 
         //check if currencies successfully found in database
         if (currency1.equals(currency2)) {
-            logger.warn("Requested currency pair of two same currencies '{}'", currency1symbol);
+            if (logger.isDebugEnabled())
+                logger.debug("Requested currency pair of two same currencies '{}'", currency1symbol);
             throw new CurrencyException("Requested pair of same currencies.", CurrencyException.ExceptionCause.SAME_CURRENCIES_IN_REQUEST);
         }
 
@@ -119,7 +120,8 @@ public class CurrencyService {
                     currencyPair.getCurrency2().getCurrencyNameUser().equals(currency2.getCurrencyNameUser()))
                 return currencyPair;
         }
-        logger.warn("Currency pair {}/{} is not found in database.", currency1symbol, currency2symbol);
+        if (logger.isDebugEnabled())
+            logger.debug("Currency pair {}/{} is not found in database.", currency1symbol, currency2symbol);
         throw new CurrencyException("Currency pair not found.", CurrencyException.ExceptionCause.NO_CURRENCY_PAIR);
     }
 
@@ -134,7 +136,7 @@ public class CurrencyService {
      */
     public CurrencyPairEntity getCurrencyPair(List<String> currencies) throws CommonBotAppException {
         if (currencies.size() != 2) {
-            logger.error("Request has wrong size: {}.", currencies.size());
+            logger.warn("Request has wrong size: {}.", currencies.size());
             throw new CurrencyException("Wrong request List size.", CurrencyException.ExceptionCause.WRONG_PARAMETERS);
         }
         return this.getCurrencyPair(currencies.get(0), currencies.get(1));
@@ -149,7 +151,10 @@ public class CurrencyService {
      */
     public String getAllCurrenciesList() throws CommonBotAppException {
 
+        if (logger.isTraceEnabled()) logger.trace("Generating list of all currencies...");
         Set<CurrencyEntity> allCurrenciesList = this.getAllCurrencies();
+
+        if (logger.isDebugEnabled()) logger.debug("List of all available currencies is generated.");
 
         return allCurrenciesList.stream()
                 .map(a -> a.getCurrencyFullName() + ": " + a.getCurrencyNameUser())
@@ -165,6 +170,9 @@ public class CurrencyService {
      * @see #getAverageCurrencyRate(CurrencyPairEntity)
      */
     public Double getCurrentCurrencyRate(CurrencyPairEntity currencyPair) {
+        if (logger.isTraceEnabled())
+            logger.trace("Searching for {}/{} currency rate...", currencyPair.getCurrency1().getCurrencyNameUser(),
+                    currencyPair.getCurrency2().getCurrencyNameUser());
         return currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameSource() +
                 currencyPair.getCurrency2().getCurrencyNameSource());
     }
@@ -178,6 +186,9 @@ public class CurrencyService {
      * @see #getCurrentCurrencyRate(CurrencyPairEntity)
      */
     public Double getAverageCurrencyRate(CurrencyPairEntity currencyPair) {
+        if (logger.isTraceEnabled())
+            logger.trace("Searching for {}/{} average currency rate...",
+                    currencyPair.getCurrency1().getCurrencyNameUser(), currencyPair.getCurrency2().getCurrencyNameUser());
         return averageCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameSource() +
                 currencyPair.getCurrency2().getCurrencyNameSource());
     }
@@ -208,6 +219,8 @@ public class CurrencyService {
      * @throws CurrencyException if found no complimentary currencies.
      */
     public Set<CurrencyEntity> getAllComplimentaryCurrencies(CurrencyEntity currency) throws CurrencyException {
+        if (logger.isTraceEnabled())
+            logger.trace("Getting all complimentary currencies to {}", currency.getCurrencyNameUser());
         return this.getAllCurrencyPairsWithGiven(currency).stream()
                 .map(currencyPair -> this.getOtherCurrencyFromPair(currencyPair, currency))
                 .collect(Collectors.toSet());
@@ -221,9 +234,12 @@ public class CurrencyService {
      * @throws CurrencyException if found no currency pair with given currency.
      */
     private Set<CurrencyPairEntity> getAllCurrencyPairsWithGiven(CurrencyEntity currency) throws CurrencyException {
+        if (logger.isTraceEnabled()) logger.trace("Getting all currency pairs with {}", currency.getCurrencyNameUser());
         Set<CurrencyPairEntity> foundPairs = new HashSet<>();
         foundPairs.addAll(currencyPairRepository.findByCurrency1(currency));
         foundPairs.addAll(currencyPairRepository.findByCurrency2(currency));
+        if (logger.isTraceEnabled())
+            logger.trace("Currency pairs with {} are: {}", currency.getCurrencyNameUser(), foundPairs);
         if (foundPairs.isEmpty()) {
             throw new CurrencyException("Not found any pair with given currency.", CurrencyException.ExceptionCause.NOT_FOUND_PAIR_WITH_CURRENCY);
         }
@@ -238,10 +254,18 @@ public class CurrencyService {
      * @return other currency from currency pair.
      */
     private CurrencyEntity getOtherCurrencyFromPair(CurrencyPairEntity currencyPair, CurrencyEntity currency) {
+        if (logger.isTraceEnabled())
+            logger.trace("From currency pair {} trying to get currency other to {}", currencyPair, currency.getCurrencyNameUser());
         //assuming that currency pair consist of two different currencies.
-        if (currencyPair.getCurrency1().equals(currency)) return currencyPair.getCurrency2();
-        else if (currencyPair.getCurrency2().equals(currency)) return currencyPair.getCurrency1();
-        else {
+        if (currencyPair.getCurrency1().equals(currency)) {
+            if (logger.isTraceEnabled())
+                logger.trace("Found currency {}.", currencyPair.getCurrency2().getCurrencyNameUser());
+            return currencyPair.getCurrency2();
+        } else if (currencyPair.getCurrency2().equals(currency)) {
+            if (logger.isTraceEnabled())
+                logger.trace("Found currency {}.", currencyPair.getCurrency1().getCurrencyNameUser());
+            return currencyPair.getCurrency1();
+        } else {
             //this statement must be unreachable. If we here, given currency not found in currency pair.
             IllegalArgumentException exception = new IllegalArgumentException(
                     "Problem with getting other currency from pair: given currency not found in currency pair.");

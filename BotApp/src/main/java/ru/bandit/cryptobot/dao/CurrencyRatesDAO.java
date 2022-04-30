@@ -1,5 +1,8 @@
 package ru.bandit.cryptobot.dao;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,6 +12,8 @@ import java.util.Map;
  * {@link #getRateBySymbol(String)}, {@link #setLastUpdateTime()}, {@link #getLastUpdateTime()},
  */
 public abstract class CurrencyRatesDAO {
+
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected final Map<String, Double> currentRates = new HashMap<>();
     protected final Timestamp lastUpdateTime = new Timestamp(0);
@@ -32,6 +37,7 @@ public abstract class CurrencyRatesDAO {
         this.currentRates.putAll(newRates);
         //todo take update time from trigger-app, not time when updates was set
         setLastUpdateTime();
+        if (logger.isTraceEnabled()) logger.trace("Rates data updated.");
     }
 
     /**

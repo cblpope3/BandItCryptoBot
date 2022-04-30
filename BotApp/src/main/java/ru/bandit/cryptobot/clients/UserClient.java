@@ -17,6 +17,7 @@ import java.util.Map;
  */
 @Service
 public class UserClient {
+
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final TelegramClient telegramClient;
@@ -45,6 +46,7 @@ public class UserClient {
                 userTrigger.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
                 value));
         telegramClient.sendMessage(alarmMessage);
+        if (logger.isDebugEnabled()) logger.debug("Worked trigger #{} successfully sent to user.", userTrigger.getId());
     }
 
     /**

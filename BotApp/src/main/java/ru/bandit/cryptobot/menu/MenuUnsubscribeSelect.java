@@ -52,6 +52,7 @@ public class MenuUnsubscribeSelect extends AbstractMenuItem {
 
     }
 
+    @Override
     public InlineKeyboardMarkup getMarkup() {
 
         List<UserTriggerEntity> subscriptionsList;
@@ -71,7 +72,7 @@ public class MenuUnsubscribeSelect extends AbstractMenuItem {
             //FIXME button name is not fine for simple triggers
             //№ - XXX/YYY/Тип триггера/Период/Искомое значение
             InlineKeyboardButton button = new InlineKeyboardButton(
-                    String.format("№%d - %s/%s - %s - %d",
+                    String.format("№%d - %s/%s - %s - %f",
                             subscription.getId(),
                             subscription.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
                             subscription.getCurrencyPair().getCurrency2().getCurrencyNameUser(),

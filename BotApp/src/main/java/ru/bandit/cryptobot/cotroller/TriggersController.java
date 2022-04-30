@@ -1,6 +1,8 @@
 package ru.bandit.cryptobot.cotroller;
 
 import io.swagger.annotations.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/trigger")
 public class TriggersController {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     TriggersService triggersService;
@@ -42,6 +46,8 @@ public class TriggersController {
                                                 @ApiParam(value = "Котировка валюты, триггер которой сработал.")
                                                 @RequestParam String value) {
 
+        if (logger.isDebugEnabled()) logger.debug("Got new trigger POST request: trigger id = {}, value = {}", triggerId, value);
+
         try {
             triggersService.processWorkedTargetTrigger(triggerId, value);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -62,6 +68,8 @@ public class TriggersController {
             @ApiResponse(code = 204, message = "No content.")})
     @GetMapping("/getAllTarget")
     public ResponseEntity<List<TriggerDTO>> refreshTriggers() {
+
+        if (logger.isTraceEnabled()) logger.trace("Got request for triggers list.");
 
         List<TriggerDTO> response = triggersService.getTargetTriggerDTOList();
 

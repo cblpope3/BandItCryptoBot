@@ -19,9 +19,9 @@ import java.util.stream.Collectors;
 @Service
 public class StreamService {
 
-    TriggersService triggersService;
+    private final TriggersService triggersService;
 
-    CurrencyService currencyService;
+    private final CurrencyService currencyService;
 
     @Autowired
     public StreamService(TriggersService triggersService, CurrencyService currencyService) {

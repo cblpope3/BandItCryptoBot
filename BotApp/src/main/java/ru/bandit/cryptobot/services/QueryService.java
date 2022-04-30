@@ -51,13 +51,12 @@ public class QueryService {
             foundMenuItem = botCommandsDAO.findMenuItem(commandName);
 
             response = foundMenuItem.makeResponse(user, separatedQuery);
-
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
             response = new BotResponseDTO(null, e.getUserFriendlyMessage());
-
         }
 
+        if (logger.isTraceEnabled()) logger.trace("Response to user #{} created successfully.", user.getUserId());
         return response;
     }
 
@@ -82,10 +81,12 @@ public class QueryService {
 
         //checking splitting result
         if (splitQuery.isEmpty()) {
-            logger.warn("Input query '{}' not split correctly.", query);
+            if (logger.isDebugEnabled()) logger.debug("Input query '{}' is empty after splitting.", query);
             throw new QueryException("Split query is empty.",
                     QueryException.ExceptionCause.COMMAND_NOT_FOUND);
         }
+
+        if (logger.isTraceEnabled()) logger.trace("Query '{}' have been split to {}.", query, splitQuery);
 
         return splitQuery;
     }
@@ -98,9 +99,10 @@ public class QueryService {
      */
     private void checkQueryIllegalSymbols(String query) throws CommonBotAppException {
         if (!query.matches("[a-zA-Z0-9_/,-]+")) {
-            logger.trace("Query has unsupported symbols or format: {}", query);
+            if (logger.isDebugEnabled()) logger.debug("Query has unsupported symbols or format: {}", query);
             throw new QueryException("Unsupported symbols in query.",
                     QueryException.ExceptionCause.UNSUPPORTED_SYMBOLS);
         }
+        if (logger.isTraceEnabled()) logger.trace("Query '{}' passed symbols check.", query);
     }
 }

@@ -46,13 +46,15 @@ public class TelegramClient extends TelegramLongPollingBot {
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             //received text message
-            logger.debug("Got text message from {}: {}", update.getMessage().getChatId(), update.getMessage().getText());
+            if (logger.isDebugEnabled())
+                logger.debug("Got text message from {}: {}", update.getMessage().getChatId(), update.getMessage().getText());
 
             this.processTextCommand(update);
 
         } else if (update.hasCallbackQuery()) {
             //received button press
-            logger.trace("Got button press from {}: {}", update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getData());
+            if (logger.isDebugEnabled())
+                logger.debug("Got button press from {}: {}", update.getCallbackQuery().getMessage().getChatId(), update.getCallbackQuery().getData());
 
             this.processButtonPress(update);
         }
@@ -66,6 +68,7 @@ public class TelegramClient extends TelegramLongPollingBot {
     public void sendMessage(SendMessage message) {
         try {
             execute(message);
+            if (logger.isTraceEnabled()) logger.trace("New message sent to chat #{}.", message.getChatId());
         } catch (TelegramApiException e) {
             logger.error(e.getMessage());
             e.printStackTrace();
