@@ -2,6 +2,7 @@ package ru.bandit.cryptobot.menu;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.bandit.cryptobot.services.MetricsService;
 
 /**
  * Class implementing help bot menu item.
@@ -12,9 +13,12 @@ import org.springframework.stereotype.Component;
 @SuppressWarnings("unused")
 public class MenuHelp extends AbstractMenuItem {
 
+    private final MetricsService metricsService;
+
     @Autowired
-    protected MenuHelp(Menu01Main parent) {
+    protected MenuHelp(Menu01Main parent, MetricsService metricsService) {
         super(parent);
+        this.metricsService = metricsService;
     }
 
     /**
@@ -30,6 +34,7 @@ public class MenuHelp extends AbstractMenuItem {
      */
     @Override
     public String getText() {
+        metricsService.incrementHelpCommandCounter();
         return "- Все команды должны начинаться со знака \"/\". Например /start, /help, /ONCE/BTC/USD\n" +
                 "- /start - начать работу с ботом\n" +
                 "- /help - показать список возможных команд\n" +
