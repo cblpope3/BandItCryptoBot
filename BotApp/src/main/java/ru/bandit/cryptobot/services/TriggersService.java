@@ -157,7 +157,7 @@ public class TriggersService {
      * @return saved trigger.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
+    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Integer triggerValue)
             throws CommonBotAppException {
 
         UserEntity foundUser = usersService.getUserEntity(user);
@@ -170,19 +170,21 @@ public class TriggersService {
         newTrigger.setCurrencyPair(currencyPair);
         newTrigger.setTriggerType(triggerType);
         if (triggerValue != null) {
-            newTrigger.setTargetValue(triggerValue);
+            newTrigger.setTargetValue(this.calculateAlarmTriggerValue(newTrigger, triggerValue));
         }
 
         //check if user already have this subscription
         if (this.doesTriggerExist(newTrigger)) {
-            logger.debug("User already subscribed to this trigger");
+            if (logger.isDebugEnabled()) logger.debug("User already subscribed to this trigger: {}.", newTrigger);
             throw new TriggerException("User already subscribed to this.",
                     TriggerException.ExceptionCause.ALREADY_SUBSCRIBED);
         }
 
+        UserTriggerEntity savedTrigger = userTriggersRepository.save(newTrigger);
+        if (logger.isDebugEnabled()) logger.debug("New trigger saved: {}.", savedTrigger);
+
         //if new trigger is alarm, send it to api-app
-        if (newTrigger.getTriggerType().equals(this.getUpTriggerType()) ||
-                newTrigger.getTriggerType().equals(this.getDownTriggerType())) {
+        if (savedTrigger.getTriggerType().isAlarm()) {
 
             //alarm trigger must have target value
             if (newTrigger.getTargetValue() == null) {
@@ -192,13 +194,35 @@ public class TriggersService {
             this.sendTargetTriggerToApp(newTrigger);
         }
 
-        return userTriggersRepository.save(newTrigger);
+        return savedTrigger;
     }
 
     //todo write javadoc
     public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
             throws CommonBotAppException {
         return this.subscribe(user, currencyPairDTO, triggerTypeName, null);
+    }
+
+    /**
+     * Method calculates trigger target value with given currency pair, watching direction (target_up or target_down)
+     * and watch value in percents.
+     *
+     * @param triggerTemplate trigger template with defined currency pair and trigger type.
+     * @param valuePercents   value of alarm in percents.
+     * @return target value of given currency pair rate.
+     */
+    private Double calculateAlarmTriggerValue(UserTriggerEntity triggerTemplate, Integer valuePercents) {
+        //get current currency pair rate
+        Double currentRate = currencyService.getCurrentCurrencyRate(triggerTemplate.getCurrencyPair());
+
+        //choose direction
+        if (triggerTemplate.getTriggerType().equals(this.getUpTriggerType())) {
+            return currentRate * (100 + valuePercents) / 100;
+        } else if (triggerTemplate.getTriggerType().equals(this.getDownTriggerType())) {
+            return currentRate * (100 - valuePercents) / 100;
+        } else {
+            throw new IllegalArgumentException("Can't calculate target trigger value: unknown trigger type.");
+        }
     }
 
     /**
@@ -278,7 +302,7 @@ public class TriggersService {
             logger.trace("Returned subscriptions of user #{}", user.getUserId());
             return subscriptionsList.stream()
                     //FIXME subscription name is not fine for simple triggers
-                    .map(a -> String.format("№%d - %s/%s - %s - %d",
+                    .map(a -> String.format("№%d - %s/%s - %s - %f",
                             a.getId(),
                             a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
                             a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
@@ -378,8 +402,7 @@ public class TriggersService {
                     userTriggerEntity.getId(),
                     userTriggerEntity.getCurrencyPair().getCurrency1().getCurrencyNameSource().toUpperCase() +
                             userTriggerEntity.getCurrencyPair().getCurrency2().getCurrencyNameSource().toUpperCase(),
-                    //fixme this value in database must be double
-                    userTriggerEntity.getTargetValue().doubleValue(),
+                    userTriggerEntity.getTargetValue(),
                     TriggerDTO.TriggerType.valueOf(
                             userTriggerEntity.getTriggerType().getTriggerName().toUpperCase())
             );

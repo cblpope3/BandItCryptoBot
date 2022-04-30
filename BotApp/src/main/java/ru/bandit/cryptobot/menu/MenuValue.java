@@ -70,7 +70,7 @@ public class MenuValue extends AbstractMenuItem {
         }
 
         int value;
-        if (queryParams.get(3) == null) value = 10;
+        if (queryParams.get(3) == null) value = 3;
         else value = Integer.parseInt(queryParams.get(3));
 
         int nextValue = value + 1;

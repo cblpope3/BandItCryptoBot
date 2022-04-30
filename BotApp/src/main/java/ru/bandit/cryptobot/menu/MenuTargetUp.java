@@ -40,7 +40,7 @@ public class MenuTargetUp extends AbstractMenuItem {
             UserTriggerEntity savedTrigger = triggersService.subscribe(userDTO,
                     new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
                     "target_up",
-                    Double.parseDouble(queryParams.get(2)));
+                    Integer.parseInt(queryParams.get(2)));
 
             return String.format("Следим за превышением курса %s/%s выше порога %s.",
                     savedTrigger.getCurrencyPair().getCurrency1().getCurrencyNameUser(),

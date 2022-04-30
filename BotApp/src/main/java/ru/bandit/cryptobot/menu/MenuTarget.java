@@ -64,9 +64,9 @@ public class MenuTarget extends AbstractMenuItem {
 
             List<List<InlineKeyboardButton>> buttonsGrid = List.of(
                     this.makeHugeButton(String.format("Курс %s выше порога", foundPairName),
-                            "/value/" + String.join("/", queryParams) + "/target_up/10"),
+                            "/value/" + String.join("/", queryParams) + "/target_up/3"),
                     this.makeHugeButton(String.format("Курс %s ниже порога", foundPairName),
-                            "/value/" + String.join("/", queryParams) + "/target_down/10"),
+                            "/value/" + String.join("/", queryParams) + "/target_down/3"),
                     this.getBackButton());
 
             return new InlineKeyboardMarkup(buttonsGrid);

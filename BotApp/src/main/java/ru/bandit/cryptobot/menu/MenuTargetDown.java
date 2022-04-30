@@ -41,7 +41,7 @@ public class MenuTargetDown extends AbstractMenuItem {
             UserTriggerEntity savedTrigger = triggersService.subscribe(userDTO,
                     new CurrencyPairDTO(queryParams.get(0), queryParams.get(1)),
                     "target_down",
-                    Double.parseDouble(queryParams.get(2)));
+                    Integer.parseInt(queryParams.get(2)));
 
             return String.format("Следим за падением курса %s/%s ниже порога %s.",
                     savedTrigger.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
