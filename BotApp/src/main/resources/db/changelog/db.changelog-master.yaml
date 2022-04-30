@@ -137,6 +137,11 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   type: VARCHAR(50)
+              - column:
+                  name: is_alarm
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
         - createSequence:
             cycle: true
             incrementBy: 1
@@ -183,7 +188,7 @@ databaseChangeLog:
                   type: INTEGER
               - column:
                   name: trigger_target_value
-                  type: INTEGER
+                  type: DOUBLE
               - column:
                   name: last_message
                   type: DATETIME
@@ -408,6 +413,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Periodical mailing currency rates"
+              - column:
+                  name: is_alarm
+                  value: false
         - insert:
             tableName: trigger_type
             columns:
@@ -420,6 +428,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Periodical mailing averages"
+              - column:
+                  name: is_alarm
+                  value: false
         - insert:
             tableName: trigger_type
             columns:
@@ -432,6 +443,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
+              - column:
+                  name: is_alarm
+                  value: true
         - insert:
             tableName: trigger_type
             columns:
@@ -444,6 +458,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
+              - column:
+                  name: is_alarm
+                  value: true
 
 
         - insert:

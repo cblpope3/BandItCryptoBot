@@ -40,6 +40,12 @@ public class TriggerTypeEntity {
     @Column(name = "trigger_type_description")
     private String triggerDescription;
 
+    /**
+     * Is this trigger type alarm trigger.
+     */
+    @Column(name = "is_alarm")
+    private boolean isAlarm;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

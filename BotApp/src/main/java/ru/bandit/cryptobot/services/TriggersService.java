@@ -170,7 +170,7 @@ public class TriggersService {
         newTrigger.setCurrencyPair(currencyPair);
         newTrigger.setTriggerType(triggerType);
         if (triggerValue != null) {
-            newTrigger.setTargetValue(triggerValue.intValue());
+            newTrigger.setTargetValue(triggerValue);
         }
 
         //check if user already have this subscription

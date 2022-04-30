@@ -68,7 +68,7 @@ public class UserTriggerEntity {
      * Target value of this trigger. Nullable.
      */
     @Column(name = "trigger_target_value")
-    Integer targetValue;
+    Double targetValue;
 
     /**
      * Last time when trigger have been sent to user. Not used in current version of application. For future use.

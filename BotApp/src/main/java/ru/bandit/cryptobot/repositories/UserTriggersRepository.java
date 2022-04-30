@@ -18,7 +18,7 @@ public interface UserTriggersRepository extends CrudRepository<UserTriggerEntity
     List<UserTriggerEntity> findByUserAndTriggerTypeAndCurrencyPairAndTargetValue(UserEntity user,
                                                                                   TriggerTypeEntity triggerType,
                                                                                   CurrencyPairEntity currencyPair,
-                                                                                  Integer targetValue);
+                                                                                  Double targetValue);
 
     List<UserTriggerEntity> findByTriggerType(TriggerTypeEntity triggerType);
 
