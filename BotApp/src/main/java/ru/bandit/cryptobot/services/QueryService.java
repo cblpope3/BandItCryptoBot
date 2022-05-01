@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import ru.bandit.cryptobot.dao.BotCommandsDAO;
 import ru.bandit.cryptobot.dto.BotResponseDTO;
 import ru.bandit.cryptobot.dto.UserDTO;
@@ -53,7 +55,10 @@ public class QueryService {
             response = foundMenuItem.makeResponse(user, separatedQuery);
         } catch (CommonBotAppException e) {
             logger.debug(e.getMessage());
-            response = new BotResponseDTO(null, e.getUserFriendlyMessage());
+            InlineKeyboardButton backButton = new InlineKeyboardButton("Назад");
+            backButton.setCallbackData("/start");
+            response = new BotResponseDTO(
+                    new InlineKeyboardMarkup(List.of(List.of(backButton))), e.getUserFriendlyMessage());
         }
 
         if (logger.isTraceEnabled()) logger.trace("Response to user #{} created successfully.", user.getUserId());
