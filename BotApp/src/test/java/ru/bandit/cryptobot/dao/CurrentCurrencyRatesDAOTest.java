@@ -1,6 +1,7 @@
 package ru.bandit.cryptobot.dao;
 
 import org.junit.jupiter.api.Test;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.test_data.CurrenciesTestData;
 
 import java.sql.Timestamp;
@@ -12,7 +13,7 @@ class CurrentCurrencyRatesDAOTest {
     CurrentCurrencyRatesDAO currentCurrencyRatesDAO = new CurrentCurrencyRatesDAO();
 
     @Test
-    void CurrencyRates() {
+    void CurrencyRates() throws CommonBotAppException {
         currentCurrencyRatesDAO.setCurrencyRates(CurrenciesTestData.getTestCurrencyRates());
 
         assertEquals(CurrenciesTestData.getTestCurrencyRates(), currentCurrencyRatesDAO.getCurrencyRates());

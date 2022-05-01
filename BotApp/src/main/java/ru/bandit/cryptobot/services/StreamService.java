@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.exceptions.CurrencyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,16 +62,31 @@ public class StreamService {
      * @return user-friendly currency rate with currencies symbols.
      */
     private String getUserFriendlyCurrencyRate(UserTriggerEntity userTrigger) {
+
         if (userTrigger.getTriggerType().equals(triggersService.getSimpleTriggerType())) {
-            return String.format("%s - %f. (%s)",
-                    this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
-                    currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()),
-                    currencyService.getLastRatesUpdateTime());
+
+            try {
+                return String.format("%s - %f. (%s)",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                        currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()),
+                        currencyService.getLastRatesUpdateTime());
+            } catch (CurrencyException e) {
+                return String.format("%s - нет данных.",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()));
+            }
+
         } else if (userTrigger.getTriggerType().equals(triggersService.getAverageTriggerType())) {
-            return String.format("%s 1-m-avg - %f. (%s)",
-                    this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
-                    currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()),
-                    currencyService.getLastAverageRatesUpdateTime());
+
+            try {
+                return String.format("%s 1-m-avg - %f. (%s)",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                        currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()),
+                        currencyService.getLastAverageRatesUpdateTime());
+            } catch (CurrencyException e) {
+                return String.format("%s 1-m-avg - нет данных.",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()));
+            }
+
         } else {
             throw new IllegalArgumentException("Unknown user trigger type.");
         }

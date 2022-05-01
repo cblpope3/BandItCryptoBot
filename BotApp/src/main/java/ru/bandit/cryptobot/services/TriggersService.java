@@ -126,8 +126,6 @@ public class TriggersService {
     //=================================================
     //=================================================
 
-    //fixme make String user-friendly looking
-
     /**
      * Get currency rates once. Output format is: "BTC/EUR: 200.44"
      *
@@ -219,8 +217,9 @@ public class TriggersService {
      * @param triggerTemplate trigger template with defined currency pair and trigger type.
      * @param valuePercents   value of alarm in percents.
      * @return target value of given currency pair rate.
+     * @throws CommonBotAppException if no data about currency rates.
      */
-    private Double calculateAlarmTriggerValue(UserTriggerEntity triggerTemplate, Integer valuePercents) {
+    private Double calculateAlarmTriggerValue(UserTriggerEntity triggerTemplate, Integer valuePercents) throws CommonBotAppException {
         //get current currency pair rate
         Double currentRate = currencyService.getCurrentCurrencyRate(triggerTemplate.getCurrencyPair());
 

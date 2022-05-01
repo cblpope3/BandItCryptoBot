@@ -166,10 +166,11 @@ public class CurrencyService {
      *
      * @param currencyPair requested currency pair.
      * @return currency rate value.
+     * @throws CurrencyException if no data about currency rates.
      * @see CurrencyPairEntity
      * @see #getAverageCurrencyRate(CurrencyPairEntity)
      */
-    public Double getCurrentCurrencyRate(CurrencyPairEntity currencyPair) {
+    public Double getCurrentCurrencyRate(CurrencyPairEntity currencyPair) throws CurrencyException {
         if (logger.isTraceEnabled())
             logger.trace("Searching for {}/{} currency rate...", currencyPair.getCurrency1().getCurrencyNameUser(),
                     currencyPair.getCurrency2().getCurrencyNameUser());
@@ -182,10 +183,11 @@ public class CurrencyService {
      *
      * @param currencyPair requested currency pair.
      * @return currency rate value.
+     * @throws CurrencyException if no data about average currency rates.
      * @see CurrencyPairEntity
      * @see #getCurrentCurrencyRate(CurrencyPairEntity)
      */
-    public Double getAverageCurrencyRate(CurrencyPairEntity currencyPair) {
+    public Double getAverageCurrencyRate(CurrencyPairEntity currencyPair) throws CurrencyException {
         if (logger.isTraceEnabled())
             logger.trace("Searching for {}/{} average currency rate...",
                     currencyPair.getCurrency1().getCurrencyNameUser(), currencyPair.getCurrency2().getCurrencyNameUser());

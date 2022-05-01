@@ -2,6 +2,7 @@ package ru.bandit.cryptobot.dao;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.bandit.cryptobot.exceptions.CurrencyException;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -45,9 +46,15 @@ public abstract class CurrencyRatesDAO {
      *
      * @param symbol currency pair identifier ({@link String}).
      * @return currency pair rate ({@link Double}).
+     * @throws CurrencyException if no data about currency rates.
      */
-    public Double getRateBySymbol(String symbol) {
-        return currentRates.get(symbol);
+    public Double getRateBySymbol(String symbol) throws CurrencyException {
+        Double rate = currentRates.get(symbol);
+        if (rate == null) {
+            if (logger.isWarnEnabled()) logger.warn("Not found currency rate for {}.", symbol);
+            throw new CurrencyException("Currency rates not available.", CurrencyException.ExceptionCause.NO_CURRENCY_RATES_DATA);
+        }
+        return rate;
     }
 
     /**

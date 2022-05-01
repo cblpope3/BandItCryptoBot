@@ -34,7 +34,7 @@ public class CurrencyException extends CommonBotAppException {
         /**
          * Not found any currency in database.
          */
-        NO_CURRENCIES_FOUND("В базе данных нет валют."),
+        NO_CURRENCIES_FOUND("В базе данных нет валют. Обратитесь к администратору."),
         /**
          * Requested currency pair consist of same currencies.
          */
@@ -50,7 +50,11 @@ public class CurrencyException extends CommonBotAppException {
         /**
          * No currency pair with given currency.
          */
-        NOT_FOUND_PAIR_WITH_CURRENCY("Не найдена пара для запрошенной валюты.");
+        NOT_FOUND_PAIR_WITH_CURRENCY("Не найдена пара для запрошенной валюты. Обратитесь к администратору."),
+        /**
+         * No data about currency rates.
+         */
+        NO_CURRENCY_RATES_DATA("Нет данных о курсе криптовалют. Обратитесь к администратору.");
 
         private final String message;
 
