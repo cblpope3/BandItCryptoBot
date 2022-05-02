@@ -34,26 +34,32 @@ public class TriggersService {
     private static final String SIMPLE_TRIGGER_NAME = "simple";
     private static final String AVERAGE_TRIGGER_NAME = "average";
     private final Logger logger = LoggerFactory.getLogger(TriggersService.class);
-    @Autowired
-    UserTriggersRepository userTriggersRepository;
+
+    private final UserTriggersRepository userTriggersRepository;
+    private final TriggerTypeRepository triggerTypeRepository;
+    private final TriggersClient triggersClient;
+    private final UserClient userClient;
+    private final UsersService usersService;
+    private final CurrencyService currencyService;
+    private final CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
 
     @Autowired
-    TriggerTypeRepository triggerTypeRepository;
+    public TriggersService(UserTriggersRepository userTriggersRepository,
+                           TriggerTypeRepository triggerTypeRepository,
+                           TriggersClient triggersClient,
+                           UserClient userClient,
+                           UsersService usersService,
+                           CurrencyService currencyService,
+                           CurrentCurrencyRatesDAO currentCurrencyRatesDAO) {
 
-    @Autowired
-    TriggersClient triggersClient;
-
-    @Autowired
-    UserClient userClient;
-
-    @Autowired
-    UsersService usersService;
-
-    @Autowired
-    CurrencyService currencyService;
-
-    @Autowired
-    CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
+        this.userTriggersRepository = userTriggersRepository;
+        this.triggerTypeRepository = triggerTypeRepository;
+        this.triggersClient = triggersClient;
+        this.userClient = userClient;
+        this.usersService = usersService;
+        this.currencyService = currencyService;
+        this.currentCurrencyRatesDAO = currentCurrencyRatesDAO;
+    }
 
     /**
      * This method allows getting target-up trigger type.
@@ -140,7 +146,6 @@ public class TriggersService {
 
         CurrencyPairEntity currencyPair = currencyService.getCurrencyPair(currencies.getCurrenciesList());
 
-        //fixme throws runtime exception if rates are not available.
         Double foundRate = currentCurrencyRatesDAO.getRateBySymbol(currencyPair.getCurrency1().getCurrencyNameUser() +
                 currencyPair.getCurrency2().getCurrencyNameUser());
 
@@ -204,7 +209,16 @@ public class TriggersService {
         return savedTrigger;
     }
 
-    //todo write javadoc
+    /**
+     * Create simple or average subscription.
+     *
+     * @param user            {@link UserDTO} of user going to subscribe.
+     * @param currencyPairDTO currency pair that involved in subscription.
+     * @param triggerTypeName name of trigger type.
+     * @return saved trigger.
+     * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
+     * @see #subscribe(UserDTO, CurrencyPairDTO, String, Integer)
+     */
     public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
             throws CommonBotAppException {
         return this.subscribe(user, currencyPairDTO, triggerTypeName, null);
@@ -256,7 +270,6 @@ public class TriggersService {
             throw new TriggerException("User don't have this subscription.", TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else if (!userTrigger.getUser().getUserId().equals(user.getUserId())) {
             //user trying to delete foreign trigger
-            //todo check how this works
             logger.warn("User #{} trying to delete foreign subscription #{}.", user.getUserId(), triggerId);
             throw new TriggerException("User don't have permission to access this trigger.",
                     TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
@@ -288,8 +301,7 @@ public class TriggersService {
             throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
             for (UserTriggerEntity triggerEntity : foundSubscriptions) {
-                if (triggerEntity.getTriggerType().equals(this.getUpTriggerType()) ||
-                        triggerEntity.getTriggerType().equals(this.getDownTriggerType())) {
+                if (triggerEntity.getTriggerType().isAlarm()) {
                     triggersClient.deleteTrigger(triggerEntity.getId());
                 }
             }
@@ -307,36 +319,46 @@ public class TriggersService {
      * @throws CommonBotAppException if user don't have any subscriptions.
      */
     public String getAllSubscriptionsAsString(UserDTO user) throws CommonBotAppException {
-        UserEntity foundUser = usersService.getUserEntity(user);
 
-        List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
-        if (subscriptionsList == null || subscriptionsList.isEmpty()) {
-            if (logger.isDebugEnabled()) logger.debug("Not found any triggers for user #{}.", user.getUserId());
-            throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
-        } else {
-            if (logger.isDebugEnabled()) logger.debug("Returning subscriptions of user #{}.", user.getUserId());
-            return subscriptionsList.stream()
-                    //FIXME subscription name is not fine for simple triggers
-                    .map(a -> String.format("№%d - %s/%s - %s - %f",
-                            a.getId(),
-                            a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
-                            a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
-                            a.getTriggerType().getTriggerName(),
-                            a.getTargetValue()))
-                    .collect(Collectors.joining("\n"));
-        }
+        List<UserTriggerEntity> subscriptionsList = this.getAllUsersSubscriptions(user);
+
+        return subscriptionsList.stream()
+                .map(a -> {
+                    if (a.getTriggerType().isAlarm()) {
+                        return String.format("№%d - %s/%s - %s - %f",
+                                a.getId(),
+                                a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                                a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                                a.getTriggerType().getTriggerName(),
+                                a.getTargetValue());
+                    } else {
+                        return String.format("№%d - %s/%s - %s",
+                                a.getId(),
+                                a.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                                a.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                                a.getTriggerType().getTriggerName());
+                    }
+                })
+                .collect(Collectors.joining("\n"));
 
     }
 
-    //todo encapsulate this method into previous
+    /**
+     * Method returns all users subscriptions and alarms.
+     *
+     * @param user subscriptions owner.
+     * @return {@link List} of all users subscriptions.
+     * @throws CommonBotAppException if user don't have any subscriptions.
+     */
     public List<UserTriggerEntity> getAllUsersSubscriptions(UserDTO user) throws CommonBotAppException {
         UserEntity foundUser = usersService.getUserEntity(user);
         List<UserTriggerEntity> subscriptionsList = userTriggersRepository.findByUser(foundUser);
         if (subscriptionsList == null) {
-            if (logger.isDebugEnabled()) logger.debug("Not found any triggers for user #{}.", user.getUserId());
+            if (logger.isDebugEnabled()) logger.debug("Not found any subscription for user #{}.", user.getUserId());
             throw new TriggerException("User don't have any subscription.", TriggerException.ExceptionCause.NO_SUBSCRIPTIONS);
         } else {
-            if (logger.isDebugEnabled()) logger.debug("Returning found subscriptions for user #{}.", user.getUserId());
+            if (logger.isDebugEnabled()) logger.debug("Returning {} found subscriptions for user #{}.",
+                    subscriptionsList.size(), user.getUserId());
             return subscriptionsList;
         }
     }
@@ -345,13 +367,18 @@ public class TriggersService {
      * Get all existing target triggers.
      *
      * @return {@link List} of all existing target triggers as {@link TriggerDTO}.
+     * @throws TriggerException if no alarm triggers found.
      */
-    public List<TriggerDTO> getTargetTriggerDTOList() {
-        //todo decide if this method must throw exception if result list is empty
-        List<UserTriggerEntity> result = new ArrayList<>();
-        //todo use table field is_alarm
-        result.addAll(userTriggersRepository.findByTriggerType(getUpTriggerType()));
-        result.addAll(userTriggersRepository.findByTriggerType(getDownTriggerType()));
+    public List<TriggerDTO> getTargetTriggerDTOList() throws TriggerException {
+
+        List<UserTriggerEntity> result = userTriggersRepository.findByTriggerType_IsAlarm(true);
+
+        if (result.isEmpty()) {
+            if (logger.isDebugEnabled()) logger.debug("No alarm triggers found in database.");
+            throw new TriggerException("No alarm triggers found in database", TriggerException.ExceptionCause.NO_ALARM_TRIGGERS);
+        }
+
+        if (logger.isDebugEnabled()) logger.debug("Found {} alarm triggers in database.", result.size());
 
         return result.stream()
                 .map(this::mapTriggerEntityToTriggerDTO)
@@ -364,7 +391,6 @@ public class TriggersService {
      * @return {@link List} of stream-type {@link UserTriggerEntity}.
      */
     public List<UserTriggerEntity> getAllActiveStreamTriggers() {
-        //todo decide if this method must throw exception if result list is empty
         List<UserTriggerEntity> result = new ArrayList<>();
         result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getSimpleTriggerType(), false));
         result.addAll(userTriggersRepository.findByTriggerTypeAndUser_IsPaused(getAverageTriggerType(), false));
@@ -385,8 +411,7 @@ public class TriggersService {
             throw new TriggerException("Not found requested trigger in database.",
                     TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
         } else {
-            if (!workedTrigger.getTriggerType().equals(this.getUpTriggerType()) &&
-                    !workedTrigger.getTriggerType().equals(this.getDownTriggerType())) {
+            if (!workedTrigger.getTriggerType().isAlarm()) {
                 logger.warn("Worked trigger #{} is not target trigger!", triggerId);
                 throw new TriggerException("Requested trigger has other type.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
             } else {
@@ -405,14 +430,10 @@ public class TriggersService {
      * @return mapped {@link TriggerDTO} object if triggerType is fine. Null if triggerType is not found in database.
      */
     private TriggerDTO mapTriggerEntityToTriggerDTO(UserTriggerEntity userTriggerEntity) {
+
         TriggerDTO triggerDTO;
 
-        //fixme this null check is temporary
-        if (userTriggerEntity.getTargetValue() == null) {
-            return null;
-        }
-
-        //todo why using try-catch blocks?
+        //try-catch block works if TriggerDTO.TriggerType enum can't parse given trigger type.
         try {
             triggerDTO = new TriggerDTO(
                     userTriggerEntity.getId(),
@@ -423,7 +444,9 @@ public class TriggersService {
                             userTriggerEntity.getTriggerType().getTriggerName().toUpperCase())
             );
         } catch (IllegalArgumentException e) {
-            logger.error("Unknown trigger type: {}", e.toString());
+            logger.error("{} is unknown trigger type: {}",
+                    userTriggerEntity.getTriggerType().getTriggerName().toUpperCase(),
+                    e.toString());
             triggerDTO = null;
         }
 

@@ -46,7 +46,11 @@ public class TriggerException extends CommonBotAppException {
         /**
          * Trigger type is not correct.
          */
-        TRIGGER_TYPE_NOT_MATCH("Неправильный тип триггера.");
+        TRIGGER_TYPE_NOT_MATCH("Неправильный тип триггера."),
+        /**
+         * Not found any alarm trigger in database.
+         */
+        NO_ALARM_TRIGGERS("В базе данных нет будильников.");
 
         private final String message;
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
+import ru.bandit.cryptobot.exceptions.TriggerException;
 import ru.bandit.cryptobot.services.TriggersService;
 
 import java.util.List;
@@ -46,7 +47,8 @@ public class TriggersController {
                                                 @ApiParam(value = "Котировка валюты, триггер которой сработал.")
                                                 @RequestParam String value) {
 
-        if (logger.isDebugEnabled()) logger.debug("Got new trigger POST request: trigger id = {}, value = {}", triggerId, value);
+        if (logger.isDebugEnabled())
+            logger.debug("Got new trigger POST request: trigger id = {}, value = {}", triggerId, value);
 
         try {
             triggersService.processWorkedTargetTrigger(triggerId, value);
@@ -69,12 +71,15 @@ public class TriggersController {
     @GetMapping("/getAllTarget")
     public ResponseEntity<List<TriggerDTO>> refreshTriggers() {
 
-        if (logger.isTraceEnabled()) logger.trace("Got request for triggers list.");
+        if (logger.isDebugEnabled()) logger.debug("Got http request for triggers list.");
 
-        List<TriggerDTO> response = triggersService.getTargetTriggerDTOList();
-
-        if (response == null || response.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-
-        else return new ResponseEntity<>(response, HttpStatus.OK);
+        try {
+            List<TriggerDTO> response = triggersService.getTargetTriggerDTOList();
+            if (logger.isTraceEnabled()) logger.trace("Returning triggers list as http response...");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (TriggerException e) {
+            if (logger.isTraceEnabled()) logger.trace("Triggers list is empty.");
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 }
