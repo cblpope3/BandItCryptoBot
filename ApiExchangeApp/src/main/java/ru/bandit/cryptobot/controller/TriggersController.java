@@ -19,7 +19,7 @@ import ru.bandit.cryptobot.service.TriggersService;
 @RequestMapping("/trigger")
 public class TriggersController {
 
-    Logger logger = LoggerFactory.getLogger(TriggersController.class);
+    private final Logger logger = LoggerFactory.getLogger(TriggersController.class);
 
     @Autowired
     TriggersService triggersService;

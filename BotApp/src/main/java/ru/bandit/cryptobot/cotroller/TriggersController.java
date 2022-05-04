@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.bandit.cryptobot.clients.UserClient;
 import ru.bandit.cryptobot.dto.TriggerDTO;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
@@ -26,8 +27,14 @@ public class TriggersController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final TriggersService triggersService;
+    private final UserClient userClient;
+
     @Autowired
-    TriggersService triggersService;
+    public TriggersController(TriggersService triggersService, UserClient userClient) {
+        this.triggersService = triggersService;
+        this.userClient = userClient;
+    }
 
     /**
      * Post worked alarm triggers here.
@@ -51,10 +58,10 @@ public class TriggersController {
             logger.debug("Got new trigger POST request: trigger id = {}, value = {}", triggerId, value);
 
         try {
-            triggersService.processWorkedTargetTrigger(triggerId, value);
+            userClient.sendWorkedTargetTriggerToUser(triggerId, value);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (CommonBotAppException e) {
-            return new ResponseEntity<>(e.getUserFriendlyMessage(), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.bandit.cryptobot.clients.TriggersClient;
-import ru.bandit.cryptobot.clients.UserClient;
 import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.dto.CurrencyPairDTO;
 import ru.bandit.cryptobot.dto.TriggerDTO;
@@ -38,7 +37,6 @@ public class TriggersService {
     private final UserTriggersRepository userTriggersRepository;
     private final TriggerTypeRepository triggerTypeRepository;
     private final TriggersClient triggersClient;
-    private final UserClient userClient;
     private final UsersService usersService;
     private final CurrencyService currencyService;
     private final CurrentCurrencyRatesDAO currentCurrencyRatesDAO;
@@ -47,7 +45,6 @@ public class TriggersService {
     public TriggersService(UserTriggersRepository userTriggersRepository,
                            TriggerTypeRepository triggerTypeRepository,
                            TriggersClient triggersClient,
-                           UserClient userClient,
                            UsersService usersService,
                            CurrencyService currencyService,
                            CurrentCurrencyRatesDAO currentCurrencyRatesDAO) {
@@ -55,7 +52,6 @@ public class TriggersService {
         this.userTriggersRepository = userTriggersRepository;
         this.triggerTypeRepository = triggerTypeRepository;
         this.triggersClient = triggersClient;
-        this.userClient = userClient;
         this.usersService = usersService;
         this.currencyService = currencyService;
         this.currentCurrencyRatesDAO = currentCurrencyRatesDAO;
@@ -398,29 +394,32 @@ public class TriggersService {
     }
 
     /**
-     * Send alarm of worked target trigger to user.
+     * Delete worked alarm trigger.
      *
      * @param triggerId id of worked trigger.
-     * @param value     value of currency rates by the time trigger worked.
+     * @return deleted target trigger as {@link UserTriggerEntity}.
      * @throws CommonBotAppException if trigger is not found or trigger is not target type.
      */
-    public void processWorkedTargetTrigger(Long triggerId, String value) throws CommonBotAppException {
+    public UserTriggerEntity deleteWorkedTargetTrigger(Long triggerId) throws CommonBotAppException {
+
         UserTriggerEntity workedTrigger = userTriggersRepository.findById(triggerId);
+
         if (workedTrigger == null) {
             logger.warn("Not found worked trigger #{} in database!", triggerId);
             throw new TriggerException("Not found requested trigger in database.",
                     TriggerException.ExceptionCause.SUBSCRIPTION_NOT_FOUND);
-        } else {
-            if (!workedTrigger.getTriggerType().isAlarm()) {
-                logger.warn("Worked trigger #{} is not target trigger!", triggerId);
-                throw new TriggerException("Requested trigger has other type.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
-            } else {
-                userClient.sendWorkedTargetTriggerToUser(workedTrigger, value);
-                userTriggersRepository.delete(workedTrigger);
-                if (logger.isTraceEnabled())
-                    logger.trace("Worked target trigger #{} with value={} processed successfully.", triggerId, value);
-            }
+        } else if (!workedTrigger.getTriggerType().isAlarm()) {
+            logger.warn("Worked trigger #{} is not target trigger!", triggerId);
+            throw new TriggerException("Requested trigger has other type.", TriggerException.ExceptionCause.TRIGGER_TYPE_NOT_MATCH);
         }
+
+        userTriggersRepository.delete(workedTrigger);
+
+        if (logger.isTraceEnabled())
+            logger.trace("Worked target trigger #{} deleted successfully.", triggerId);
+
+        return workedTrigger;
+
     }
 
     /**

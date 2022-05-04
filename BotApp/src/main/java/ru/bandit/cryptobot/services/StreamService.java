@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
  * @see #getStreams()
  */
 @Service
+@SuppressWarnings("unused")
 public class StreamService {
 
     private final TriggersService triggersService;
-
     private final CurrencyService currencyService;
 
     @Autowired

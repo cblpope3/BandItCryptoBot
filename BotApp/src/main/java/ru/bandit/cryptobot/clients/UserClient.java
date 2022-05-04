@@ -7,7 +7,9 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
+import ru.bandit.cryptobot.exceptions.CommonBotAppException;
 import ru.bandit.cryptobot.services.StreamService;
+import ru.bandit.cryptobot.services.TriggersService;
 
 import java.util.List;
 import java.util.Map;
@@ -21,32 +23,39 @@ public class UserClient {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final TelegramClient telegramClient;
-
     private final StreamService streamService;
+    private final TriggersService triggersService;
 
     @Autowired
-    public UserClient(TelegramClient telegramClient, StreamService streamService) {
+    public UserClient(TelegramClient telegramClient, StreamService streamService, TriggersService triggersService) {
         this.telegramClient = telegramClient;
         this.streamService = streamService;
+        this.triggersService = triggersService;
     }
 
     /**
-     * Method to send worked alarm trigger to user.
+     * Method deletes worked alarm trigger from database and send it to user.
      *
-     * @param userTrigger trigger that has been worked.
-     * @param value       value of worked alarm trigger.
+     * @param triggerId if of trigger that has been worked.
+     * @param value     value of worked alarm trigger.
+     * @throws CommonBotAppException if trigger with given id is not found, or found trigger is not alarm type.
      */
-    public void sendWorkedTargetTriggerToUser(UserTriggerEntity userTrigger, String value) {
-        if (logger.isTraceEnabled()) logger.trace("Sending worked trigger #{} to user.", userTrigger.getId());
+    public void sendWorkedTargetTriggerToUser(Long triggerId, String value) throws CommonBotAppException {
+        if (logger.isTraceEnabled()) logger.trace("Processing worked trigger #{}...", triggerId);
+
+        UserTriggerEntity workedTrigger = triggersService.deleteWorkedTargetTrigger(triggerId);
 
         SendMessage alarmMessage = new SendMessage();
-        alarmMessage.setChatId(userTrigger.getUser().getChatId().toString());
+        alarmMessage.setChatId(workedTrigger.getUser().getChatId().toString());
         alarmMessage.setText(String.format("Сработал ваш будильник по валюте %s/%s! Текущий курс: %s.",
-                userTrigger.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
-                userTrigger.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
+                workedTrigger.getCurrencyPair().getCurrency1().getCurrencyNameUser(),
+                workedTrigger.getCurrencyPair().getCurrency2().getCurrencyNameUser(),
                 value));
+
         telegramClient.sendMessage(alarmMessage);
-        if (logger.isDebugEnabled()) logger.debug("Worked trigger #{} successfully sent to user.", userTrigger.getId());
+
+        if (logger.isDebugEnabled())
+            logger.debug("Worked trigger #{} successfully sent to user.", workedTrigger.getId());
     }
 
     /**
