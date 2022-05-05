@@ -8,12 +8,12 @@
     <version>0.2.0</version>
     <packaging>pom</packaging>
 
-      <parent>
+    <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.5.2</version>
         <relativePath/>
-      </parent>
+    </parent>
 
     <name>BandIt crypto-currency bot</name>
     <description>Project to learn how to develop telegram bot</description>
@@ -46,6 +46,12 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

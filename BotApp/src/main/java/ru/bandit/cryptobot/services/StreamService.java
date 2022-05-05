@@ -2,79 +2,107 @@ package ru.bandit.cryptobot.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.bandit.cryptobot.entities.TriggerTypeEntity;
+import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.entities.UserTriggerEntity;
-import ru.bandit.cryptobot.repositories.Rates1MinAverageRepository;
-import ru.bandit.cryptobot.repositories.RatesRepository;
-import ru.bandit.cryptobot.repositories.TriggerTypeRepository;
-import ru.bandit.cryptobot.repositories.UserTriggersRepository;
+import ru.bandit.cryptobot.exceptions.CurrencyException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+/**
+ * This service implements methods that handle mailing new currency rates to users.
+ *
+ * @see #getStreams()
+ */
 @Service
+@SuppressWarnings("unused")
 public class StreamService {
 
-    @Autowired
-    RatesRepository ratesRepository;
+    private final TriggersService triggersService;
+    private final CurrencyService currencyService;
 
     @Autowired
-    Rates1MinAverageRepository rates1MinAverageRepository;
+    public StreamService(TriggersService triggersService, CurrencyService currencyService) {
+        this.triggersService = triggersService;
+        this.currencyService = currencyService;
+    }
 
-    @Autowired
-    UserTriggersRepository userTriggersRepository;
-
-    @Autowired
-    TriggerTypeRepository triggerTypeRepository;
-
+    /**
+     * Method making user-friendly information about user subscriptions.
+     *
+     * @return {@link Map}, where key is user id, value is {@link List} of user-friendly {@link String} with
+     * information about currency rates that can be published directly to user.
+     */
     public Map<Long, List<String>> getStreams() {
-        TriggerTypeEntity simpleTrigger = triggerTypeRepository.findByTriggerName("simple");
-        TriggerTypeEntity averageTrigger = triggerTypeRepository.findByTriggerName("average");
 
-        List<UserTriggerEntity> mailingList = userTriggersRepository.findByTriggerType(simpleTrigger);
-        mailingList.addAll(userTriggersRepository.findByTriggerType(averageTrigger));
+        //getting all active triggers list from database
+        List<UserTriggerEntity> mailingList = triggersService.getAllActiveStreamTriggers();
 
-        Map<Long, List<String>> result = new HashMap<>();
-        for (UserTriggerEntity stream : mailingList) {
+        return mailingList.stream()
+                .collect(Collectors.groupingBy(
+                        a -> a.getUser().getUserId(),
+                        Collector.of(
+                                ArrayList::new,
+                                (result, userTrigger) -> result.add(this.getUserFriendlyCurrencyRate(userTrigger)),
+                                (result1, result2) -> {
+                                    result1.addAll(result2);
+                                    return result1;
+                                }
+                        )
+                ));
+    }
 
-            //if user is paused - ignore
-            if (stream.getUser().isPaused()) continue;
+    /**
+     * Make user-friendly currency rate from {@link UserTriggerEntity}.
+     *
+     * @param userTrigger stream trigger to be mapped.
+     * @return user-friendly currency rate with currencies symbols.
+     */
+    private String getUserFriendlyCurrencyRate(UserTriggerEntity userTrigger) {
 
-            String currency1 = stream.getCurrencyPair().getCurrency1().getCurrencyNameUser();
-            String currency2 = stream.getCurrencyPair().getCurrency2().getCurrencyNameUser();
+        if (userTrigger.getTriggerType().equals(triggersService.getSimpleTriggerType())) {
 
-            Long chatId = stream.getUser().getChatId();
-
-            List<String> currentUserSubscriptions = result.get(chatId);
-            if (currentUserSubscriptions == null) currentUserSubscriptions = new ArrayList<>();
-
-            Double foundRate;
-            if (stream.getTriggerType().equals(simpleTrigger)) {
-                foundRate = ratesRepository.findRatesBySymbol(currency1 + currency2);
-            } else {
-                foundRate = rates1MinAverageRepository.findRatesBySymbol(currency1 + currency2);
+            try {
+                return String.format("%s - %f. (%s)",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                        currencyService.getCurrentCurrencyRate(userTrigger.getCurrencyPair()),
+                        currencyService.getLastRatesUpdateTime());
+            } catch (CurrencyException e) {
+                return String.format("%s - нет данных.",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()));
             }
 
-            String foundRateString;
-            if (foundRate == null) foundRateString = "Нет данных";
-            else foundRateString = foundRate.toString();
+        } else if (userTrigger.getTriggerType().equals(triggersService.getAverageTriggerType())) {
 
-            if (stream.getTriggerType().equals(simpleTrigger)) {
-                currentUserSubscriptions.add(String.format("%s/%s - %s",
-                        currency1,
-                        currency2,
-                        foundRateString));
-            } else {
-                currentUserSubscriptions.add(String.format("%s/%s среднее за минуту - %s",
-                        currency1,
-                        currency2,
-                        foundRateString));
+            try {
+                return String.format("%s 1-m-avg - %f. (%s)",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()),
+                        currencyService.getAverageCurrencyRate(userTrigger.getCurrencyPair()),
+                        currencyService.getLastAverageRatesUpdateTime());
+            } catch (CurrencyException e) {
+                return String.format("%s 1-m-avg - нет данных.",
+                        this.getUserFriendlyCurrencyPair(userTrigger.getCurrencyPair()));
             }
 
-            result.put(chatId, currentUserSubscriptions);
+        } else {
+            throw new IllegalArgumentException("Unknown user trigger type.");
         }
-        return result;
+    }
+
+    /**
+     * Get user-friendly currency pair name.
+     *
+     * @param currencyPair requested currency pair.
+     * @return user-friendly currency pair.
+     * @see CurrencyPairEntity
+     * @see String
+     */
+    private String getUserFriendlyCurrencyPair(CurrencyPairEntity currencyPair) {
+        return String.format("%s/%s",
+                currencyPair.getCurrency1().getCurrencyNameUser(),
+                currencyPair.getCurrency2().getCurrencyNameUser());
     }
 }

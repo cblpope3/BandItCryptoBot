@@ -13,7 +13,7 @@ import ru.bandit.cryptobot.service.TriggersService;
 @Component
 public class MainThread {
 
-    Logger logger = LoggerFactory.getLogger(MainThread.class);
+    private final Logger logger = LoggerFactory.getLogger(MainThread.class);
 
     @Autowired
     CurrentRatesService currentRatesService;
