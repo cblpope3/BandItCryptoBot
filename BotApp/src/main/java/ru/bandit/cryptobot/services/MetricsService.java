@@ -17,6 +17,7 @@ import ru.bandit.cryptobot.repositories.MetricsRepository;
  * @see MetricsEntity
  */
 @Service
+@SuppressWarnings("unused")
 public class MetricsService {
 
     private final MetricsRepository metricsRepository;

@@ -19,21 +19,25 @@ import ru.bandit.cryptobot.services.QueryService;
  * Class for interaction with Telegram bot api.
  */
 @Component
+@SuppressWarnings("unused")
 public class TelegramClient extends TelegramLongPollingBot {
 
     private final String token;
     private final String username;
     private final Logger logger = LoggerFactory.getLogger(TelegramClient.class);
 
-    @Autowired
-    MetricsService metricsService;
+    private final MetricsService metricsService;
+    private final QueryService queryService;
 
     @Autowired
-    QueryService queryService;
-
-    TelegramClient(@Value("${bot.token}") String token, @Value("${bot.username}") String username) {
+    TelegramClient(@Value("${bot.token}") String token,
+                   @Value("${bot.username}") String username,
+                   MetricsService metricsService,
+                   QueryService queryService) {
         this.token = token;
         this.username = username;
+        this.metricsService = metricsService;
+        this.queryService = queryService;
     }
 
     /**

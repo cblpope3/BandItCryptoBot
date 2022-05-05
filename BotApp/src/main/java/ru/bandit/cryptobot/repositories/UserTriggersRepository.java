@@ -20,8 +20,6 @@ public interface UserTriggersRepository extends CrudRepository<UserTriggerEntity
                                                                                   CurrencyPairEntity currencyPair,
                                                                                   Double targetValue);
 
-    List<UserTriggerEntity> findByTriggerType(TriggerTypeEntity triggerType);
-
     List<UserTriggerEntity> findByTriggerTypeAndUser_IsPaused(TriggerTypeEntity triggerType, boolean isPaused);
 
     List<UserTriggerEntity> findByTriggerType_IsAlarm(boolean isAlarm);
