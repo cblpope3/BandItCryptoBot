@@ -52,7 +52,7 @@ public class BinanceApiService {
 
         try {
             newCurrencies.addAll(binanceApiClient.getAllCurrencyPrices());
-            logger.debug("Got new data from api.");
+            if (logger.isTraceEnabled()) logger.trace("Got new data from api.");
         } catch (ResponseStatusException e) {
             if (e.getStatus() == HttpStatus.TOO_MANY_REQUESTS) {
                 logger.error("Too frequent requests, need to cool down. Sleeping for 60 seconds.");
@@ -95,7 +95,8 @@ public class BinanceApiService {
 
         for (String rate : allowedRates) {
             if (unfilteredData.get(rate) == null) {
-                logger.error("Not found allowed rate in new rates list: " + rate);
+                if (logger.isErrorEnabled())
+                    logger.error(String.format("Not found allowed rate in new rates list: %s", rate));
             } else {
                 filteredData.put(rate, unfilteredData.get(rate));
             }

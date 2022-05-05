@@ -136,10 +136,10 @@ public class TriggersService {
 
     private boolean isTriggerWorked(TriggerDTO trigger, Double rateValue) {
 
-        return (trigger.getTriggerType().equals(TriggerDTO.TriggerType.UP)
+        return (trigger.getTriggerType().equals(TriggerDTO.TriggerType.TARGET_UP)
                 && rateValue > trigger.getTargetValue())
                 ||
-                (trigger.getTriggerType().equals(TriggerDTO.TriggerType.DOWN)
+                (trigger.getTriggerType().equals(TriggerDTO.TriggerType.TARGET_DOWN)
                         && rateValue < trigger.getTargetValue());
 
     }

@@ -8,16 +8,38 @@ databaseChangeLog:
             tableName: users
             columns:
               - column:
-                  name: telegram_userchat_id
+                  name: telegram_user_id
                   type: BIGINT
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: user_name
+                  name: is_bot
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: telegram_chat_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: first_name
                   type: VARCHAR(50)
                   constraints:
                     nullable: false
+              - column:
+                  name: last_name
+                  type: VARCHAR(50)
+              - column:
+                  name: username
+                  type: VARCHAR(50)
+              - column:
+                  name: language
+                  type: VARCHAR(5)
+              - column:
+                  name: last_message_id
+                  type: INTEGER
               - column:
                   name: update_interval
                   type: INTEGER
@@ -29,13 +51,9 @@ databaseChangeLog:
               - column:
                   name: registration_date
                   type: TIMESTAMP
-                  constraints:
-                    - default: CURRENT_TIMESTAMP
               - column:
                   name: start_count
                   type: INTEGER
-                  constraints:
-                    - default: 0
   - changeSet:
       id: create_currency_table
       author: nickolay_leonov
@@ -119,6 +137,11 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   type: VARCHAR(50)
+              - column:
+                  name: is_alarm
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
         - createSequence:
             cycle: true
             incrementBy: 1
@@ -140,11 +163,11 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: user_id
+                  name: telegram_user_id
                   type: BIGINT
                   constraints:
                     foreignKeyName: fk_user_id
-                    references: users(telegram_userchat_id)
+                    references: users(telegram_user_id)
                     nullable: false
               - column:
                   name: pair_id
@@ -165,7 +188,7 @@ databaseChangeLog:
                   type: INTEGER
               - column:
                   name: trigger_target_value
-                  type: INTEGER
+                  type: DOUBLE
               - column:
                   name: last_message
                   type: DATETIME
@@ -346,21 +369,21 @@ databaseChangeLog:
               - column:
                   name: is_crypto
                   value: false
-#        - insert:
-#            tableName: currency
-#            columns:
-#              - column:
-#                  name: currency_id
-#                  value: "USD"
-#              - column:
-#                  name: currency_symbol
-#                  value: "USD"
-#              - column:
-#                  name: currency_name
-#                  value: "US Dollar"
-#              - column:
-#                  name: is_crypto
-#                  value: false
+        #        - insert:
+        #            tableName: currency
+        #            columns:
+        #              - column:
+        #                  name: currency_id
+        #                  value: "USD"
+        #              - column:
+        #                  name: currency_symbol
+        #                  value: "USD"
+        #              - column:
+        #                  name: currency_name
+        #                  value: "US Dollar"
+        #              - column:
+        #                  name: is_crypto
+        #                  value: false
         - insert:
             tableName: currency
             columns:
@@ -390,6 +413,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Periodical mailing currency rates"
+              - column:
+                  name: is_alarm
+                  value: false
         - insert:
             tableName: trigger_type
             columns:
@@ -402,6 +428,9 @@ databaseChangeLog:
               - column:
                   name: trigger_type_description
                   value: "Periodical mailing averages"
+              - column:
+                  name: is_alarm
+                  value: false
         - insert:
             tableName: trigger_type
             columns:
@@ -410,10 +439,13 @@ databaseChangeLog:
                   value: 3
               - column:
                   name: trigger_type_name
-                  value: "target-up"
+                  value: "target_up"
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
+              - column:
+                  name: is_alarm
+                  value: true
         - insert:
             tableName: trigger_type
             columns:
@@ -422,10 +454,13 @@ databaseChangeLog:
                   value: 4
               - column:
                   name: trigger_type_name
-                  value: "target-down"
+                  value: "target_down"
               - column:
                   name: trigger_type_description
                   value: "Sending alarm when target value reached"
+              - column:
+                  name: is_alarm
+                  value: true
 
 
         - insert:

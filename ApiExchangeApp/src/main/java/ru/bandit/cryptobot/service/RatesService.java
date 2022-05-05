@@ -11,7 +11,7 @@ import java.util.Set;
 
 public abstract class RatesService {
 
-    protected Logger logger = LoggerFactory.getLogger(RatesService.class);
+    protected final Logger logger = LoggerFactory.getLogger(RatesService.class);
 
     protected BotAppRatesClient botAppRatesClient;
 

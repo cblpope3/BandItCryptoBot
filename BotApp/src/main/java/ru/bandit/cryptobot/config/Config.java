@@ -13,6 +13,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableScheduling
 @EnableSwagger2
+@SuppressWarnings("unused")
 public class Config {
     //FIXME throws Exception Processing ErrorPage[errorCode=0, location=/error] when open swagger ui page
     @Bean
