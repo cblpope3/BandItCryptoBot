@@ -10,6 +10,7 @@ import ru.bandit.cryptobot.dao.CurrentCurrencyRatesDAO;
 import ru.bandit.cryptobot.entities.CurrencyEntity;
 import ru.bandit.cryptobot.entities.CurrencyPairEntity;
 import ru.bandit.cryptobot.exceptions.CommonBotAppException;
+import ru.bandit.cryptobot.exceptions.CurrencyException;
 import ru.bandit.cryptobot.repositories.CurrencyPairRepository;
 import ru.bandit.cryptobot.repositories.CurrencyRepository;
 import ru.bandit.cryptobot.test_data.CurrenciesTestData;
@@ -120,8 +121,9 @@ class CurrencyServiceTest {
 
     //Testing if currency not found
     @Test
-    void getCurrencyPairSeparateNoCurrency() throws CommonBotAppException {
+    void getCurrencyPairSeparateNoCurrency() {
         //mocking all used classes
+        //currencies BTC and EUR are known
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
                 .thenReturn(CurrenciesTestData.getCurrencyBTC());
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyETHSymbol()))
@@ -131,22 +133,40 @@ class CurrencyServiceTest {
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyRUBSymbol()))
                 .thenReturn(null);
 
+
+        int exceptionsNumber = 0;
         //simulating service method call
-        CurrencyPairEntity givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyETHSymbol());
-        CurrencyPairEntity givenCurrencyPair2 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyRUBSymbol(), CurrenciesTestData.getCurrencyBTCSymbol());
+        try {
+            //try to get known BTC and unknown EUR
+            currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyETHSymbol());
+        } catch (CommonBotAppException e) {
+            ++exceptionsNumber;
+            //todo decide if this assertion is fine
+            assertEquals(CurrencyException.ExceptionCause.NO_CURRENCY.getMessage(), e.getUserFriendlyMessage());
+        }
+
+        //expecting 2 calls to findByCurrencyNameUser method
+        verify(currencyRepository, times(2)).findByCurrencyNameUser(any());
+
+        try {
+            //try to get unknown RUB and known BTC
+            currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyRUBSymbol(), CurrenciesTestData.getCurrencyBTCSymbol());
+        } catch (CommonBotAppException e) {
+            ++exceptionsNumber;
+        }
+
+        //expecting 1 more call to findByCurrencyNameUser method (3 with previous)
+        verify(currencyRepository, times(3)).findByCurrencyNameUser(any());
 
         //checking that response is correct
-        assertNull(givenCurrencyPair1);
-        assertNull(givenCurrencyPair2);
-
-        //verifying other methods interaction
-        verify(currencyRepository, times(4)).findByCurrencyNameUser(any());
+        assertEquals(2, exceptionsNumber);
     }
 
     //Testing if currency pair not found
     @Test
-    void getCurrencyPairSeparateNoCurrencyPair() throws CommonBotAppException {
+    void getCurrencyPairSeparateNoCurrencyPair() {
         //mocking all used classes
+        //currencies BTC and EUR are known
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyBTCSymbol()))
                 .thenReturn(CurrenciesTestData.getCurrencyBTC());
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyETHSymbol()))
@@ -156,11 +176,20 @@ class CurrencyServiceTest {
         when(currencyRepository.findByCurrencyNameUser(CurrenciesTestData.getCurrencyRUBSymbol()))
                 .thenReturn(null);
 
+        int exceptionsCounter = 0;
+
         //simulating service method call
-        CurrencyPairEntity givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyEURSymbol());
+        CurrencyPairEntity givenCurrencyPair1 = null;
+        try {
+            givenCurrencyPair1 = currencyService.getCurrencyPair(CurrenciesTestData.getCurrencyBTCSymbol(), CurrenciesTestData.getCurrencyEURSymbol());
+        } catch (CommonBotAppException e) {
+            //todo need to check what kind of exception had happened
+            ++exceptionsCounter;
+        }
 
         //checking that response is correct
         assertNull(givenCurrencyPair1);
+        assertEquals(1, exceptionsCounter);
 
         //verifying other methods interaction
         verify(currencyRepository, times(2)).findByCurrencyNameUser(any());
