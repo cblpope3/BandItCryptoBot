@@ -165,7 +165,7 @@ public class TriggersService {
      * @return saved trigger.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
      */
-    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Integer triggerValue)
+    public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName, Double triggerValue)
             throws CommonBotAppException {
 
         UserEntity foundUser = usersService.getUserEntity(user);
@@ -213,7 +213,7 @@ public class TriggersService {
      * @param triggerTypeName name of trigger type.
      * @return saved trigger.
      * @throws CommonBotAppException if requested currency pair not found or user already have this subscription.
-     * @see #subscribe(UserDTO, CurrencyPairDTO, String, Integer)
+     * @see #subscribe(UserDTO, CurrencyPairDTO, String, Double)
      */
     public UserTriggerEntity subscribe(UserDTO user, CurrencyPairDTO currencyPairDTO, String triggerTypeName)
             throws CommonBotAppException {
@@ -229,7 +229,7 @@ public class TriggersService {
      * @return target value of given currency pair rate.
      * @throws CommonBotAppException if no data about currency rates.
      */
-    private Double calculateAlarmTriggerValue(UserTriggerEntity triggerTemplate, Integer valuePercents) throws CommonBotAppException {
+    private Double calculateAlarmTriggerValue(UserTriggerEntity triggerTemplate, Double valuePercents) throws CommonBotAppException {
         //get current currency pair rate
         Double currentRate = currencyService.getCurrentCurrencyRate(triggerTemplate.getCurrencyPair());
 

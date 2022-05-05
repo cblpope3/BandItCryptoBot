@@ -103,7 +103,7 @@ public class QueryService {
      * @throws CommonBotAppException if query has illegal symbols.
      */
     private void checkQueryIllegalSymbols(String query) throws CommonBotAppException {
-        if (!query.matches("[a-zA-Z0-9_/,-]+")) {
+        if (!query.matches("[a-zA-Z0-9_/,.-]+")) {
             if (logger.isDebugEnabled()) logger.debug("Query has unsupported symbols or format: {}", query);
             throw new QueryException("Unsupported symbols in query.",
                     QueryException.ExceptionCause.UNSUPPORTED_SYMBOLS);
